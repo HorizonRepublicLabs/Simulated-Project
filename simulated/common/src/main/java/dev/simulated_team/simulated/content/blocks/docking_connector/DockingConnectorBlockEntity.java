@@ -13,7 +13,6 @@ import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
-import dev.simulated_team.simulated.compat.computercraft.wired.DockingConnectorWiredElement;
 import dev.simulated_team.simulated.content.blocks.redstone_magnet.*;
 import dev.simulated_team.simulated.index.SimBlocks;
 import dev.simulated_team.simulated.index.SimSoundEvents;
@@ -64,7 +63,8 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
     protected double closestPairDistance = 0;
     private MagnetBehaviour magnetBehaviour;
     private FixedConstraintHandle constraintHandle;
-    public final DockingConnectorWiredElement ccWiredElement;
+    // No 26.2 build of cc-tweaked, so a docking connector carries no wired
+    // element; the docking itself is unaffected.
 
     private ConstraintSmoother constraintSmoother = null;
 
@@ -76,7 +76,6 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
                 SimConfigService.INSTANCE.server().blocks.dockingConnectorFECapacity.get(),
                 SimConfigService.INSTANCE.server().blocks.dockingConnectorFEThroughput.get()
         );
-        this.ccWiredElement = DockingConnectorWiredElement.create(this);
     }
 
     @Nullable
@@ -136,7 +135,7 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
             }
         }
 
-        if (this.otherConnectorPosition != null && !this.level.isClientSide) {
+        if (this.otherConnectorPosition != null && !this.level.isClientSide()) {
             if (!(this.level.getBlockEntity(this.otherConnectorPosition) instanceof final DockingConnectorBlockEntity be && Objects.equals(be.otherConnectorPosition, this.getBlockPos()))) {
                 this.unDock();
                 this.state = DockingConnectorState.EXTENDED;
@@ -273,7 +272,7 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
         }
 
         // connection in the same block grid
-        final BlockPos sameGridConnection = this.getBlockPos().offset(direction.getNormal().multiply(3));
+        final BlockPos sameGridConnection = this.getBlockPos().offset(direction.getUnitVec3i().multiply(3));
 
         if (this.isExtended() && this.level.getBlockEntity(sameGridConnection) instanceof final DockingConnectorBlockEntity other) {
             if (other.getBlockState().getValue(BlockStateProperties.FACING).getOpposite() == direction && other.isExtended()) {
@@ -381,7 +380,6 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
                 this.state = DockingConnectorState.LOCKED;
                 this.tank.connect(this.otherConnectorPosition, otherConnector.tank);
                 this.battery.connect(otherConnector.battery);
-                this.ccWiredElement.connect(otherConnector.ccWiredElement);
 
                 this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
                 if (this.constraintSmoother != null) {
@@ -403,7 +401,6 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
     public void unDock() {
         final DockingConnectorBlockEntity otherConnector = this.getOtherConnector();
         if (otherConnector != null) {
-            this.ccWiredElement.disconnect(otherConnector.ccWiredElement);
         }
 
         this.closestPairDistance = Double.MAX_VALUE;
@@ -458,10 +455,10 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
 
     @Override
     protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        this.powered = tag.getBoolean("IsPowered");
-        this.extension.setValue(tag.getFloat("Extension"));
-        this.extension.updateChaseTarget(tag.getFloat("Target"));
-        this.feet.setValue(tag.getFloat("Feet"));
+        this.powered = tag.getBooleanOr("IsPowered", false);
+        this.extension.setValue(tag.getFloatOr("Extension", 0.0f));
+        this.extension.updateChaseTarget(tag.getFloatOr("Target", 0.0f));
+        this.feet.setValue(tag.getFloatOr("Feet", 0.0f));
 
         // ensure current = old value for visual lerping
         this.extension.setValue(this.extension.getValue());
@@ -477,9 +474,9 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
             this.otherConnectorSubLevelId = tag.getUUID("OtherConnectorSubLevelId");
         }
 
-        this.inventory.read(registries, tag.getCompound("Inventory"));
-        this.tank.read(tag.getCompound("Tank"));
-        this.battery.read(tag.getCompound("Battery"));
+        this.inventory.read(registries, tag.getCompoundOrEmpty("Inventory"));
+        this.tank.read(tag.getCompoundOrEmpty("Tank"));
+        this.battery.read(tag.getCompoundOrEmpty("Battery"));
         super.read(tag, registries, clientPacket);
     }
 
@@ -497,8 +494,7 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
     public void remove() {
         super.remove();
         this.removeConstraint();
-        if (this.level == null || !this.level.isClientSide) {
-            this.ccWiredElement.remove();
+        if (this.level == null || !this.level.isClientSide()) {
         }
     }
 

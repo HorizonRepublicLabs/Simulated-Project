@@ -125,7 +125,7 @@ public class HotAirBurnerBlockEntity extends SmartBlockEntity
             this.tickBalloonLogic();
         }
 
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             if (!this.isVirtual()) {
                 this.notifyUpdate();
             }
@@ -141,7 +141,7 @@ public class HotAirBurnerBlockEntity extends SmartBlockEntity
         super.tick();
 
         this.ticksSinceSync++;
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             return;
         }
 
@@ -206,7 +206,7 @@ public class HotAirBurnerBlockEntity extends SmartBlockEntity
     public void invalidate() {
         super.invalidate();
 
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             AeroSoundDistUtil.removePosHotAirBurnerSound(this.getBlockPos());
         } else {
             this.removeFromBalloon();
@@ -227,8 +227,8 @@ public class HotAirBurnerBlockEntity extends SmartBlockEntity
 
     @Override
     protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        this.powered = tag.getBoolean("IsPowered");
-        this.signalStrength = tag.getInt("SignalStrength");
+        this.powered = tag.getBooleanOr("IsPowered", false);
+        this.signalStrength = tag.getIntOr("SignalStrength", 0);
 
         if (clientPacket) {
             this.ticksSinceSync = 0;

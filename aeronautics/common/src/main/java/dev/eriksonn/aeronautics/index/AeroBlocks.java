@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.providers.generators.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import dev.eriksonn.aeronautics.Aeronautics;
@@ -29,9 +29,7 @@ import dev.eriksonn.aeronautics.content.blocks.propeller.small.andesite.Andesite
 import dev.eriksonn.aeronautics.content.blocks.propeller.small.smart_propeller.SmartPropellerBlock;
 import dev.eriksonn.aeronautics.content.blocks.propeller.small.wooden.WoodenPropellerBlock;
 import dev.eriksonn.aeronautics.content.components.Levitating;
-import dev.eriksonn.aeronautics.data.AeroBlockStateGen;
 import dev.ryanhcode.sable.index.SableTags;
-import dev.simulated_team.simulated.data.SimBlockStateGen;
 import dev.simulated_team.simulated.index.SimItems;
 import dev.simulated_team.simulated.index.sounds.SimLazySoundType;
 import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
@@ -344,7 +342,6 @@ public class AeroBlocks {
     public static final BlockEntry<MountedPotatoCannonBlock> MOUNTED_POTATO_CANNON =
             REGISTRATE.block("mounted_potato_cannon", MountedPotatoCannonBlock::new)
                     .initialProperties(SharedProperties::stone)
-                    .blockstate(AeroBlockStateGen::directionalPoweredAxisBlockstate)
                     .properties(BlockBehaviour.Properties::noOcclusion)
                     .transform(AeroStress.setImpact(2.0))
                     .transform(pickaxeOnly())

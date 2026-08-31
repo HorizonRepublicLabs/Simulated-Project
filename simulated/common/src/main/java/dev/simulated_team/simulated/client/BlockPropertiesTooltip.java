@@ -13,9 +13,7 @@ import dev.simulated_team.simulated.mixin.accessor.BlockBehaviourAccessor;
 import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
 import dev.simulated_team.simulated.util.SimColors;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.createmod.ponder.impl.client.gui.PonderUI;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -54,9 +52,8 @@ public class BlockPropertiesTooltip {
     }
 
     public static boolean shouldShowTooltip(final Condition condition, final TooltipFlag iTooltipFlag, final @Nullable Player player) {
-        if (Minecraft.getInstance().screen instanceof PonderUI) {
-            return true;
-        }
+        // 26.2 dropped the current-screen field from Minecraft, so the tooltip
+        // no longer force-shows itself inside ponder.
 
         if (player == null) {
             return condition.allows();

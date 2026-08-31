@@ -51,7 +51,7 @@ public class HotAirBurnerRenderer extends SmartBlockEntityRenderer<HotAirBurnerB
         final Vec3 center = pos.getCenter();
 
         final Minecraft minecraft = Minecraft.getInstance();
-        Vec3 camera = minecraft.gameRenderer.getMainCamera().getPosition();
+        Vec3 camera = minecraft.gameRenderer.mainCamera().position();
 
         if (be.getLevel() instanceof PonderLevel) {
             camera = minecraft.getCameraEntity().getPosition(partialTicks);

@@ -8,7 +8,7 @@ import dev.simulated_team.simulated.index.SimRenderTypes;
 import dev.simulated_team.simulated.util.SimColors;
 import net.createmod.catnip.api.client.render.CachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.renderer.LightTexture;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

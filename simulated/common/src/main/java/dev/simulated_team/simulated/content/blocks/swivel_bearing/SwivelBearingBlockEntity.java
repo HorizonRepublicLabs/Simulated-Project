@@ -163,7 +163,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
         super.tick();
         this.cogwheel.tick();
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             if (this.isTooFast()) {
                 this.playGrindingEffect();
             }
@@ -635,7 +635,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
     @Override
     protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
         super.read(compound, registries, clientPacket);
-        this.targetAngleDegrees = compound.getDouble("TargetAngle");
+        this.targetAngleDegrees = compound.getDoubleOr("TargetAngle", 0.0);
 
         final SubLevelSchematicSerializationContext schematicContext = SubLevelSchematicSerializationContext.getCurrentContext();
 
@@ -660,7 +660,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
             this.setPlatePos(blockPos);
         }
 
-        this.sequencedAngleLimit = compound.contains("SequencedAngleLimit") ? compound.getDouble("SequencedAngleLimit") : -1;
+        this.sequencedAngleLimit = compound.contains("SequencedAngleLimit") ? compound.getDoubleOr("SequencedAngleLimit", 0.0) : -1;
         this.lastException = AssemblyException.read(compound, registries);
     }
 
@@ -679,7 +679,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
 
     @Override
     public void remove() {
-        if (!this.level.isClientSide && !this.assembling) {
+        if (!this.level.isClientSide() && !this.assembling) {
             // If we're actually removed and not just unloaded, let's break the plate as well
             this.destroyPlate();
         }

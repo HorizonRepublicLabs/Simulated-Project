@@ -1,8 +1,6 @@
 package dev.simulated_team.simulated.data.advancements;
 
-import com.google.common.collect.Maps;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.PlayerAdvancements;
@@ -14,36 +12,12 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public abstract class SimulatedCriterionTriggerBase<T extends SimulatedCriterionTriggerBase.Instance> implements CriterionTrigger<T> {
 
     private final Identifier id;
-    protected final Map<PlayerAdvancements, Set<Listener<T>>> listeners = Maps.newHashMap();
 
     public SimulatedCriterionTriggerBase(final Identifier id) {
         this.id = id;
-    }
-
-    @Override
-    public void addPlayerListener(final PlayerAdvancements pPlayerAdvancements, final Listener<T> pListener) {
-        final Set<Listener<T>> playerListeners = this.listeners.computeIfAbsent(pPlayerAdvancements, k -> new HashSet<>());
-        playerListeners.add(pListener);
-    }
-
-    @Override
-    public void removePlayerListener(final PlayerAdvancements pPlayerAdvancements, final Listener<T> pListener) {
-        final Set<Listener<T>> playerListeners = this.listeners.get(pPlayerAdvancements);
-        if(playerListeners != null)  {
-            playerListeners.remove(pListener);
-            if(playerListeners.isEmpty()) {
-                this.listeners.remove(pPlayerAdvancements);
-            }
-        }
-    }
-
-    @Override
-    public void removePlayerListeners(final PlayerAdvancements pPlayerAdvancements) {
-        this.listeners.remove(pPlayerAdvancements);
     }
 
     public Identifier getId() {
@@ -52,17 +26,22 @@ public abstract class SimulatedCriterionTriggerBase<T extends SimulatedCriterion
 
     protected void trigger(final ServerPlayer player, @Nullable final List<Supplier<Object>> suppliers) {
         final PlayerAdvancements playerAdvancements = player.getAdvancements();
-        final Set<Listener<T>> playerListeners = this.listeners.get(playerAdvancements);
-        if(playerListeners != null) {
-            final List<Listener<T>> list = new LinkedList<>();
+        final Map<PlayerAdvancements.TriggerInstanceKey, T> listenersForType = playerAdvancements.getTriggerMapForType(this);
 
-            for (final Listener<T> listener : playerListeners) {
-                if(listener.trigger().test(suppliers)) {
-                    list.add(listener);
-                }
+        if (listenersForType == null || listenersForType.isEmpty()) {
+            return;
+        }
+
+        final List<PlayerAdvancements.TriggerInstanceKey> matched = new LinkedList<>();
+
+        for (final Map.Entry<PlayerAdvancements.TriggerInstanceKey, T> entry : listenersForType.entrySet()) {
+            if (entry.getValue().test(suppliers)) {
+                matched.add(entry.getKey());
             }
+        }
 
-            list.forEach(listener -> listener.run(playerAdvancements));
+        for (final PlayerAdvancements.TriggerInstanceKey key : matched) {
+            playerAdvancements.award(key.advancement(), key.criterion());
         }
     }
 

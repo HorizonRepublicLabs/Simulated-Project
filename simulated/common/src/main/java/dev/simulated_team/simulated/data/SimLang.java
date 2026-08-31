@@ -9,10 +9,9 @@ import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.data.advancements.SimAdvancements;
 import dev.simulated_team.simulated.index.SimKeys;
 import dev.simulated_team.simulated.index.SimSoundEvents;
-import dev.simulated_team.simulated.index.ponder.SimPonderPlugin;
 import net.createmod.catnip.api.lang.Lang;
 import net.createmod.catnip.api.lang.LangBuilder;
-import net.createmod.catnip.api.lang.LangNumberFormat;
+import net.createmod.catnip.api.client.lang.LangNumberFormat;
 import net.createmod.ponder.api.client.PonderIndex;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
@@ -99,7 +98,8 @@ public class SimLang {
         final Map<String, String> lang = getLangMap("en_us");
         lang.forEach(consumer);
 
-        PonderIndex.addPlugin(new SimPonderPlugin());
+        // Ponder scenes belong to the client render layer, which is not part of
+        // the 26.2 port yet, so no ponder plugin contributes lang here.
         PonderIndex.getLangAccess().provideLang(Simulated.MOD_ID, consumer);
     }
 

@@ -198,10 +198,10 @@ public class MergingGlueBlockEntity extends SmartBlockEntity implements BlockEnt
     protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
         super.read(tag, registries, clientPacket);
 
-        this.isController = tag.getBoolean("Controller");
+        this.isController = tag.getBooleanOr("Controller", false);
 
         if (tag.contains("PartnerPosition")) {
-            this.partnerPosition = BlockPos.of(tag.getLong("PartnerPosition"));
+            this.partnerPosition = BlockPos.of(tag.getLongOr("PartnerPosition", 0L));
         }
     }
 
@@ -264,7 +264,7 @@ public class MergingGlueBlockEntity extends SmartBlockEntity implements BlockEnt
             this.endPartnerOrientation.rotateY(turns * ninety);
             this.endRotation = SimAssemblyHelper.rotationFrom90DegRots(-turns);
         } else {
-            final Vec3i normal = direction.getNormal();
+            final Vec3i normal = direction.getUnitVec3i();
             final Vec3i partnerNormal = partnerDirection.getNormal();
 
             double angle = Math.atan2(partnerNormal.getX(), partnerNormal.getZ()) - Math.atan2(normal.getX(), normal.getZ());

@@ -81,7 +81,7 @@ public class SwivelBearingPlateBlock extends DirectionalKineticBlock implements 
         }
 
         if (player.getItemInHand(hand).isEmpty()) {
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 return InteractionResult.SUCCESS;
             }
 

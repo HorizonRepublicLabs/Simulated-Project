@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.providers.generators.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.config.server.blocks.SimStress;
@@ -27,7 +27,6 @@ import dev.simulated_team.simulated.content.blocks.analog_transmission.AnalogTra
 import dev.simulated_team.simulated.content.blocks.auger_shaft.AugerCogBlock;
 import dev.simulated_team.simulated.content.blocks.auger_shaft.AugerShaftBlock;
 import dev.simulated_team.simulated.content.blocks.directional_gearshift.DirectionalGearshiftBlock;
-import dev.simulated_team.simulated.content.blocks.directional_gearshift.DirectionalGearshiftGenerator;
 import dev.simulated_team.simulated.content.blocks.docking_connector.DockingConnectorBlock;
 import dev.simulated_team.simulated.content.blocks.docking_connector.PairedDockingConnectorBlock;
 import dev.simulated_team.simulated.content.blocks.gimbal_sensor.GimbalSensorBlock;
@@ -53,18 +52,14 @@ import dev.simulated_team.simulated.content.blocks.rope.rope_winch.RopeWinchBloc
 import dev.simulated_team.simulated.content.blocks.spring.SpringBlock;
 import dev.simulated_team.simulated.content.blocks.steering_wheel.SteeringWheelBlock;
 import dev.simulated_team.simulated.content.blocks.steering_wheel.SteeringWheelBlockEntity;
-import dev.simulated_team.simulated.content.blocks.steering_wheel.SteeringWheelGenerator;
 import dev.simulated_team.simulated.content.blocks.swivel_bearing.SwivelBearingBlock;
 import dev.simulated_team.simulated.content.blocks.swivel_bearing.link_block.SwivelBearingPlateBlock;
 import dev.simulated_team.simulated.content.blocks.symmetric_sail.SymmetricSailBlock;
 import dev.simulated_team.simulated.content.blocks.throttle_lever.ThrottleLeverBlock;
 import dev.simulated_team.simulated.content.blocks.torsion_spring.TorsionSpringBlock;
 import dev.simulated_team.simulated.content.blocks.velocity_sensor.VelocitySensorBlock;
-import dev.simulated_team.simulated.data.SimBlockStateGen;
 import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
 import dev.simulated_team.simulated.registrate.simulated_tab.CreativeTabItemTransforms;
-import dev.simulated_team.simulated.service.SimBlockStateService;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -122,7 +117,6 @@ public class SimBlocks {
                     .tag(AllTags.AllBlockTags.NON_MOVABLE.tag)
                     .initialProperties(SharedProperties::netheriteMetal)
                     .properties((properties -> properties.destroyTime(5f)))
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .blockstate((ctx, prov) -> prov.directionalBlock(ctx.getEntry(),
                             blockState -> prov.models().getExistingFile(
                                     prov.modLoc("block/swivel_bearing/block" + (blockState.getValue(SwivelBearingBlock.ASSEMBLED) ? "_assembled" : "")))))
@@ -158,15 +152,12 @@ public class SimBlocks {
                     .blockstate((ctx, prov) ->
                             prov.directionalBlock(ctx.getEntry(), blockState -> prov.models().getExistingFile(prov.modLoc("block/merging_glue/block"))))
                     .properties(p -> p.noOcclusion().instabreak().mapColor(MapColor.GRASS).friction(0.8F).sound(SoundType.SLIME_BLOCK))
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .register();
 
     public static final BlockEntry<RopeWinchBlock> ROPE_WINCH =
             REGISTRATE.block("rope_winch", RopeWinchBlock::new)
                     .tag(AllTags.AllBlockTags.NON_MOVABLE.tag)
                     .initialProperties(SharedProperties::stone)
-                    .addLayer(() -> RenderType::cutoutMipped)
-                    .blockstate(SimBlockStateGen::directionalKineticAxisBlockstate)
                     .properties(Block.Properties::noOcclusion)
                     .transform(SimStress.setImpact(4.0))
                     .tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -188,8 +179,6 @@ public class SimBlocks {
             REGISTRATE.block("rope_connector", RopeConnectorBlock::new)
                     .tag(AllTags.AllBlockTags.NON_MOVABLE.tag)
                     .initialProperties(SharedProperties::stone)
-                    .addLayer(() -> RenderType::cutoutMipped)
-                    .blockstate(SimBlockStateGen::directionalAxisBlock)
                     .properties(p -> p.noOcclusion().forceSolidOn())
                     .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_AXE, AllTags.AllBlockTags.BRITTLE.tag, SimTags.Blocks.SUPER_LIGHT)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
@@ -248,7 +237,6 @@ public class SimBlocks {
             .properties(p -> p.noOcclusion()
                     .isRedstoneConductor(SimBlocks::never)
                     .mapColor(MapColor.PODZOL))
-            .addLayer(() -> RenderType::cutoutMipped)
             .transform(axeOrPickaxe())
             .recipe((c, p) -> {
                 ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, c.get())
@@ -259,7 +247,6 @@ public class SimBlocks {
                         .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(AllBlocks.ANDESITE_CASING))
                         .save(p);
             })
-            .blockstate(DirectionalGearshiftGenerator::generate)
             .item()
             .transform(customItemModel())
             .register();
@@ -267,7 +254,6 @@ public class SimBlocks {
             REGISTRATE.block("torsion_spring", TorsionSpringBlock::new)
                     .initialProperties(SharedProperties::stone)
                     .properties(BlockBehaviour.Properties::noOcclusion)
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .blockstate((c, p) -> p.directionalBlock(c.get(),
                             blockState -> p.models().getExistingFile(p.modLoc("block/torsion_spring/block"))))
                     .tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -288,7 +274,6 @@ public class SimBlocks {
     public static final BlockEntry<AugerShaftBlock> AUGER_SHAFT =
             REGISTRATE.block("auger_shaft", AugerShaftBlock::new)
                     .initialProperties(SharedProperties::softMetal)
-                    .blockstate(SimBlockStateService.INSTANCE.augerShaftGenerate("auger_shaft", false))
                     .transform(pickaxeOnly())
                     .transform(SimStress.setImpact(0.5))
                     .recipe((c, p) -> {
@@ -307,14 +292,12 @@ public class SimBlocks {
                     })
                     .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
                     .properties(BlockBehaviour.Properties::noOcclusion)
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .transform(DisplaySource.displaySource(SimDisplaySources.AUGER_DISPLAY))
                     .item().transform(customItemModel())
                     .register();
     public static final BlockEntry<AugerCogBlock> AUGER_COG =
             REGISTRATE.block("auger_cog", AugerCogBlock::new)
                     .initialProperties(SharedProperties::softMetal)
-                    .blockstate(SimBlockStateService.INSTANCE.augerShaftGenerate("auger_cog", true))
                     .lang("Auger Cogwheel")
                     .transform(pickaxeOnly())
                     .transform(SimStress.setImpact(0.5))
@@ -325,7 +308,6 @@ public class SimBlocks {
                             .save(p, Simulated.path(c.getName() + "_from_auger_shaft")))
                     .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
                     .properties(BlockBehaviour.Properties::noOcclusion)
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .transform(DisplaySource.displaySource(SimDisplaySources.AUGER_DISPLAY))
                     .item().transform(customItemModel())
                     .register();
@@ -375,7 +357,6 @@ public class SimBlocks {
                 .initialProperties(SharedProperties::stone)
                 .properties(p -> p.sound(SoundType.NETHERITE_BLOCK).lightLevel((state) -> PortableEngineBlock.isLitState(state) ? 6 : 0))
                 .properties(BlockBehaviour.Properties::noOcclusion)
-                .addLayer(() -> RenderType::cutoutMipped)
                 .blockstate((c, p) -> p.horizontalBlock(c.get(), blockState -> p.models()
                         .withExistingParent(colorName + "_portable_engine", p.modLoc("block/portable_engine/block"))
                                 .texture("0", p.modLoc("block/portable_engine/" + colorName))
@@ -390,9 +371,7 @@ public class SimBlocks {
     public static final BlockEntry<LaserPointerBlock> LASER_POINTER =
             REGISTRATE.block("laser_pointer", LaserPointerBlock::new)
                     .initialProperties(SharedProperties::softMetal)
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
-                    .blockstate(SimBlockStateGen::facingPoweredAxisBlockstate)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                             .pattern("A")
                             .pattern("T")
@@ -412,7 +391,6 @@ public class SimBlocks {
                     .transform(DisplaySource.displaySource(SimDisplaySources.LASER_SENSOR_DISPLAY))
                     .initialProperties(SharedProperties::wooden)
                     .properties(BlockBehaviour.Properties::noOcclusion)
-                    .blockstate((c, p) -> SimBlockStateService.INSTANCE.genericModelBuilder(c, p, SimBlockStateGen::xyLaser, (state) -> AssetLookup.forPowered(c, p).apply(state)))
                     .tag(BlockTags.MINEABLE_WITH_PICKAXE)
                     .tag(BlockTags.MINEABLE_WITH_AXE)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
@@ -433,7 +411,6 @@ public class SimBlocks {
                     .initialProperties(SharedProperties::wooden)
                     .transform(axeOrPickaxe())
                     .properties(BlockBehaviour.Properties::noOcclusion)
-                    .blockstate(SimBlockStateGen::directionalAxisBlock)
                     .transform(DisplaySource.displaySource(SimDisplaySources.VELO_DISPLAY))
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
@@ -446,14 +423,12 @@ public class SimBlocks {
                             .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(AllBlocks.ANDESITE_CASING))
                             .save(p))
                     .item().transform(customItemModel())
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .register();
 
     public static final BlockEntry<AltitudeSensorBlock> ALTITUDE_SENSOR =
             REGISTRATE.block("altitude_sensor", AltitudeSensorBlock::new)
                     .initialProperties(SharedProperties::wooden)
                     .transform(axeOrPickaxe())
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .properties(BlockBehaviour.Properties::noOcclusion)
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                     .blockstate((c, p) -> SimBlockStateService.INSTANCE.genericModelBuilder(c, p,
@@ -476,7 +451,6 @@ public class SimBlocks {
 
     public static final BlockEntry<GimbalSensorBlock> GIMBAL_SENSOR =
             REGISTRATE.block("gimbal_sensor", GimbalSensorBlock::new)
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .properties(BlockBehaviour.Properties::noOcclusion)
                     .initialProperties(SharedProperties::softMetal)
                     .properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
@@ -503,7 +477,6 @@ public class SimBlocks {
             REGISTRATE.block("navigation_table", NavTableBlock::new)
                     .initialProperties(SharedProperties::wooden)
                     .transform(axeOrPickaxe())
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .properties(BlockBehaviour.Properties::noOcclusion)
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                     .blockstate((c, p) -> p.directionalBlock(c.get(), blockState -> p.models()
@@ -526,7 +499,6 @@ public class SimBlocks {
                     .initialProperties(SharedProperties::softMetal)
                     .transform(DisplaySource.displaySource(SimDisplaySources.OPTICAL_SENSOR_DISPLAY))
                     .properties(BlockBehaviour.Properties::noOcclusion)
-                    .blockstate((c, p) -> SimBlockStateService.INSTANCE.genericModelBuilder(c, p, SimBlockStateGen::xyLaser, (state) -> AssetLookup.forPowered(c, p).apply(state)))
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                     .tag(BlockTags.MINEABLE_WITH_PICKAXE)
                     .tag(BlockTags.MINEABLE_WITH_AXE)
@@ -552,11 +524,9 @@ public class SimBlocks {
                             .isRedstoneConductor(SimBlocks::never)
                             .forceSolidOn()
                     )
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .transform(DisplaySource.displaySource(SimDisplaySources.DOCKING_CONNECTOR_DISPLAY))
                     .properties(BlockBehaviour.Properties::noOcclusion)
                     .properties(BlockBehaviour.Properties::dynamicShape)
-                    .blockstate(SimBlockStateGen::facingPoweredAxisBlockstate)
                     .item()
                     .transform(customItemModel())
                     .register();
@@ -580,7 +550,6 @@ public class SimBlocks {
                     .initialProperties(SharedProperties::stone)
                     .properties((p) -> p.noOcclusion()
                             .isRedstoneConductor(SimBlocks::never))
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .blockstate((c, p) -> BlockStateGen.axisBlock(c, p, s -> {
                         String suffix = s.getValue(AnalogTransmissionBlock.POWERED) ? "_on" : "";
                         Identifier path = Simulated.path("block/" + c.getName() + "/block" + suffix);
@@ -603,7 +572,6 @@ public class SimBlocks {
             REGISTRATE.block("steering_wheel", SteeringWheelBlock::new)
                     .initialProperties(SharedProperties::wooden)
                     .properties(p -> p.mapColor(MapColor.PODZOL))
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .transform(axeOrPickaxe())
                     .blockstate(new SteeringWheelGenerator()::generate)
                     .onRegister(ItemUseOverrides::addBlock)
@@ -630,7 +598,6 @@ public class SimBlocks {
                     .transform(axeOrPickaxe())
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                     .blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                             .pattern("S")
                             .pattern("B")
@@ -654,18 +621,15 @@ public class SimBlocks {
                     .transform(axeOrPickaxe())
                     .item(LinkedTypewriterItem::new)
                     .transform(customItemModel())
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .register();
 
     public static final BlockEntry<DirectionalLinkedReceiverBlock> DIRECTIONAL_LINKED_RECEIVER =
             REGISTRATE.block("directional_linked_receiver", DirectionalLinkedReceiverBlock::new)
                     .initialProperties(SharedProperties::stone)
                     .properties(p -> p.noOcclusion().forceSolidOn())
-                    .blockstate(SimBlockStateGen::facingPoweredAxisBlockstate)
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag, AllTags.AllBlockTags.BRITTLE.tag, SimTags.Blocks.SUPER_LIGHT, SimTags.Blocks.QUARTER_VOLUME)
                     .transform(axeOrPickaxe())
                     .item().transform(customItemModel())
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                             .pattern("A")
                             .pattern("B")
@@ -681,11 +645,9 @@ public class SimBlocks {
             REGISTRATE.block("modulating_linked_receiver", ModulatingLinkedReceiverBlock::new)
                     .initialProperties(SharedProperties::stone)
                     .properties(p -> p.noOcclusion().forceSolidOn())
-                    .blockstate(SimBlockStateGen::facingPoweredAxisBlockstate)
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag, AllTags.AllBlockTags.BRITTLE.tag, SimTags.Blocks.SUPER_LIGHT, SimTags.Blocks.QUARTER_VOLUME)
                     .transform(axeOrPickaxe())
                     .item().transform(customItemModel())
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                             .pattern("A")
                             .pattern("B")
@@ -717,13 +679,11 @@ public class SimBlocks {
                             .save(p))
                     .item()
                     .transform(customItemModel())
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .register();
 
     public static final BlockEntry<RedstoneInductorBlock> REDSTONE_INDUCTOR =
             REGISTRATE.block("redstone_inductor", RedstoneInductorBlock::new)
                     .initialProperties(() -> Blocks.REPEATER)
-                    .blockstate(SimBlockStateGen::redstoneInductorBlockstate)
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag, SimTags.Blocks.DIODE)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                             .pattern(" C ")
@@ -738,7 +698,6 @@ public class SimBlocks {
                             .save(p))
                     .item()
                     .transform(customItemModel())
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .register();
 
 /*    public static final BlockEntry<AbsorberBlock> ABSORBER =
@@ -758,18 +717,15 @@ public class SimBlocks {
 //                            .define('R', Items.REDSTONE)
 //                            .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(SimTags.Items.REDSTONE_DUST))
 //                            .save(p))
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .item().transform(customItemModel())
                     .register();
  */
     public static final BlockEntry<RedstoneMagnetBlock> REDSTONE_MAGNET =
             REGISTRATE.block("redstone_magnet", RedstoneMagnetBlock::new)
                     .initialProperties(SharedProperties::stone)
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .transform(pickaxeOnly())
                     .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
                     .properties(BlockBehaviour.Properties::noOcclusion)
-                    .blockstate(SimBlockStateGen::facingPoweredAxisBlockstate)
                     .item()
                     .tag(SimTags.Items.ROTATE_WITH_NAV_ARROW)
                     .transform(customItemModel())
@@ -835,7 +791,6 @@ public class SimBlocks {
                 .properties(p -> p.forceSolidOn())
                 .transform(axeOnly())
                 .tag(SimTags.Blocks.NAMEPLATE_BLOCKS)
-                .addLayer(() -> RenderType::cutoutMipped)
                 .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), state -> {
                     NameplateBlock.Position position = state.getValue(NameplateBlock.POSITION);
                     return prov.models()

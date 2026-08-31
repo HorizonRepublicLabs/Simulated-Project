@@ -56,7 +56,7 @@ public class LaserSensorBlockEntity extends SmartBlockEntity implements Clearabl
     @Override
     public void tick() {
         super.tick();
-        if (this.level == null || this.level.isClientSide) {
+        if (this.level == null || this.level.isClientSide()) {
             return;
         }
 
@@ -103,8 +103,8 @@ public class LaserSensorBlockEntity extends SmartBlockEntity implements Clearabl
     protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
         super.read(tag, registries, clientPacket);
 
-        this.currentPower = tag.getInt("CurrentPower");
-        this.updateCooldown = Math.clamp(tag.getInt("UpdateCooldown"), 0, MAX_COOLDOWN);
+        this.currentPower = tag.getIntOr("CurrentPower", 0);
+        this.updateCooldown = Math.clamp(tag.getIntOr("UpdateCooldown", 0), 0, MAX_COOLDOWN);
     }
 
     @Override

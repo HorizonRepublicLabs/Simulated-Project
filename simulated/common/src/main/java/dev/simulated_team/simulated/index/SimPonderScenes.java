@@ -3,7 +3,6 @@ package dev.simulated_team.simulated.index;
 import com.simibubi.create.AllBlocks;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import dev.simulated_team.simulated.Simulated;
-import dev.simulated_team.simulated.data.SimBlockStateGen;
 import dev.simulated_team.simulated.ponder.new_ponder_tooltip.NewPonderTooltipManager;
 import dev.simulated_team.simulated.ponder.scenes.*;
 import net.createmod.ponder.api.client.registration.PonderSceneRegistrationHelper;

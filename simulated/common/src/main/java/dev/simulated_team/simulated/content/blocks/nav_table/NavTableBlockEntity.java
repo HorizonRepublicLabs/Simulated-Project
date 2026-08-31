@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.nav_table;
 
+import net.minecraft.nbt.NbtOps;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import dev.ryanhcode.sable.Sable;
@@ -72,7 +73,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
     public void tick() {
         super.tick();
 
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             this.lerpedAngleDegrees.tickChaser();
         }
 
@@ -83,7 +84,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
         this.subLevel = Sable.HELPER.getContaining(this);
 
         // Update the Nav-Table's current target
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             this.updateTarget();
             this.updateCurrentAngle();
 
@@ -135,7 +136,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
      * @return the lerped angle
      */
     public float getClientTargetAngle(final float partialTicks) {
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             return -AngleHelper.rad(this.lerpedAngleDegrees.getValue(partialTicks));
         } else {
             return 0;
@@ -155,7 +156,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
      * Updates the current angle of this Navigation Table on the server.
      */
     private void updateCurrentAngle() {
-        if (this.level.isClientSide || this.getTargetPosition(false) == null) {
+        if (this.level.isClientSide() || this.getTargetPosition(false) == null) {
             this.relativeAngle = 0;
             return;
         }
@@ -187,15 +188,15 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
     //TODO: make this map-ified
     public int getRedstoneStrength(final Direction direction) {
         // ponder rendering logic where only the visual arrow direction is cared about
-        if (this.level.isClientSide && this.isVirtual()) {
+        if (this.level.isClientSide() && this.isVirtual()) {
             final Direction facing = this.getBlockState().getValue(NavTableBlock.FACING);
-            final Vec3i normal = facing.getNormal();
+            final Vec3i normal = facing.getUnitVec3i();
 
             final double andleRad = Math.toRadians(this.lerpedAngleDegrees.getValue());
             Vec3 targetPos = new Vec3(Math.cos(andleRad), 0, Math.sin(andleRad));
             targetPos = NavigationTarget.getPlaneProjectedPos(targetPos, normal);
 
-            final double dot = -targetPos.dot(Vec3.atLowerCornerOf(direction.getNormal()));
+            final double dot = -targetPos.dot(Vec3.atLowerCornerOf(direction.getUnitVec3i()));
             return (int) (Math.asin(dot) / Math.PI * 30 + 0.5);
         }
 
@@ -250,7 +251,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
 
     @Override
     protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        tag.put("CurrentStack", this.getHeldItem().saveOptional(registries));
+        tag.put("CurrentStack", ItemStack.OPTIONAL_CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), this.getHeldItem()).getOrThrow());
 
         if (this.currentTarget != null) {
             this.writeCurrentTarget(tag);
@@ -263,7 +264,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
 
     @Override
     protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        final ItemStack stack = ItemStack.parseOptional(registries, tag.getCompound("CurrentStack"));
+        final ItemStack stack = ItemStack.OPTIONAL_CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag.getCompoundOrEmpty("CurrentStack")).result().orElse(ItemStack.EMPTY);
         this.inventory.slot.setStack(stack);
 
         if (tag.contains("CurrentTarget")) {
@@ -273,7 +274,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
             this.isPowering = false;
         }
 
-        this.relativeAngle = tag.getFloat("RelativeAngle");
+        this.relativeAngle = tag.getFloatOr("RelativeAngle", 0.0f);
         if (clientPacket) {
             this.lerpedAngleDegrees.chase(this.relativeAngle, 0.8f, LerpedFloat.Chaser.EXP);
         }
@@ -287,12 +288,12 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
     }
 
     private Vec3 readCurrentTarget(final CompoundTag tag) {
-        final ListTag targetList = tag.getList("CurrentTarget", Tag.TAG_DOUBLE);
+        final ListTag targetList = tag.getListOrEmpty("CurrentTarget");
         return VecHelper.readNBT(targetList);
     }
 
     private boolean selectivelyUpdateNeighbors() {
-        if (this.level == null || this.level.isClientSide) {
+        if (this.level == null || this.level.isClientSide()) {
             return false;
         }
 

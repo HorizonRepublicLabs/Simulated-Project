@@ -1,11 +1,10 @@
 package dev.simulated_team.simulated.neoforge.service;
 
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import dev.simulated_team.simulated.content.blocks.auger_shaft.AugerShaftBlock;
 import dev.simulated_team.simulated.content.blocks.util.AbstractDirectionalAxisBlock;
-import dev.simulated_team.simulated.data.SimBlockStateGen;
 import dev.simulated_team.simulated.data.neoforge.AugerShaftGen;
 import dev.simulated_team.simulated.service.SimBlockStateService;
 import net.minecraft.core.Direction;

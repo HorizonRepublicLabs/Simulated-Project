@@ -1,5 +1,6 @@
 package dev.ryanhcode.offroad.content.blocks.wheel_mount;
 
+import net.minecraft.nbt.NbtOps;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockEntityItemRequirement;
@@ -246,7 +247,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
         this.lastChasingYaw = this.chasingYaw;
         this.chasingYaw = Mth.lerp(0.4, this.chasingYaw, this.computeYaw());
 
-        if (!this.level.isClientSide) return;
+        if (!this.level.isClientSide()) return;
 
         if (tire == null) {
             this.angle = 0.0;
@@ -431,7 +432,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
     }
 
     protected int getSteeringSignal() {
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             return this.clientSteeringSignal;
         }
 
@@ -465,7 +466,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
 
     @Override
     protected void write(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        tag.put("CurrentStack", this.getHeldItem().saveOptional(registries));
+        tag.put("CurrentStack", ItemStack.OPTIONAL_CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), this.getHeldItem()).getOrThrow());
 
         if (clientPacket) {
             tag.putInt("SteeringSignalStrength", this.lastServerSteeringSignal);
@@ -478,7 +479,7 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
 
     @Override
     protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        final ItemStack stack = ItemStack.parseOptional(registries, tag.getCompound("CurrentStack"));
+        final ItemStack stack = ItemStack.OPTIONAL_CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), tag.getCompoundOrEmpty("CurrentStack")).result().orElse(ItemStack.EMPTY);
 
         this.inventory.suppressUpdate = true;
         this.inventory.slot.setStack(stack);
@@ -486,9 +487,9 @@ public class WheelMountBlockEntity extends KineticBlockEntity implements BlockEn
 
         if (clientPacket) {
             if (tag.contains("SteeringSignalStrength")) {
-                this.clientSteeringSignal = tag.getInt("SteeringSignalStrength");
-                this.clientSteeringSignalLeft = tag.getInt("SteeringSignalStrengthLeft");
-                this.clientSteeringSignalRight = tag.getInt("SteeringSignalStrengthRight");
+                this.clientSteeringSignal = tag.getIntOr("SteeringSignalStrength", 0);
+                this.clientSteeringSignalLeft = tag.getIntOr("SteeringSignalStrengthLeft", 0);
+                this.clientSteeringSignalRight = tag.getIntOr("SteeringSignalStrengthRight", 0);
             }
             this.onStackChanged();
         }

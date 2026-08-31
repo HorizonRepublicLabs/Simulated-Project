@@ -106,8 +106,8 @@ public class RedstoneMagnetBlockEntity extends SmartBlockEntity implements SimMa
 
     @Override
     protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
-        this.powered = compound.getBoolean("IsPowered");
-        this.signalStrength = compound.getInt("SignalStrength");
+        this.powered = compound.getBooleanOr("IsPowered", false);
+        this.signalStrength = compound.getIntOr("SignalStrength", 0);
         super.read(compound, registries, clientPacket);
     }
 

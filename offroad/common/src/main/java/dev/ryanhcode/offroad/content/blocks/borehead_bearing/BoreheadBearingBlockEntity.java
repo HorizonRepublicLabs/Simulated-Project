@@ -139,7 +139,7 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
             this.movedContraption = null;
         }
 
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             this.visitedPositions.clear();
         }
 
@@ -150,7 +150,7 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
             return;
         }
 
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             this.updateMiningBlocks();
         }
     }
@@ -280,7 +280,7 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
         assert this.level != null;
 
         if (this.isSlowingDown()) {
-            if (this.slowdownController.stepGoal() && !this.level.isClientSide) {
+            if (this.slowdownController.stepGoal() && !this.level.isClientSide()) {
                 this.disassemble();
                 return;
             }
@@ -318,7 +318,7 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
 
     private int getRockCuttingAmount(final int minimumRockcuttingWheelAmount) {
         assert this.level != null;
-        int rockCuttingWheelAmount = this.level.isClientSide ? this.clientRockCutters : this.centerMiningPositions.size();
+        int rockCuttingWheelAmount = this.level.isClientSide() ? this.clientRockCutters : this.centerMiningPositions.size();
 
         if (minimumRockcuttingWheelAmount > 0) {
             rockCuttingWheelAmount = Math.max(rockCuttingWheelAmount, minimumRockcuttingWheelAmount);
@@ -347,7 +347,7 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
         if (this.insideMainTick && this.disassemblySlowdown) {
             float slowDownSpeed = this.slowdownController.getSpeed(1);
 
-            if (this.level.isClientSide) {
+            if (this.level.isClientSide()) {
                 slowDownSpeed *= ServerSpeedProvider.get();
                 slowDownSpeed += this.clientAngleDiff / 3f;
             }
@@ -444,7 +444,7 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
         this.setChanged();
         final BlockPos anchor = this.worldPosition.relative(blockState.getValue(BlockStateProperties.FACING));
         this.movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             this.running = true;
             this.sendData();
         }
@@ -456,12 +456,12 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
     public void initializeContraption() {
         assert this.level != null;
 
-        if (!this.level.isClientSide && this.movedContraption instanceof final BoreheadContraptionEntity bce) {
+        if (!this.level.isClientSide() && this.movedContraption instanceof final BoreheadContraptionEntity bce) {
             ((BoreheadAttachedStorage) bce.getContraption().getStorage())
                     .attachBlockEntity(this);
         }
 
-        if (!this.initialized && this.movedContraption != null && !this.level.isClientSide) {
+        if (!this.initialized && this.movedContraption != null && !this.level.isClientSide()) {
             this.resetCenterMiningInfo();
 
             final Map<BlockPos, StructureTemplate.StructureBlockInfo> blocks = this.movedContraption.getContraption().getBlocks();
@@ -593,37 +593,37 @@ public class BoreheadBearingBlockEntity extends MechanicalBearingBlockEntity imp
     @Override
     protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
         super.read(compound, registries, clientPacket);
-        this.setRotationSpeed(compound.getFloat("RotationSpeed"));
+        this.setRotationSpeed(compound.getFloatOr("RotationSpeed", 0.0f));
 
-        this.disassemblySlowdown = compound.getBoolean("DisassemblySlowdown");
+        this.disassemblySlowdown = compound.getBooleanOr("DisassemblySlowdown", false);
         if (this.disassemblySlowdown) {
             this.slowdownController.deserializeFromNBT(compound);
         }
 
-        this.initialized = compound.getBoolean("ContraptionInitialized");
-        this.setStalled(compound.getBoolean("Stalled"));
-        this.stalledRecoveryTimer = compound.getInt("StalledRecoveryTimer");
+        this.initialized = compound.getBooleanOr("ContraptionInitialized", false);
+        this.setStalled(compound.getBooleanOr("Stalled", false));
+        this.stalledRecoveryTimer = compound.getIntOr("StalledRecoveryTimer", 0);
         if (this.initialized) {
             if (clientPacket) {
-                this.clientRockCutters = compound.getInt("ClientRockCutterAmount");
+                this.clientRockCutters = compound.getIntOr("ClientRockCutterAmount", 0);
             } else {
-                for (int i = 0; i < compound.getInt("OriginPositionSize"); i++) {
+                for (int i = 0; i < compound.getIntOr("OriginPositionSize", 0); i++) {
                     this.centerMiningPositions.add(new Vector3d()); //populate the correct number of entries
                 }
 
                 final ListTag originTagList = compound.getList("OriginPositions", CompoundTag.TAG_COMPOUND);
                 for (final Tag tag : originTagList) {
                     final CompoundTag originCompoundTag = (CompoundTag) tag;
-                    final int indexPos = originCompoundTag.getInt("indexPosition");
+                    final int indexPos = originCompoundTag.getIntOr("indexPosition", 0);
                     final Vector3d originPos = this.centerMiningPositions.get(indexPos);
                     originPos.set(
-                            originCompoundTag.getDouble("x"),
-                            originCompoundTag.getDouble("y"),
-                            originCompoundTag.getDouble("z")
+                            originCompoundTag.getDoubleOr("x", 0.0),
+                            originCompoundTag.getDoubleOr("y", 0.0),
+                            originCompoundTag.getDoubleOr("z", 0.0)
                     );
                 }
 
-                this.nextAvailableIndex = compound.getInt("NextAvailableIndex");
+                this.nextAvailableIndex = compound.getIntOr("NextAvailableIndex", 0);
             }
         }
     }

@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.simibubi.create.foundation.render.RenderTypes;
 import dev.simulated_team.simulated.Simulated;
 import foundry.veil.api.client.render.VeilRenderBridge;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;

@@ -131,7 +131,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
     }
 
     private void onDirectionChanged() {
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             this.updateGeneratedRotation();
         }
     }
@@ -156,7 +156,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
         final boolean isLit = this.burnTime > 0;
 
         //Update visualSpeed and play sounds
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             final float targetSpeed = this.isVirtual() ? this.speed : this.getGeneratedSpeed();
             this.visualSpeed.updateChaseTarget(targetSpeed);
             this.visualSpeed.tickChaser();
@@ -267,7 +267,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
 
             final Direction direction = this.getBlockState()
                     .getValue(BlockStateProperties.HORIZONTAL_FACING);
-            final Vec3i N = direction.getNormal();
+            final Vec3i N = direction.getUnitVec3i();
             final Vec3 N2 = new Vec3(N.getX(), N.getY(), N.getZ());
             pos = pos.add(-N.getX() * 0.53, -0.1, -N.getZ() * 0.53);
             final Vec3 speed = VecHelper.offsetRandomly(Vec3.ZERO, RandomSource.create(), 0.01f).add(N2.scale(-0.03));
@@ -355,7 +355,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
         Vec3 hatchPos = VecHelper.getCenterOf(this.worldPosition);
 
         final Direction direction = this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-        final Vec3i facingDirI = direction.getNormal();
+        final Vec3i facingDirI = direction.getUnitVec3i();
         final Vec3 facingDir = new Vec3(facingDirI.getX(), facingDirI.getY(), facingDirI.getZ());
         final Vec3 rightDir = facingDir.yRot((float) (Math.PI / 2.0));
 
@@ -414,13 +414,13 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
 
     protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
         super.read(compound, registries, clientPacket);
-        this.superHeated = compound.getBoolean("SuperHeated");
+        this.superHeated = compound.getBooleanOr("SuperHeated", false);
 
-        this.inventory.read(registries, compound.getCompound("Inventory"));
+        this.inventory.read(registries, compound.getCompoundOrEmpty("Inventory"));
 
-        this.burnTime = compound.getInt("BurnTime");
-        this.generatedSpeed = compound.getFloat("GeneratedSpeed");
-        this.eatingCake = compound.getBoolean("EatingCake");
+        this.burnTime = compound.getIntOr("BurnTime", 0);
+        this.generatedSpeed = compound.getFloatOr("GeneratedSpeed", 0.0f);
+        this.eatingCake = compound.getBooleanOr("EatingCake", false);
 
         if (clientPacket || this.isVirtual()) {
             this.visualSpeed.chase(this.getGeneratedSpeed(), 1 / 8f, LerpedFloat.Chaser.EXP);

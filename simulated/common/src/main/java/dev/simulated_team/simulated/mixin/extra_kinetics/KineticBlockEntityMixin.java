@@ -177,7 +177,7 @@ public abstract class KineticBlockEntityMixin extends SmartBlockEntity implement
         }
 
         if (compound.contains("ConnectedToExtraKinetics")) {
-            this.simulated$extraKineticsConnected = compound.getBoolean("ConnectedToExtraKinetics");
+            this.simulated$extraKineticsConnected = compound.getBooleanOr("ConnectedToExtraKinetics", false);
         }
     }
 

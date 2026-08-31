@@ -111,7 +111,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
         final Level level = this.level();
 
 
-        if (!level.isClientSide && !this.addedToPlungerHandler) {
+        if (!level.isClientSide() && !this.addedToPlungerHandler) {
             LaunchedPlungerServerHandler.addLaunchedPlunger(level, this);
             this.addedToPlungerHandler = true;
         }
@@ -126,7 +126,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
         }
 
         final LaunchedPlungerEntity other = this.getOther();
-        if (!level.isClientSide && other != null) {
+        if (!level.isClientSide() && other != null) {
             this.setData(TARGET_POS, other.position());
             final double distance = Math.sqrt(Sable.HELPER.distanceSquaredWithSubLevels(level, this.position(), other.position()));
             if (distance > SimConfigService.INSTANCE.server().equipment.maxPlungerLauncherRange.get()) {
@@ -134,7 +134,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
             }
         } else {
             this.setData(TARGET_POS, Vec3.ZERO);
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 if (this.getEntityData().get(OTHER_PLUNGER).isPresent() || (this.getEntityData().get(OTHER_PLUNGER).isEmpty() && owner instanceof final Player player && !player.isHolding(SimItems.PLUNGER_LAUNCHER.get()))) {
                     this.discard();
                 } else if (this.getEntityData().get(OTHER_PLUNGER).isEmpty() && owner instanceof final Player player && player.isHolding(SimItems.PLUNGER_LAUNCHER.get())) {
@@ -171,7 +171,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
             }
         }
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             this.tickSmoothing();
         }
     }
@@ -352,7 +352,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
     public void remove(final RemovalReason removalReason) {
         this.removeConstraint();
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             this.playSound(SimSoundEvents.PLUNGER_RELEASE.event(), 1.0f, 0.9f + 0.2f * this.level().random.nextFloat());
             LaunchedPlungerServerHandler.removeLaunchedPlunger(this.level(), this);
         }
@@ -382,13 +382,13 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
 
     @Override
     protected void readAdditionalSaveData(final CompoundTag compoundTag) {
-        this.setData(IS_PLUNGED, compoundTag.getBoolean("IsPlunged"));
+        this.setData(IS_PLUNGED, compoundTag.getBooleanOr("IsPlunged", false));
 
         this.setData(PLUNGED_DIRECTION, NBTHelper.readEnum(compoundTag, "PlungedDir", Direction.class));
         this.setData(PLUNGED_BLOCK_POS, NbtUtils.readBlockPos(compoundTag, "PlungedBlockPos").get());
         this.setData(TARGET_POS, VecHelper.readNBT((ListTag) compoundTag.get("TargetPos")));
 
-        this.setData(IS_FIRST, compoundTag.getBoolean("IsFirst"));
+        this.setData(IS_FIRST, compoundTag.getBooleanOr("IsFirst", false));
 
         if (compoundTag.contains("OtherPlunger")) {
             this.setData(OTHER_PLUNGER, Optional.of(compoundTag.getUUID("OtherPlunger")));
@@ -445,7 +445,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
             return this.cachedOtherPlunger;
         }
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             final Optional<UUID> otherID = this.getData(OTHER_PLUNGER);
             if (otherID.isPresent()) {
                 final Entity entity = ((ServerLevel) this.level()).getEntity(otherID.get());

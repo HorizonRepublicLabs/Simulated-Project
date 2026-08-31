@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.particle;
 
+import net.minecraft.client.particle.ParticleResources.SpriteParticleRegistration;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -38,7 +39,7 @@ public class MagnetFieldParticleData implements ParticleOptions, ICustomParticle
         return CODEC;
     }
 
-    public ParticleEngine.SpriteParticleRegistration<MagnetFieldParticleData> getMetaFactory() {
+    public SpriteParticleRegistration<MagnetFieldParticleData> getMetaFactory() {
         return MagnetFieldParticle.Factory::new;
     }
 

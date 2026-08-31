@@ -42,7 +42,6 @@ public class AeroRenderTypes extends RenderType {
                                     .setTextureState(RenderStateShard.BLOCK_SHEET)
                                     .setLightmapState(LightmapStateShard.LIGHTMAP)
                     )
-                    .addLayer(VeilRenderBridge.patchState(4))
                     .create(false)
     );
 
@@ -61,7 +60,6 @@ public class AeroRenderTypes extends RenderType {
                                     .setTextureState(RenderStateShard.BLOCK_SHEET)
                                     .setLightmapState(LightmapStateShard.LIGHTMAP)
                     )
-                    .addLayer(VeilRenderBridge.patchState(4))
                     .create(false)
     );
 

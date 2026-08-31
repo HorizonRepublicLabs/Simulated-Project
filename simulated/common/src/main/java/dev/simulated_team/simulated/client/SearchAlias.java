@@ -67,7 +67,7 @@ public record SearchAlias(List<String> terms, List<ExtraCodecs.TagOrElementLocat
                     }
                 });
             } else {
-                Item item = BuiltInRegistries.ITEM.get(result.id());
+                Item item = BuiltInRegistries.ITEM.getValue(result.id());
                 list.add(item.getDefaultInstance());
             }
         }

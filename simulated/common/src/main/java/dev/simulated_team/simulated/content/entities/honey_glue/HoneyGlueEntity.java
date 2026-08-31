@@ -67,7 +67,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
         this.yo = this.getY();
         this.zo = this.getZ();
 
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             this.updateClientBounds();
         } else {
             if (this.getBoundingBox().getXsize() <0.9f || this.getBoundingBox().getYsize() <0.9f || this.getBoundingBox().getZsize() < 0.9f) {
@@ -177,15 +177,15 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
 
     @Override
     public void readAdditionalSaveData(final @NotNull CompoundTag compound) {
-        final Vec3 pos = VecHelper.readNBT(compound.getList("Pos", Tag.TAG_DOUBLE)); // we need to grab this from the NBT due to schematics
+        final Vec3 pos = VecHelper.readNBT(compound.getListOrEmpty("Pos")); // we need to grab this from the NBT due to schematics
 
-        final Vec3 from = VecHelper.readNBT(compound.getList("From", Tag.TAG_DOUBLE));
-        final Vec3 to = VecHelper.readNBT(compound.getList("To", Tag.TAG_DOUBLE));
+        final Vec3 from = VecHelper.readNBT(compound.getListOrEmpty("From"));
+        final Vec3 to = VecHelper.readNBT(compound.getListOrEmpty("To"));
         final AABB bb = new AABB(from, to).move(pos);
 
         final Level level = this.level();
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             this.setBounds(bb);
         } else {
             this.setBoundsAndSync(bb);
@@ -204,7 +204,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
     public void setBoundsAndSync(final AABB bounds) {
         final Level level = this.level();
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
 
@@ -215,7 +215,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
     public void setBoundsAndSync(final AABB bounds, @Nullable final Player player) {
         final Level level = this.level();
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
 
@@ -237,7 +237,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
 
     @Override
     public void move(final MoverType typeIn, final Vec3 pos) {
-        if (!this.level().isClientSide && this.isAlive() && pos.lengthSqr() > 0.0D) {
+        if (!this.level().isClientSide() && this.isAlive() && pos.lengthSqr() > 0.0D) {
             this.discard();
         }
     }

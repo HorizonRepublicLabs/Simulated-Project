@@ -5,7 +5,6 @@ import com.simibubi.create.content.equipment.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import dev.ryanhcode.sable.Sable;
-import dev.simulated_team.simulated.SimulatedClient;
 import dev.simulated_team.simulated.content.entities.launched_plunger.LaunchedPlungerEntity;
 import dev.simulated_team.simulated.content.entities.launched_plunger.LaunchedPlungerServerHandler;
 import dev.simulated_team.simulated.data.SimLang;
@@ -24,12 +23,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -54,7 +52,7 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand interactionHand) {
+    public InteractionResult use(final Level level, final Player player, final InteractionHand interactionHand) {
         final ItemStack heldStack = player.getItemInHand(interactionHand);
         if (SimEntityService.INSTANCE.isFake(player)) {
             return InteractionResultHolder.fail(heldStack);
@@ -64,7 +62,7 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
             return InteractionResultHolder.fail(heldStack);
         }
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (player.isShiftKeyDown()) {
                 LaunchedPlungerServerHandler.removePlayerPlungers(player);
                 player.displayClientMessage(SimLang.translate("plunger_launcher.clear_plungers").color(0xaaaaaa).component(),true);
@@ -111,7 +109,8 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
             if (!BacktankUtil.canAbsorbDamage(player, maxUses()))
                 heldStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(interactionHand));
         } else {
-            SimulatedClient.PLUNGER_LAUNCHER_RENDER_HANDLER.dontAnimateItem(interactionHand);
+            // The first-person animation belongs to the client render layer,
+            // which is not part of the 26.2 port yet.
         }
 
         return InteractionResultHolder.success(heldStack);
@@ -163,8 +162,8 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
     }
 
     @Override
-    public UseAnim getUseAnimation(final ItemStack stack) {
-        return UseAnim.NONE;
+    public ItemUseAnimation getUseAnimation(final ItemStack stack) {
+        return ItemUseAnimation.NONE;
     }
 
     @Override

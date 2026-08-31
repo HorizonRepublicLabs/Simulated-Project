@@ -52,7 +52,7 @@ public class AbsorberBlock extends HorizontalDirectionalBlock implements IBE<Abs
 
     @Override
     protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block block, final BlockPos fromPos, final boolean isMoving) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             final boolean flag = state.getValue(POWERED);
             if (flag != level.hasNeighborSignal(pos)) {
                 level.setBlock(pos, state.cycle(POWERED), 2);

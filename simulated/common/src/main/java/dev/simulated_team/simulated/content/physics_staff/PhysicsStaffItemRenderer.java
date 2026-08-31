@@ -37,7 +37,7 @@ public class PhysicsStaffItemRenderer extends CustomRenderedItemModelRenderer {
 
     public static Vec3 getFirstPersonFocusPos(final float pt) {
         final GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-        final Camera camera = gameRenderer.getMainCamera();
+        final Camera camera = gameRenderer.mainCamera();
 
         final Vector3d focusPoint = new Vector3d(PhysicsStaffItemRenderer.focusPos);
         final Quaternionf orientation = camera.rotation();
@@ -97,7 +97,7 @@ public class PhysicsStaffItemRenderer extends CustomRenderedItemModelRenderer {
             if (clientHandler.getDragSession() != null) {
                 final PhysicsStaffClientHandler.ClientDragSession dragSession = clientHandler.getDragSession();
 
-                final Quaternionf rotation = minecraft.gameRenderer.getMainCamera().rotation();
+                final Quaternionf rotation = minecraft.gameRenderer.mainCamera().rotation();
                 final Vector3d globalAnchor = ((ClientSubLevel) dragSession.dragSubLevel()).renderPose().transformPosition(new Vector3d(dragSession.dragLocalAnchor()));
                 final Vector3d dirToAnchor = globalAnchor.sub(JOMLConversion.toJOML(player.getEyePosition(partialTicks))).normalize();
                 rotation.transformInverse(dirToAnchor);

@@ -91,7 +91,7 @@ public class RockCuttingWheelActor implements MovementBehaviour {
 
     @Override
     public void tick(final MovementContext context) {
-        if (context.world.isClientSide && context.temporaryData == null) {
+        if (context.world.isClientSide() && context.temporaryData == null) {
             context.temporaryData = LerpedFloat.angular();
         }
 
@@ -99,7 +99,7 @@ public class RockCuttingWheelActor implements MovementBehaviour {
         final BlockEntity be = context.world.getBlockEntity(controllerPos);
         if (be instanceof final BoreheadBearingBlockEntity bhbe) {
             final boolean meetsSpeed = Math.abs(bhbe.getSpeed()) > 0.1;
-            if (!context.world.isClientSide) {
+            if (!context.world.isClientSide()) {
                 //apparently context.data.contraption.entity does not exist when we start moving...
                 if (!context.data.contains("Initialized")) {
                     final int newIndex = bhbe.requestNewIndexAndIncrement(context);
@@ -121,7 +121,7 @@ public class RockCuttingWheelActor implements MovementBehaviour {
                     final Vec3 contraptionProjectedPos = context.contraption.entity.toGlobalVector(centerPos, 1);
                     final Vec3 sublevelProjected = Sable.HELPER.projectOutOfSubLevel(context.world, contraptionProjectedPos);
 
-                    bhbe.updatePosition(context.data.getInt("Index"), sublevelProjected);
+                    bhbe.updatePosition(context.data.getIntOr("Index", 0), sublevelProjected);
                 }
             } else {
                 final LerpedFloat lerpingObject = (LerpedFloat) context.temporaryData;

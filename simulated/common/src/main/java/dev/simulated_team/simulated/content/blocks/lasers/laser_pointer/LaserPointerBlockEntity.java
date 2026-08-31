@@ -66,7 +66,7 @@ public class LaserPointerBlockEntity extends AbstractLaserBlockEntity implements
             return;
         }
 
-        if (!this.level.isClientSide || this.isVirtual()) {
+        if (!this.level.isClientSide() || this.isVirtual()) {
             final int currentPower = this.level.getBestNeighborSignal(this.worldPosition);
             if (currentPower != this.bestPower) {
                 this.bestPower = currentPower;
@@ -100,9 +100,9 @@ public class LaserPointerBlockEntity extends AbstractLaserBlockEntity implements
 
     @Override
     protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
-        this.laserColor = tag.contains("LaserColor", Tag.TAG_ANY_NUMERIC) ? tag.getInt("LaserColor") : SimColors.MEDIA_OURPLE;
-        this.bestPower = tag.getInt("BestPower");
-        this.rainbow = tag.getBoolean("Rainbow");
+        this.laserColor = tag.contains("LaserColor") ? tag.getIntOr("LaserColor", 0) : SimColors.MEDIA_OURPLE;
+        this.bestPower = tag.getIntOr("BestPower", 0);
+        this.rainbow = tag.getBooleanOr("Rainbow", false);
 
         this.currentHitPos = this.readHitPos(tag);
         super.read(tag, registries, clientPacket);
@@ -126,7 +126,7 @@ public class LaserPointerBlockEntity extends AbstractLaserBlockEntity implements
         Vec3 currentHit = Vec3.ZERO;
 
         if (tag.contains("HitPos")) {
-            currentHit = VecHelper.readNBT(tag.getList("HitPos", Tag.TAG_COMPOUND));
+            currentHit = VecHelper.readNBT(tag.getListOrEmpty("HitPos"));
         }
 
         return currentHit;
@@ -178,8 +178,8 @@ public class LaserPointerBlockEntity extends AbstractLaserBlockEntity implements
         if(simulate) {
             return true;
         }
-        this.setLaserColor(tag.getInt("Color"));
-        this.setRainbow(tag.getBoolean("Rainbow"));
+        this.setLaserColor(tag.getIntOr("Color", 0));
+        this.setRainbow(tag.getBooleanOr("Rainbow", false));
         return true;
     }
 
@@ -190,7 +190,7 @@ public class LaserPointerBlockEntity extends AbstractLaserBlockEntity implements
     public void setRainbow(final boolean rainbow) {
         this.rainbow = rainbow;
 
-        if (!this.getLevel().isClientSide) {
+        if (!this.getLevel().isClientSide()) {
             this.notifyUpdate();
         }
     }

@@ -107,7 +107,7 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
         final SubLevel subLevel = Sable.HELPER.getContaining(this);
         final Pose3dc pose = subLevel != null ? subLevel.logicalPose() : IDENTITY_POSE;
 
-        if (this.level.isClientSide)
+        if (this.level.isClientSide())
             this.animateClientRotation(subLevel, pose);
         if (subLevel == null)
             return;
@@ -333,18 +333,18 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
             }
         }
         if (!clientPacket) {
-            float x = tag.getFloat("Angle1");
-            float y = tag.getFloat("Angle2");
-            float z = tag.getFloat("Angle3");
+            float x = tag.getFloatOr("Angle1", 0.0f);
+            float y = tag.getFloatOr("Angle2", 0.0f);
+            float z = tag.getFloatOr("Angle3", 0.0f);
             this.eulerAngles = new Vector3d(x, y, z);
-            x = tag.getFloat("Vel1");
-            y = tag.getFloat("Vel2");
-            z = tag.getFloat("Vel3");
+            x = tag.getFloatOr("Vel1", 0.0f);
+            y = tag.getFloatOr("Vel2", 0.0f);
+            z = tag.getFloatOr("Vel3", 0.0f);
             this.angleVelocities = new Vector3d(x, y, z);
         }
 
-        this.XAngle = tag.getDouble("x_angle");
-        this.ZAngle = tag.getDouble("z_angle");
+        this.XAngle = tag.getDoubleOr("x_angle", 0.0);
+        this.ZAngle = tag.getDoubleOr("z_angle", 0.0);
     }
 
     public static class GimbalSensorScrollValueBehaviour extends ScrollValueBehaviour {
@@ -411,8 +411,8 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
 
         @Override
         public void read(final CompoundTag nbt, final HolderLookup.Provider registries, final boolean clientPacket) {
-            this.primaryValue = nbt.getInt("ScrollValue1");
-            this.secondaryValue = nbt.getInt("ScrollValue2");
+            this.primaryValue = nbt.getIntOr("ScrollValue1", 0);
+            this.secondaryValue = nbt.getIntOr("ScrollValue2", 0);
             super.read(nbt, registries, clientPacket);
         }
 
@@ -430,8 +430,8 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
             if(!acceptsValueSettings()) return false;
             if(!tag.contains("ScrollValue1") || !tag.contains("ScrollValue2")) return true;
             if(simulate) return true;
-            this.primaryValue = tag.getInt("ScrollValue1");
-            this.secondaryValue = tag.getInt("ScrollValue2");
+            this.primaryValue = tag.getIntOr("ScrollValue1", 0);
+            this.secondaryValue = tag.getIntOr("ScrollValue2", 0);
             blockEntity.setChanged();
             blockEntity.sendData();
             return true;

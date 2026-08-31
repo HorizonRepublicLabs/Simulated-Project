@@ -9,7 +9,6 @@ import dev.simulated_team.simulated.util.hold_interaction.BlockHoldInteraction;
 import dev.simulated_team.simulated.util.hold_interaction.HoldInteractionManager;
 import foundry.veil.api.network.VeilPacketManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -39,7 +38,7 @@ public class SteeringWheelHandler extends BlockHoldInteraction {
 
 
     @Override
-    public void renderOverlay(final GuiGraphics guiGraphics, final int width1, final int height1, final boolean hideGui) {
+    public void renderOverlay(final int width1, final int height1, final boolean hideGui) {
         final Minecraft mc = Minecraft.getInstance();
         if (hideGui) {
             return;

@@ -51,7 +51,7 @@ public class MergingGlueRenderer extends SmartBlockEntityRenderer<MergingGlueBlo
         final BlockState state = be.getBlockState();
         final Direction facing = state.getValue(SpringBlock.FACING);
         final Direction otherFacing = other.getBlockState().getValue(SpringBlock.FACING);
-        final Vector3dc normalA = JOMLConversion.atLowerCornerOf(facing.getNormal());
+        final Vector3dc normalA = JOMLConversion.atLowerCornerOf(facing.getUnitVec3i());
         final Vector3d normalB = JOMLConversion.atLowerCornerOf(otherFacing.getNormal());
 
         final VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(Simulated.path("textures/block/merging_glue/strand.png")));

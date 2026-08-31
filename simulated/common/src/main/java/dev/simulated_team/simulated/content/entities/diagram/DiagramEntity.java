@@ -208,18 +208,18 @@ public class DiagramEntity extends HangingEntity implements ISyncPersistentData,
 
     @Override
     public void readAdditionalSaveData(final CompoundTag tag) {
-        if (tag.contains("Facing", Tag.TAG_ANY_NUMERIC)) {
-            this.direction = Direction.from3DDataValue(tag.getByte("Facing"));
-            this.verticalOrientation = Direction.from3DDataValue(tag.getByte("Orientation"));
-            this.size = tag.getInt("Size");
+        if (tag.contains("Facing")) {
+            this.direction = Direction.from3DDataValue(tag.getByteOr("Facing", (byte) 0));
+            this.verticalOrientation = Direction.from3DDataValue(tag.getByteOr("Orientation", (byte) 0));
+            this.size = tag.getIntOr("Size", 0);
         } else {
             this.direction = Direction.SOUTH;
             this.verticalOrientation = Direction.DOWN;
             this.size = 1;
         }
 
-        if (tag.contains("Config", Tag.TAG_COMPOUND)) {
-            final CompoundTag configTag = tag.getCompound("Config");
+        if (tag.contains("Config")) {
+            final CompoundTag configTag = tag.getCompoundOrEmpty("Config");
             this.config = DiagramConfig.CODEC.parse(NbtOps.INSTANCE, configTag).getOrThrow();
         } else {
             this.config = DiagramConfig.makeDefault(this);
@@ -258,7 +258,7 @@ public class DiagramEntity extends HangingEntity implements ISyncPersistentData,
     protected AABB calculateBoundingBox(final BlockPos blockPos, final Direction direction) {
         Vec3 pos = Vec3.atLowerCornerOf(this.getPos())
                 .add(.5, .5, .5)
-                .subtract(Vec3.atLowerCornerOf(direction.getNormal())
+                .subtract(Vec3.atLowerCornerOf(direction.getUnitVec3i())
                         .scale(0.46875));
         double d1 = pos.x;
         double d2 = pos.y;
@@ -415,7 +415,7 @@ public class DiagramEntity extends HangingEntity implements ISyncPersistentData,
     @Override
     public InteractionResult interactAt(final Player player, final Vec3 vec, final InteractionHand hand) {
 
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             final SubLevel subLevel = Sable.HELPER.getContaining(this);
 
             if (subLevel == null) {

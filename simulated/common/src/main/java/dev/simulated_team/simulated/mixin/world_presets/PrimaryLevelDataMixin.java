@@ -8,7 +8,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.LevelSettings;
-import net.minecraft.world.level.dimension.end.EnderDragonFight;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.presets.WorldPresets;
 import net.minecraft.world.level.storage.PrimaryLevelData;
@@ -25,8 +24,6 @@ public class PrimaryLevelDataMixin implements PrimaryLevelDataExtension {
 
 	@Unique
 	private static final String simulated$WORLD_PRESET_KEY = "simulated:world_preset";
-
-	@Shadow private EnderDragonFight.Data endDragonFightData;
 	private Identifier simulated$worldPresetKey = WorldPresets.NORMAL.location();
 
 	@Inject(method = "parse", at = @At("RETURN"), remap = false)
@@ -52,8 +49,4 @@ public class PrimaryLevelDataMixin implements PrimaryLevelDataExtension {
 		this.simulated$worldPresetKey = resourceLocation;
 	}
 
-	@Override
-	public void setEndDragonFight(final EnderDragonFight.Data endDragonFight) {
-		this.endDragonFightData = endDragonFight;
-	}
 }

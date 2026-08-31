@@ -155,7 +155,7 @@ public class MountedPotatoCannonBlockEntity extends KineticBlockEntity implement
 				animationSpeed = barrelTimer * 75;
 				//wait 2 ticks before firing to sync up visuals
 				if (this.barrelTimer > 2) {
-					if (this.level.isClientSide) {
+					if (this.level.isClientSide()) {
 						this.speed = 0.2F;
 					}
 
@@ -169,7 +169,7 @@ public class MountedPotatoCannonBlockEntity extends KineticBlockEntity implement
 							barrelPos = new Vec3(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 0.5, this.getBlockPos().getZ() + 0.5).add(this.getAimingVector().scale(this.blockedLength / 1.725f));
 						}
 
-						if (!this.level.isClientSide) {
+						if (!this.level.isClientSide()) {
 							final PotatoCannonProjectileType type = ammo.type();
 
 							//motion
@@ -306,16 +306,16 @@ public class MountedPotatoCannonBlockEntity extends KineticBlockEntity implement
 	protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
 
-		this.inventory.read(registries, compound.getCompound("inventory"));
+		this.inventory.read(registries, compound.getCompoundOrEmpty("inventory"));
 		this.inventory.updateCachedType(registries, this.inventory.slot.getStack());
-		if (clientPacket && compound.getBoolean("NeedsUpdate")) {
+		if (clientPacket && compound.getBooleanOr("NeedsUpdate", false)) {
 			this.resetAndUpdate();
 		}
 
-		this.chargeTimer = compound.getFloat("ChargeTimer");
-		this.barrelTimer = compound.getInt("BarrelTimer");
-		this.itemRotationId = compound.getInt("ItemRotationID");
-		this.itemTimer = compound.getInt("ItemTimer");
+		this.chargeTimer = compound.getFloatOr("ChargeTimer", 0.0f);
+		this.barrelTimer = compound.getIntOr("BarrelTimer", 0);
+		this.itemRotationId = compound.getIntOr("ItemRotationID", 0);
+		this.itemTimer = compound.getIntOr("ItemTimer", 0);
 		this.currentState = NBTHelper.readEnum(compound, "State", State.class);
 	}
 

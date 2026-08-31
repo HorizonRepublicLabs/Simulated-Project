@@ -82,7 +82,7 @@ public class AbsorberBlockEntity extends SmartBlockEntity {
         if(this.animationTimer.settled()) {
             this.animationTimer.updateChaseTarget(powered ? 1 : 0);
         }
-        if(this.animationTimer.settled() && !this.level.isClientSide)
+        if(this.animationTimer.settled() && !this.level.isClientSide())
         {
             if (powered) {
                 if (!this.regionActive) {
@@ -109,7 +109,7 @@ public class AbsorberBlockEntity extends SmartBlockEntity {
                     this.level.setBlock(this.getBlockPos(), this.getBlockState().cycle(AbsorberBlock.WET), 2);
             }
         }
-        if(this.level.isClientSide && this.animationTimer.getChaseTarget() < this.animationTimer.getValue() && this.getBlockState().getValue(AbsorberBlock.WET))
+        if(this.level.isClientSide() && this.animationTimer.getChaseTarget() < this.animationTimer.getValue() && this.getBlockState().getValue(AbsorberBlock.WET))
         {
             final BlockPos pos = this.getBlockPos();
             final float t = this.animationTimer.getValue();

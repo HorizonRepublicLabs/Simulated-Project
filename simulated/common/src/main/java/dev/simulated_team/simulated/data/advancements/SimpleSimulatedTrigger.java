@@ -1,7 +1,6 @@
 package dev.simulated_team.simulated.data.advancements;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +38,5 @@ public class SimpleSimulatedTrigger extends SimulatedCriterionTriggerBase<Simula
             return true;
         }
 
-        @Override
-        public void validate(@NotNull final CriterionValidator criterionValidator) {}
     }
 }

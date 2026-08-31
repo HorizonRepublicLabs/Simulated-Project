@@ -72,7 +72,7 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
 
     public static Vec3 getFirstPersonFocusPos(final float pt) {
         final GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-        final Camera camera = gameRenderer.getMainCamera();
+        final Camera camera = gameRenderer.mainCamera();
 
         final Vector3d focusPoint = new Vector3d(PlungerLauncherItemRenderer.focusPos);
         final Quaternionf orientation = camera.rotation();
@@ -105,7 +105,7 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
         Vec3 perpendicularNormal = Vec3.ZERO;
         final Direction dir = entity.getData(LaunchedPlungerEntity.PLUNGED_DIRECTION);
         if (entity.isPlunged()) {
-            selfNormal = Vec3.atLowerCornerOf(dir.getNormal());
+            selfNormal = Vec3.atLowerCornerOf(dir.getUnitVec3i());
             if (dir.getAxis().isHorizontal()) {
                 perpendicularNormal = Vec3.atLowerCornerOf(Direction.UP.getNormal());
             } else {
@@ -280,7 +280,7 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
     public static void renderRope(final List<Vec3> positions, final MultiBufferSource multiBufferSource, final BlockAndTintGetter level, final PoseStack poseStack) {
         final Vec3 first = positions.getFirst();
         final Vector3d origin = new Vector3d();
-        final Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        final Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.mainCamera().position();
 
         final RenderType renderType = SimRenderTypes.rope();
         final VertexConsumer builder = multiBufferSource.getBuffer(renderType);

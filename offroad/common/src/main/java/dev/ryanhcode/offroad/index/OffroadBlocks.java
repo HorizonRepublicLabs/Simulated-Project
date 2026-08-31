@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.actors.roller.RollerBlockItem;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.data.recipe.CommonMetal;
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.providers.generators.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import dev.ryanhcode.offroad.Offroad;
 import dev.ryanhcode.offroad.config.server.OffroadStress;
@@ -15,10 +15,8 @@ import dev.ryanhcode.offroad.content.blocks.rock_cutting_wheel.RockCuttingWheelA
 import dev.ryanhcode.offroad.content.blocks.rock_cutting_wheel.RockCuttingWheelBlock;
 import dev.ryanhcode.offroad.content.blocks.wheel_mount.WheelMountBlock;
 import dev.ryanhcode.offroad.content.components.TireLike;
-import dev.simulated_team.simulated.data.SimBlockStateGen;
 import dev.simulated_team.simulated.index.SimItems;
 import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.ItemTags;
@@ -47,7 +45,6 @@ public class OffroadBlocks {
                             .isRedstoneConductor((state, level, pos) -> false))
                     .transform(pickaxeOnly())
                     .transform(OffroadStress.setImpact(8))
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .blockstate(BlockStateGen.directionalAxisBlockProvider())
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                             .pattern("S")
@@ -72,8 +69,6 @@ public class OffroadBlocks {
                     .transform(pickaxeOnly())
                     .onRegister(movementBehaviour(new RockCuttingWheelActor()))
                     .properties(BlockBehaviour.Properties::noOcclusion)
-                    .addLayer(() -> RenderType::cutoutMipped)
-                    .blockstate(SimBlockStateGen::directionalAxisBlock)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                             .pattern("C")
                             .pattern("G")
@@ -96,7 +91,6 @@ public class OffroadBlocks {
                             .noOcclusion()
                             .isRedstoneConductor((state, level, pos) -> false))
                     .transform(axeOrPickaxe())
-                    .addLayer(() -> RenderType::cutoutMipped)
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                     .blockstate(BlockStateGen.horizontalBlockProvider(true))
                     .transform(OffroadStress.setImpact(16.0))

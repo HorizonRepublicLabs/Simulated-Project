@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.particle;
 
+import net.minecraft.client.particle.ParticleResources.SpriteParticleRegistration;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -82,7 +83,7 @@ public class AugerIndicatorParticleData implements ParticleOptions, ICustomParti
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public ParticleEngine.SpriteParticleRegistration<AugerIndicatorParticleData> getMetaFactory() {
+    public SpriteParticleRegistration<AugerIndicatorParticleData> getMetaFactory() {
         return AugerIndicatorParticle.Factory::new;
     }
 }

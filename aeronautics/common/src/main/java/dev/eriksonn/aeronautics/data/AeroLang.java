@@ -10,7 +10,7 @@ import dev.eriksonn.aeronautics.index.AeroAdvancements;
 import dev.eriksonn.aeronautics.index.AeroSoundEvents;
 import net.createmod.catnip.api.lang.Lang;
 import net.createmod.catnip.api.lang.LangBuilder;
-import net.createmod.catnip.api.lang.LangNumberFormat;
+import net.createmod.catnip.api.client.lang.LangNumberFormat;
 import net.createmod.ponder.api.client.PonderIndex;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;

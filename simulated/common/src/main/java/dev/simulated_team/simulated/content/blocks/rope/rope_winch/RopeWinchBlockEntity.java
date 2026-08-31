@@ -70,12 +70,12 @@ public class RopeWinchBlockEntity extends KineticBlockEntity implements RopeStra
         final ServerRopeStrand strand = this.ropeHolder.getOwnedStrand();
         final boolean hasRope = strand != null;
 
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             this.invalidateRenderBoundingBox();
             this.clientAngle.setValue(this.clientAngle.getValue() + this.getMovementSpeed());
         }
 
-        if (!this.level.isClientSide && hasRope && this.ropeHolder.ownsRope()) {
+        if (!this.level.isClientSide() && hasRope && this.ropeHolder.ownsRope()) {
             this.updateRopeStrandExtension(strand);
         }
 

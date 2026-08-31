@@ -13,7 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -85,7 +85,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
     public void tick() {
         super.tick();
 
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             final DyeColor color = this.getColor();
             final Direction facing = this.getBlockState().getValue(NameplateBlock.FACING);
 
@@ -98,7 +98,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
     @Override
     public void lazyTick() {
         super.lazyTick();
-        if (!this.level.isClientSide && this.controller && this.allowsEditing()
+        if (!this.level.isClientSide() && this.controller && this.allowsEditing()
                     && this.connectedSubLevel != null && !Objects.equals(this.connectedSubLevel.getName(), this.name)) {
             this.setName(this.connectedSubLevel.getName(), true, null);
         }
@@ -227,10 +227,10 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
             return -988212;
         } else {
             final double d = 0.4;
-            final int j = (int) ((double) FastColor.ARGB32.red(i) * 0.4);
-            final int k = (int) ((double) FastColor.ARGB32.green(i) * 0.4);
-            final int l = (int) ((double) FastColor.ARGB32.blue(i) * 0.4);
-            return FastColor.ARGB32.color(0, j, k, l);
+            final int j = (int) ((double) ARGB.red(i) * 0.4);
+            final int k = (int) ((double) ARGB.green(i) * 0.4);
+            final int l = (int) ((double) ARGB.blue(i) * 0.4);
+            return ARGB.color(0, j, k, l);
         }
     }
 
@@ -334,11 +334,11 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
     protected void read(final CompoundTag tag, final HolderLookup.Provider registries, final boolean clientPacket) {
         super.read(tag, registries, clientPacket);
 
-        this.textColor = DyeColor.byId(tag.getInt("TextColor"));
-        this.glowing = tag.getBoolean("Glow");
-        this.waxed = tag.getBoolean("Waxed");
+        this.textColor = DyeColor.byId(tag.getIntOr("TextColor", 0));
+        this.glowing = tag.getBooleanOr("Glow", false);
+        this.waxed = tag.getBooleanOr("Waxed", false);
         if (tag.contains("Name")) {
-            this.name = tag.getString("Name");
+            this.name = tag.getStringOr("Name", "");
         }
 
         if (tag.contains("ControllerPos")) {
@@ -347,7 +347,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
         } else {
             this.controller = true;
             this.controllerPos = this.getBlockPos();
-            this.controllerWidth = tag.getInt("Width");
+            this.controllerWidth = tag.getIntOr("Width", 0);
         }
 
         if (clientPacket) {
@@ -398,8 +398,8 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
             return true;
         }
 
-        controller.setName(tag.getString("StoredName"), true, player);
-        controller.textColor = DyeColor.byId(tag.getInt("TextColor"));
+        controller.setName(tag.getStringOr("StoredName", ""), true, player);
+        controller.textColor = DyeColor.byId(tag.getIntOr("TextColor", 0));
         this.sendData();
 
         return true;

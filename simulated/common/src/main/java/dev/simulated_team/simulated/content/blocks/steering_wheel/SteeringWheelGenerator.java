@@ -3,7 +3,7 @@ package dev.simulated_team.simulated.content.blocks.steering_wheel;
 import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchBlock;
 import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.generators.RegistrateBlockstateProvider;
 import dev.simulated_team.simulated.Simulated;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;

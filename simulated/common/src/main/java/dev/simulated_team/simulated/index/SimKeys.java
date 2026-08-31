@@ -3,7 +3,7 @@ package dev.simulated_team.simulated.index;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.AllKeys;
 import dev.simulated_team.simulated.Simulated;
-import net.createmod.catnip.client.ConflictSafeKeyMapping;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
@@ -49,7 +49,7 @@ public enum SimKeys {
 	public static void registerTo(final Consumer<KeyMapping> consumer) {
 		for (final SimKeys key : values()) {
 			if (key.conflictSafe) {
-				key.keybind = new ConflictSafeKeyMapping(key.description, key.key, Simulated.MOD_NAME);
+				key.keybind = new KeyMapping(key.description, key.key, Simulated.MOD_NAME);
 			} else {
 				key.keybind = new KeyMapping(key.description, key.key, Simulated.MOD_NAME);
 			}
