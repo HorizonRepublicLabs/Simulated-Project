@@ -29,7 +29,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -44,7 +45,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 public class SteamVentBlock extends Block implements IBE<SteamVentBlockEntity>, SimpleWaterloggedBlock, IWrenchable {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<Variant> VARIANT = EnumProperty.create("variant", Variant.class);
 
 

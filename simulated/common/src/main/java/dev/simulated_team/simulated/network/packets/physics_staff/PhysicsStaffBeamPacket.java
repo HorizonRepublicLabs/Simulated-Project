@@ -4,7 +4,6 @@ import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.SubLevelHelper;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.simulated_team.simulated.Simulated;
-import dev.simulated_team.simulated.SimulatedClient;
 import dev.simulated_team.simulated.util.SimCodecUtil;
 import foundry.veil.api.network.handler.PacketContext;
 import io.netty.buffer.ByteBuf;
@@ -41,11 +40,7 @@ public class PhysicsStaffBeamPacket implements CustomPacketPayload {
     }
 
     public void handle(final PacketContext context) {
-        final Level level = context.level();
-
-        SimulatedClient.PHYSICS_STAFF_CLIENT_HANDLER.updateBeam(level,
-                this.uuid,
-                Sable.HELPER.projectOutOfSubLevel(level, JOMLConversion.toMojang(this.start)),
-                JOMLConversion.toMojang(this.end));
+        // The client side of this packet drives the render layer, which is
+        // not part of the 26.2 port yet.
     }
 }

@@ -1,7 +1,6 @@
 package dev.simulated_team.simulated.network.packets.physics_staff;
 
 import dev.simulated_team.simulated.Simulated;
-import dev.simulated_team.simulated.SimulatedClient;
 import dev.simulated_team.simulated.util.SimCodecUtil;
 import foundry.veil.api.network.handler.PacketContext;
 import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
@@ -33,6 +32,7 @@ public record PhysicsStaffDragSessionsPacket(ResourceKey<Level> dimension, List<
     }
 
     public void handle(final PacketContext context) {
-        SimulatedClient.PHYSICS_STAFF_CLIENT_HANDLER.setServerDragSessions(this.dimension, this.sessions);
+        // The client side of this packet drives the render layer, which is
+        // not part of the 26.2 port yet.
     }
 }

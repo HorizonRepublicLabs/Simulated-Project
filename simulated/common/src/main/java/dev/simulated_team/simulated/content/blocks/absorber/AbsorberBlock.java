@@ -27,7 +27,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -36,7 +37,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class AbsorberBlock extends HorizontalDirectionalBlock implements IBE<AbsorberBlockEntity>, IWrenchable {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty WET = BooleanProperty.create("wet");
-    public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final MapCodec<AbsorberBlock> CODEC = simpleCodec(AbsorberBlock::new);
 
     public AbsorberBlock(final Properties properties) {

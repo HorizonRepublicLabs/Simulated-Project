@@ -3,7 +3,6 @@ package dev.simulated_team.simulated.network.packets.contraption_diagram;
 import dev.ryanhcode.sable.api.physics.force.ForceGroup;
 import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
 import dev.simulated_team.simulated.Simulated;
-import dev.simulated_team.simulated.content.entities.diagram.screen.DiagramScreen;
 import dev.simulated_team.simulated.util.SimCodecUtil;
 import foundry.veil.api.network.handler.ClientPacketContext;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -31,12 +30,8 @@ public record DiagramDataPacket(Map<ForceGroup, List<QueuedForceGroup.PointForce
     }
 
     private static void handle(final DiagramDataPacket packet) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        final Screen screen = minecraft.screen;
-
-        if (screen instanceof final DiagramScreen diagramScreen) {
-            diagramScreen.updateData(packet);
-        }
+        // The diagram screen belongs to the client render layer, which is not
+        // part of the 26.2 port yet.
     }
 
     @Override

@@ -43,3 +43,8 @@ artifacts {
     commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }
 
+// Reduced 26.2 port: GuiGraphics and the neoforge model generators are gone.
+sourceSets.main.java {
+    exclude 'dev/eriksonn/aeronautics/data/AeroBlockStateGen.java'
+    exclude 'dev/eriksonn/aeronautics/mixin/levitite/PonderUIMixin.java'
+}

@@ -2,7 +2,6 @@ package dev.simulated_team.simulated.util.hold_interaction;
 
 import dev.simulated_team.simulated.util.SimDistUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -56,9 +55,16 @@ public class HoldInteractionManager {
         }
     }
 
-    public static void renderOverlay(final GuiGraphics graphics, final int width, final int height) {
+    /**
+     * Draws the overlay for the active hold interaction.
+     *
+     * <p>26.2 replaced {@code GuiGraphics} with the gui render state pipeline,
+     * so there is nothing to draw through until the client render layer is
+     * ported. The interaction itself still runs.
+     */
+    public static void renderOverlay(final int width, final int height) {
         if (active != null) {
-            active.renderOverlay(graphics, width, height, Minecraft.getInstance().options.hideGui);
+            active.renderOverlay(width, height, Minecraft.getInstance().options.hideGui);
         }
     }
 

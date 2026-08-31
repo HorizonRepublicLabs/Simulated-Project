@@ -6,7 +6,6 @@ import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.content.entities.diagram.DiagramConfig;
 import dev.simulated_team.simulated.content.entities.diagram.DiagramEntity;
-import dev.simulated_team.simulated.content.entities.diagram.screen.DiagramScreen;
 import foundry.veil.api.network.handler.ClientPacketContext;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -25,17 +24,8 @@ public record DiagramOpenPacket(int entityID, DiagramConfig config) implements C
     );
 
     public void handle(final ClientPacketContext context) {
-        final Level level = context.level();
-        assert level != null;
-
-        final Entity entity = level.getEntity(this.entityID());
-
-        if (entity instanceof final DiagramEntity diagram) {
-            final SubLevel subLevel = Sable.HELPER.getContaining(diagram);
-            if (subLevel == null) return;
-
-            DiagramScreen.open(diagram, this.config, subLevel);
-        }
+        // The client side of this packet drives the render layer, which is
+        // not part of the 26.2 port yet.
     }
 
     @Override

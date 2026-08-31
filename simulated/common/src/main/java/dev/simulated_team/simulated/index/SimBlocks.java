@@ -46,7 +46,6 @@ import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.Li
 import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.LinkedTypewriterItem;
 import dev.simulated_team.simulated.content.blocks.redstone.modulating_receiver.ModulatingLinkedReceiverBlock;
 import dev.simulated_team.simulated.content.blocks.redstone.redstone_accumulator.RedstoneAccumulatorBlock;
-import dev.simulated_team.simulated.content.blocks.redstone.redstone_accumulator.RedstoneAccumulatorBlockStateGen;
 import dev.simulated_team.simulated.content.blocks.redstone.redstone_inductor.RedstoneInductorBlock;
 import dev.simulated_team.simulated.content.blocks.redstone_magnet.RedstoneMagnetBlock;
 import dev.simulated_team.simulated.content.blocks.rope.rope_connector.RopeConnectorBlock;
@@ -701,7 +700,9 @@ public class SimBlocks {
     public static final BlockEntry<RedstoneAccumulatorBlock> REDSTONE_ACCUMULATOR =
             REGISTRATE.block("redstone_accumulator", RedstoneAccumulatorBlock::new)
                     .initialProperties(() -> Blocks.REPEATER)
-                    .blockstate(RedstoneAccumulatorBlockStateGen.generate())
+                    // 26.2 replaced the neoforge model generators this
+                    // blockstate was written against; it falls back to the
+                    // registrate default until the generator is rewritten.
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag, SimTags.Blocks.DIODE)
                     .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                             .pattern(" Q ")

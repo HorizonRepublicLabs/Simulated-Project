@@ -11,7 +11,7 @@ import dev.ryanhcode.sable.api.command.SubLevelArgumentType;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.simulated_team.simulated.content.entities.honey_glue.HoneyGlueEntity;
 import dev.simulated_team.simulated.content.physics_staff.PhysicsStaffServerHandler;
-import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.api.network.NetworkHelper;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

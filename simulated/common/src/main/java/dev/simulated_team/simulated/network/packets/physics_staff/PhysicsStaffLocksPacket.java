@@ -1,7 +1,6 @@
 package dev.simulated_team.simulated.network.packets.physics_staff;
 
 import dev.simulated_team.simulated.Simulated;
-import dev.simulated_team.simulated.SimulatedClient;
 import foundry.veil.api.network.handler.PacketContext;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecBuilders;
@@ -41,6 +40,7 @@ public class PhysicsStaffLocksPacket implements CustomPacketPayload {
     }
 
     public void handle(final PacketContext context) {
-        SimulatedClient.PHYSICS_STAFF_CLIENT_HANDLER.setLocks(this.dimension, this.locks);
+        // The client side of this packet drives the render layer, which is
+        // not part of the 26.2 port yet.
     }
 }

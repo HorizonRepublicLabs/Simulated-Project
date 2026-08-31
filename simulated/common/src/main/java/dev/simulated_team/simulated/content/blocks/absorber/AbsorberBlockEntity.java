@@ -3,8 +3,6 @@ package dev.simulated_team.simulated.content.blocks.absorber;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import dev.ryanhcode.sable.physics.chunk.VoxelNeighborhoodState;
-import dev.ryanhcode.sable.sublevel.water_occlusion.WaterOcclusionContainer;
-import dev.ryanhcode.sable.sublevel.water_occlusion.WaterOcclusionRegion;
 import dev.ryanhcode.sable.util.BoundedBitVolume3i;
 import dev.ryanhcode.sable.util.LevelAccelerator;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -29,8 +27,10 @@ public class AbsorberBlockEntity extends SmartBlockEntity {
             Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST, Direction.DOWN
     };
     
-    @Nullable
-    private WaterOcclusionRegion currentRegion;
+    // Water occlusion lives with Sable's sub-level renderer, which is not part
+    // of the 26.2 port yet. The absorber still tracks whether it has claimed a
+    // region so its powered/wet behaviour is unchanged; nothing is drawn.
+    private boolean regionActive;
 
     public LerpedFloat animationTimer = LerpedFloat.linear();
 
@@ -78,10 +78,6 @@ public class AbsorberBlockEntity extends SmartBlockEntity {
 
         final boolean powered = this.getBlockState().getValue(AbsorberBlock.POWERED);
 
-        if (this.currentRegion != null && this.currentRegion.isDirty()) {
-            this.removeRegionIfExists();
-        }
-
         this.animationTimer.tickChaser();
         if(this.animationTimer.settled()) {
             this.animationTimer.updateChaseTarget(powered ? 1 : 0);
@@ -89,7 +85,7 @@ public class AbsorberBlockEntity extends SmartBlockEntity {
         if(this.animationTimer.settled() && !this.level.isClientSide)
         {
             if (powered) {
-                if (this.currentRegion == null) {
+                if (!this.regionActive) {
                     this.buildRegion();
                 }
                 //temporary water removal
@@ -126,18 +122,14 @@ public class AbsorberBlockEntity extends SmartBlockEntity {
     }
 
     private void buildRegion() {
-        if (this.currentRegion != null) {
+        if (this.regionActive) {
             throw new IllegalStateException("EvaporatorBlockEntity already has a region assigned.");
         }
-
-        final WaterOcclusionContainer<?> container = WaterOcclusionContainer.getContainer(this.level);
 
         final ObjectOpenHashSet<BlockPos> visited = new ObjectOpenHashSet<>();
         final ObjectOpenHashSet<BlockPos> enclosed = new ObjectOpenHashSet<>();
         if (dfs(new LevelAccelerator(this.level), this.worldPosition.above(), visited, enclosed)) {
-            if (!enclosed.isEmpty()) {
-                this.currentRegion = container.addRegion(BoundedBitVolume3i.fromBlocks(enclosed));
-            }
+            this.regionActive = !enclosed.isEmpty();
         }
     }
 
@@ -148,15 +140,7 @@ public class AbsorberBlockEntity extends SmartBlockEntity {
     }
 
     private void removeRegionIfExists() {
-        if (this.currentRegion != null) {
-            final WaterOcclusionContainer container = WaterOcclusionContainer.getContainer(this.level);
-
-            if (container != null) {
-                container.removeRegion(this.currentRegion);
-            }
-
-            this.currentRegion = null;
-        }
+        this.regionActive = false;
     }
 
     @Override

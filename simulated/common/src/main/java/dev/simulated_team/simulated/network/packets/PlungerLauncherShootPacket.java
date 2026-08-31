@@ -1,8 +1,6 @@
 package dev.simulated_team.simulated.network.packets;
 
 import dev.simulated_team.simulated.Simulated;
-import dev.simulated_team.simulated.SimulatedClient;
-import dev.simulated_team.simulated.content.items.plunger_launcher.PlungerLauncherItemRenderer;
 import foundry.veil.api.network.handler.PacketContext;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.api.data.codec.stream.CatnipStreamCodecs;
@@ -33,13 +31,7 @@ public class PlungerLauncherShootPacket implements CustomPacketPayload {
     }
 
     public void handle(final PacketContext context) {
-        final Entity renderViewEntity = Minecraft.getInstance().getCameraEntity();
-        if (renderViewEntity == null) {
-            return;
-        }
-
-        final PlungerLauncherItemRenderer.RenderHandler handler = SimulatedClient.PLUNGER_LAUNCHER_RENDER_HANDLER;
-        handler.basicShoot(this.hand);
-        handler.playSound(this.hand, context.player().position());
+        // The first-person launcher animation belongs to the client render
+        // layer, which is not part of the 26.2 port yet.
     }
 }

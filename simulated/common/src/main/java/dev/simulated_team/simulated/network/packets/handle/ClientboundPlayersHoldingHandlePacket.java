@@ -1,7 +1,6 @@
 package dev.simulated_team.simulated.network.packets.handle;
 
 import dev.simulated_team.simulated.Simulated;
-import dev.simulated_team.simulated.content.blocks.handle.PlayerHoldingHandleRenderer;
 import foundry.veil.api.network.handler.ClientPacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
@@ -21,7 +20,8 @@ public record ClientboundPlayersHoldingHandlePacket(Collection<UUID> uuids) impl
 	);
 
 	public void handle(final ClientPacketContext context) {
-		PlayerHoldingHandleRenderer.updatePlayerList(this.uuids);
+		// The holding pose is drawn by the client render layer, which is not
+		// part of the 26.2 port yet.
 	}
 
 	@Override
