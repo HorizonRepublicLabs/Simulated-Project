@@ -18,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -125,10 +124,10 @@ public abstract class AbstractLinkedReceiverBlockEntity extends SmartBlockEntity
                         subLevel.logicalPose().transformNormalInverse(relativePos);
                     }
 
-                    final Tuple<Integer, Double> signal = this.getSignalFromLink(JOMLConversion.toMojang(relativePos), link.getTransmittedStrength());
-                    if (signal.getA() > newSignal) {
-                        newSignal = signal.getA();
-                        rawValue = signal.getB();
+                    final net.createmod.catnip.api.data.Pair<Integer, Double> signal = this.getSignalFromLink(JOMLConversion.toMojang(relativePos), link.getTransmittedStrength());
+                    if (signal.getFirst() > newSignal) {
+                        newSignal = signal.getFirst();
+                        rawValue = signal.getSecond();
                     }
                 }
         }
@@ -159,7 +158,7 @@ public abstract class AbstractLinkedReceiverBlockEntity extends SmartBlockEntity
         return this.link.getNetworkKey();
     }
 
-    public abstract Tuple<Integer, Double> getSignalFromLink(Vec3 relativePosition, int transmittedStrength);
+    public abstract net.createmod.catnip.api.data.Pair<Integer, Double> getSignalFromLink(Vec3 relativePosition, int transmittedStrength);
 
     @Override
     public void remove() {

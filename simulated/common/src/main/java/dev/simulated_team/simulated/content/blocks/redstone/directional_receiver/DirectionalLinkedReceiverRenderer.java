@@ -2,7 +2,7 @@ package dev.simulated_team.simulated.content.blocks.redstone.directional_receive
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 

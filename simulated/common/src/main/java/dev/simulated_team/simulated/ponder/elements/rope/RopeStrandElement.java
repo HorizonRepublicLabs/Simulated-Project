@@ -18,7 +18,7 @@ import net.createmod.ponder.api.client.scene.PonderScene;
 import net.createmod.ponder.impl.client.element.AnimatedSceneElementBase;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

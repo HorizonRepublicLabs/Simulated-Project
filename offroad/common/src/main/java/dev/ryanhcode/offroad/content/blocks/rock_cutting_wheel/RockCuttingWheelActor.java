@@ -11,7 +11,7 @@ import dev.ryanhcode.offroad.content.entities.BoreheadContraptionEntity;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.SubLevelHelper;
 import net.createmod.catnip.api.animation.LerpedFloat;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -158,7 +158,7 @@ public class RockCuttingWheelActor implements MovementBehaviour {
     }
 
     @Override
-    public void renderInContraption(final MovementContext context, final VirtualRenderWorld renderWorld, final ContraptionMatrices matrices, final MultiBufferSource buffer) {
+    public void renderInContraption(final MovementContext context, final VirtualRenderWorld renderWorld, final ContraptionMatrices matrices, final SuperRenderTypeBuffer buffer) {
         if (renderWorld.supportsVisualization()) {
             return;
         }

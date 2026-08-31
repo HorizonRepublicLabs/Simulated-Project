@@ -37,7 +37,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -46,7 +46,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.Tuple;
+import net.createmod.catnip.api.data.Pair;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
@@ -294,7 +294,7 @@ public class DiagramScreen extends AbstractSimiScreen {
         final HashMap<Identifier, Tuple<Greeble, ArrayList<Greeble.TextureSlice>>> greebleSet = new HashMap<>();
 
         for (final Map.Entry<Identifier, Greeble> entry : SimResourceManagers.GREEBLE.entrySet()) {
-            greebleSet.put(entry.getKey(), new Tuple<>(entry.getValue(), entry.getValue().shuffled()));
+            greebleSet.put(entry.getKey(), Pair.of(entry.getValue(), entry.getValue().shuffled()));
         }
 
         return greebleSet;

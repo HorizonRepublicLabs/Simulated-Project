@@ -61,3 +61,42 @@ sourceSets.main.java {
     exclude 'dev/simulated_team/simulated/service/compat/**'
     exclude 'dev/simulated_team/simulated/neoforge/service/compat/**'
 }
+
+// Reduced 26.2 port: the client render layer is built on GuiGraphics,
+// MultiBufferSource and the pre-render-state entity renderers, all of which
+// 26.2 replaced, and it draws through Sable's sub-level renderer which is not
+// ported yet either.
+sourceSets.main.java {
+    exclude 'dev/simulated_team/simulated/util/SimpleSubLevelGroupRenderer.java'
+    exclude 'dev/simulated_team/simulated/util/hold_interaction/**'
+    exclude 'dev/simulated_team/simulated/registrate/simulated_tab/SimulatedCreativeTab.java'
+    exclude 'dev/simulated_team/simulated/client/**'
+    exclude 'dev/simulated_team/simulated/network/packets/linked_typewriter/TypewriterMenuModifySlots.java'
+    exclude 'dev/simulated_team/simulated/mixin_interface/PrimaryLevelDataExtension.java'
+    exclude 'dev/simulated_team/simulated/mixin/world_presets/PrimaryLevelDataMixin.java'
+    exclude 'dev/simulated_team/simulated/SimulatedClient.java'
+    exclude 'dev/simulated_team/simulated/config/client/**'
+    exclude 'dev/simulated_team/simulated/network/packets/contraption_diagram/**'
+    exclude 'dev/simulated_team/simulated/network/packets/handle/ClientboundPlayersHoldingHandlePacket.java'
+    exclude 'dev/simulated_team/simulated/network/packets/PlungerLauncherShootPacket.java'
+    exclude 'dev/simulated_team/simulated/network/packets/ThrottleLeverSignalPacket.java'
+    exclude 'dev/simulated_team/simulated/mixin/handle/**'
+    exclude 'dev/simulated_team/simulated/mixin/world_presets/CreateWorldScreenMixin.java'
+    exclude 'dev/simulated_team/simulated/mixin/search_alias/**'
+    exclude 'dev/simulated_team/simulated/**/screen/**'
+    exclude 'dev/simulated_team/simulated/compat/**'
+    exclude 'dev/simulated_team/simulated/index/SimGUITextures.java'
+    exclude 'dev/simulated_team/simulated/**/*Renderer.java'
+    exclude 'dev/simulated_team/simulated/**/*Screen.java'
+    exclude 'dev/simulated_team/simulated/mixin/creative_tab_sections/**'
+    exclude 'dev/simulated_team/simulated/mixin/diagram/**'
+    exclude 'dev/simulated_team/simulated/mixin/end_sea/**'
+    exclude 'dev/simulated_team/simulated/mixin/hold_interaction/**'
+    exclude 'dev/simulated_team/simulated/mixin/physics_staff/**'
+    exclude 'dev/simulated_team/simulated/mixin/ponder/**'
+    exclude 'dev/simulated_team/simulated/mixin/accessor/ParrotElementAccessor.java'
+    exclude 'dev/simulated_team/simulated/mixin/silence_jei/**'
+    exclude 'dev/simulated_team/simulated/mixin/lodestone_compat/**'
+    exclude 'dev/simulated_team/simulated/mixin_interface/diagram/**'
+    exclude 'dev/simulated_team/simulated/mixin_interface/SpriteContentsExtension.java'
+}

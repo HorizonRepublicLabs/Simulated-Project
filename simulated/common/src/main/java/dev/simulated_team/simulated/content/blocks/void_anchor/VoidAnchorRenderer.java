@@ -2,7 +2,7 @@ package dev.simulated_team.simulated.content.blocks.void_anchor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.simulated_team.simulated.content.end_sea.EndSeaShadowRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.phys.Vec3;
