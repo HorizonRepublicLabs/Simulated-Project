@@ -13,6 +13,7 @@ java {
 }
 
 repositories {
+    mavenLocal() // the 26.2 Create/Ponder/Flywheel/Registrate ports are built here
     mavenCentral()
 
     // https://docs.gradle.org/current/userguide/declaring_repositories.html#declaring_content_exclusively_found_in_one_repository
@@ -63,9 +64,9 @@ if (project.path.endsWith(":common")) {
             exclude group: "foundry.veil"
         }
 
-        compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
-        compileOnly("net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}")
-        compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
+        compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}") { transitive = false }
+        compileOnly("net.createmod.ponder:neoforge:${ponder_version}+mc${minecraft_version}")
+        compileOnly("dev.engine-room.flywheel:flywheel-neoforge:${flywheel_version}:api")
         implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
         implementation("foundry.veil:veil-common-${minecraft_version}:${project.veil_version}") {

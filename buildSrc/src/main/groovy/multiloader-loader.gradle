@@ -30,9 +30,9 @@ dependencies {
     api("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
     api("com.simibubi.create:create-${minecraft_version}:${create_version}") { transitive = false }
-    api("net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}")
-    compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
-    implementation("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
+    api("net.createmod.ponder:neoforge:${ponder_version}+mc${minecraft_version}")
+    compileOnly("dev.engine-room.flywheel:flywheel-neoforge:${flywheel_version}:api")
+    implementation("dev.engine-room.flywheel:flywheel-neoforge:${flywheel_version}")
     compileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
 
     implementation("foundry.veil:veil-neoforge-${minecraft_version}:${project.veil_version}") {
