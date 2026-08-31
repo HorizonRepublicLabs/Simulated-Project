@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.neoforge.service;
 
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import com.simibubi.create.content.contraptions.MountedStorageManager;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import dev.simulated_team.simulated.multiloader.energy.SingleBattery;
@@ -47,9 +49,9 @@ public class NeoForgeSimInventoryService implements SimInventoryService {
     @Override
     public <T extends InventoryLoaderWrapper> T getInventory(@Nullable final BlockEntity be, @Nullable final Direction dir) {
         if (be != null) {
-            final IItemHandler handler = be.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), dir);
+            final ResourceHandler<ItemResource> handler = be.getLevel().getCapability(Capabilities.Item.BLOCK, be.getBlockPos(), dir);
             if (handler != null) {
-                return (T) new InventoryLoaderWrapperImpl(handler);
+                return (T) new InventoryLoaderWrapperImpl(IItemHandler.of(handler));
             }
         }
 

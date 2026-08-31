@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.service;
 
+import net.minecraft.world.level.Level;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
@@ -13,7 +14,7 @@ public interface SimItemService {
         return itemStack.get(DataComponents.DYE);
     }
 
-    int getBurnTime(final ItemStack stack);
+    int getBurnTime(final Level level, final ItemStack stack);
 
-    int getSuperheatedBurnTime(final ItemStack stack);
+    int getSuperheatedBurnTime(final Level level, final ItemStack stack);
 }

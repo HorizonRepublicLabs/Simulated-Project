@@ -4,11 +4,9 @@ import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.index.SimBlocks;
 import dev.simulated_team.simulated.index.neoforge.NeoForgeSimStats;
 import dev.simulated_team.simulated.index.neoforge.SimNeoForgeRecipeTypes;
-import dev.simulated_team.simulated.index.neoforge.SimParticleTypesImpl;
 import dev.simulated_team.simulated.neoforge.events.SimNeoForgeCommonEvents;
 import dev.simulated_team.simulated.neoforge.service.NeoForgeSimConfigService;
 import dev.simulated_team.simulated.neoforge.service.NeoForgeSimEntityDataSerialization;
-import dev.simulated_team.simulated.neoforge.service.compat.NeoForgeSimPeripheralService;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -37,7 +35,6 @@ public final class SimulatedNeoForge {
         NeoForge.EVENT_BUS.register(SimNeoForgeCommonEvents.class);
         modEventBus.register(SimNeoForgeCommonEvents.ModBusEvents.class);
 
-        SimParticleTypesImpl.register(modEventBus);
         SimNeoForgeRecipeTypes.register(modEventBus);
 
         NeoForgeSimEntityDataSerialization.register(modEventBus);
@@ -46,7 +43,6 @@ public final class SimulatedNeoForge {
         NeoForgeSimStats.register(modEventBus);
 
         if (ModList.get().isLoaded("computercraft")) {
-            modEventBus.register(NeoForgeSimPeripheralService.class);
         }
 
         Simulated.init();

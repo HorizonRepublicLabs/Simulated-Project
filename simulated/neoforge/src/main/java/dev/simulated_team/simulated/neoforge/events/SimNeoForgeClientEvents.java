@@ -64,7 +64,7 @@ public class SimNeoForgeClientEvents {
 			if (event.getLevel().isClientSide()) {
 				SimClickInteractions.HONEY_GLUE_MANAGER.selectPos(event.getPos(), event.getEntity(), event.getItemStack());
 			}
-			event.setCancellationResult(InteractionResult.SUCCESS;
+			event.setCancellationResult(InteractionResult.SUCCESS);
 			event.setCanceled(true);
 		}
 	}

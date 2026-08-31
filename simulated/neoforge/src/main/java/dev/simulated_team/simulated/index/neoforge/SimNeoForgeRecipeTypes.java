@@ -3,7 +3,6 @@ package dev.simulated_team.simulated.index.neoforge;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import dev.simulated_team.simulated.Simulated;
-import dev.simulated_team.simulated.data.neoforge.PortableEngineDyeingRecipe;
 import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -20,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public enum SimNeoForgeRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
-
-    PORTABLE_ENGINE_DYEING(() -> new SimpleCraftingRecipeSerializer<>(PortableEngineDyeingRecipe::new), () -> RecipeType.CRAFTING, false);
+    // The portable engine dyeing recipe went with the staged-out datagen.
+    ;
 
     public static final Codec<SimNeoForgeRecipeTypes> CODEC = StringRepresentable.fromEnum(SimNeoForgeRecipeTypes::values);
     public final Identifier id;

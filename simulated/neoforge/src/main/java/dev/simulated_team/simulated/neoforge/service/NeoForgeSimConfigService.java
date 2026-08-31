@@ -1,8 +1,8 @@
 package dev.simulated_team.simulated.neoforge.service;
 
+import net.createmod.catnip.impl.neoforge.config.NeoForgeConfigSpecBuilder;
 import com.simibubi.create.api.stress.BlockStressValues;
 import com.simibubi.create.infrastructure.config.CStress;
-import dev.simulated_team.simulated.config.client.SimClient;
 import dev.simulated_team.simulated.config.server.SimServer;
 import dev.simulated_team.simulated.service.SimConfigService;
 import net.createmod.catnip.api.config.ConfigBase;
@@ -24,14 +24,15 @@ public class NeoForgeSimConfigService implements SimConfigService {
 
     @Override
     public boolean serverLoaded() {
-        return server != null && server.specification != null && server.specification.isLoaded();
+        return server != null && server.specification instanceof final ModConfigSpec spec && spec.isLoaded();
     }
 
-    private static SimClient client;
 
     @Override
     public boolean clientLoaded() {
-        return client != null && client.specification != null && client.specification.isLoaded();
+        // The client config drives the render layer, which is not part of the
+        // 26.2 port yet.
+        return false;
     }
 
     @Override
@@ -39,10 +40,6 @@ public class NeoForgeSimConfigService implements SimConfigService {
         return server;
     }
 
-    @Override
-    public SimClient client() {
-        return client;
-    }
 
     public static ConfigBase byType(final ModConfig.Type type) {
         return CONFIGS.get(type);
@@ -50,14 +47,13 @@ public class NeoForgeSimConfigService implements SimConfigService {
 
     public static void registerCommon() {
         server = register(SimServer::new, ModConfig.Type.SERVER);
-        client = register(SimClient::new, ModConfig.Type.CLIENT);
     }
 
 
     private static <T extends ConfigBase> T register(final Supplier<T> factory, final ModConfig.Type side) {
         final Pair<T, ModConfigSpec> specPair = (new ModConfigSpec.Builder()).configure((builder) -> {
             final T config = factory.get();
-            config.registerAll(builder);
+            config.registerAll(new NeoForgeConfigSpecBuilder(builder));
             return config;
         });
         final T config = specPair.getLeft();
@@ -69,10 +65,9 @@ public class NeoForgeSimConfigService implements SimConfigService {
 
     public static void register(final ModLoadingContext context, final ModContainer container) {
         server = register(SimServer::new, ModConfig.Type.SERVER);
-        client = register(SimClient::new, ModConfig.Type.CLIENT);
 
         for (final Map.Entry<ModConfig.Type, ConfigBase> typeConfigBaseEntry : CONFIGS.entrySet()) {
-            container.registerConfig(typeConfigBaseEntry.getKey(), typeConfigBaseEntry.getValue().specification);
+            container.registerConfig(typeConfigBaseEntry.getKey(), (ModConfigSpec) typeConfigBaseEntry.getValue().specification);
         }
 
         final CStress stress = SimConfigService.INSTANCE.server().kinetics.stressValues;

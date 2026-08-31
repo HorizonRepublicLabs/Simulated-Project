@@ -1,5 +1,8 @@
 package dev.simulated_team.simulated.neoforge.service;
 
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import dev.simulated_team.simulated.service.SimFluidService;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
@@ -14,13 +17,17 @@ public class NeoForgeSimFluidService implements SimFluidService {
 
     @Override
     public Fluid getFluidInItem(final ItemStack stack) {
-        final IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
-        if(handler != null) {
-            final FluidStack fluid = handler.getFluidInTank(0);
-            if(!fluid.isEmpty()) {
-                return fluid.getFluid();
+        // 26.2 reaches an item's fluid through a resource handler on an access.
+        final ItemAccess access = ItemAccess.forStack(stack.copy());
+        final ResourceHandler<FluidResource> handler = access.getCapability(Capabilities.Fluid.ITEM);
+
+        if (handler != null && handler.size() > 0) {
+            final FluidResource resource = handler.getResource(0);
+            if (!resource.isEmpty()) {
+                return resource.getFluid();
             }
         }
+
         return null;
     }
 }

@@ -219,7 +219,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
             }
         }
         if (this.burnTime <= 0 && !this.inventory.isEmpty()) {
-            this.burnTime = SimItemService.INSTANCE.getBurnTime(stack);
+            this.burnTime = SimItemService.INSTANCE.getBurnTime(this.getLevel(), stack);
             this.superHeated = this.getNextSuperHeated();
             if (this.burnTime > 0) {
                 if (stack.getCount() == 1 && stack.getItem().getCraftingRemainder() != null) {
@@ -435,7 +435,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
         SimLang.translate("portable_engine.tooltip_name").text(":").forGoggles(tooltip);
 
         final ItemStack currentStack = this.inventory.slot.getStack();
-        final boolean hasByProduct = !currentStack.isEmpty() && SimItemService.INSTANCE.getBurnTime(currentStack) == 0;
+        final boolean hasByProduct = !currentStack.isEmpty() && SimItemService.INSTANCE.getBurnTime(this.getLevel(), currentStack) == 0;
 
         final LangBuilder noFuel = SimLang.translate("portable_engine.none").style(ChatFormatting.RED);
         final LangBuilder stackName = SimLang.builder().add(currentStack.getHoverName())
@@ -540,7 +540,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
      * @return The burn timestamp (in ticks) for the currently held stack
      */
     private int getNextBurnTime() {
-        return SimItemService.INSTANCE.getBurnTime(this.inventory.slot.getStack());
+        return SimItemService.INSTANCE.getBurnTime(this.getLevel(), this.inventory.slot.getStack());
     }
 
     public boolean isSuperHeated() {
@@ -552,6 +552,6 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
     }
 
     private boolean getNextSuperHeated() {
-        return SimItemService.INSTANCE.getSuperheatedBurnTime(this.inventory.slot.getStack()) > 0;
+        return SimItemService.INSTANCE.getSuperheatedBurnTime(this.getLevel(), this.inventory.slot.getStack()) > 0;
     }
 }
