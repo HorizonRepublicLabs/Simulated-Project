@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.entities.honey_glue;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import com.simibubi.create.api.schematic.requirement.SpecialEntityItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import dev.simulated_team.simulated.Simulated;
@@ -62,7 +64,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
     public void tick() {
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
-        this.walkDistO = this.walkDist;
+        
         this.xo = this.getX();
         this.yo = this.getY();
         this.zo = this.getZ();
@@ -101,21 +103,21 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
             final Direction.AxisDirection positive = Direction.AxisDirection.POSITIVE;
             final double max = axis.choose(extents.x, extents.y, extents.z);
             final Vec3 normal = Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axis, positive)
-                    .getNormal());
+                    .getUnitVec3i());
             for (final Direction.Axis axis2 : Iterate.axes) {
                 if (axis2 == axis) {
                     continue;
                 }
                 final double max2 = axis2.choose(extents.x, extents.y, extents.z);
                 final Vec3 normal2 = Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axis2, positive)
-                        .getNormal());
+                        .getUnitVec3i());
                 for (final Direction.Axis axis3 : Iterate.axes) {
                     if (axis3 == axis2 || axis3 == axis) {
                         continue;
                     }
                     final double max3 = axis3.choose(extents.x, extents.y, extents.z);
                     final Vec3 normal3 = Vec3.atLowerCornerOf(Direction.fromAxisAndDirection(axis3, positive)
-                            .getNormal());
+                            .getUnitVec3i());
 
                     for (int i = 0; i <= max * 2; i++) {
                         for (final int o1 : Iterate.zeroAndOne) {
@@ -125,7 +127,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
                                         .add(normal3.scale(max3 * o2));
 
                                 serverLevel.sendParticles(
-                                        new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Blocks.HONEY_BLOCK)), v.x,
+                                        new ItemParticleOption(ParticleTypes.ITEM, Blocks.HONEY_BLOCK.asItem()), v.x,
                                         v.y, v.z, 1, 0, 0, 0, 0);
 
                             }
@@ -163,24 +165,23 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
     }
 
     @Override
-    public void addAdditionalSaveData(final CompoundTag compound) {
+    public void addAdditionalSaveData(final ValueOutput output) {
         final Vec3 position = this.position();
         final AABB savedBounds = this.getBoundingBox().move(position.scale(-1));
 
-        compound.put("From", VecHelper.writeNBT(new Vec3(savedBounds.minX, savedBounds.minY, savedBounds.minZ)));
-        compound.put("To", VecHelper.writeNBT(new Vec3(savedBounds.maxX, savedBounds.maxY, savedBounds.maxZ)));
-
-        if (!compound.contains("Pos")) {
-            compound.put("Pos", VecHelper.writeNBT(position));
-        }
+        output.store("From", Vec3.CODEC, new Vec3(savedBounds.minX, savedBounds.minY, savedBounds.minZ));
+        output.store("To", Vec3.CODEC, new Vec3(savedBounds.maxX, savedBounds.maxY, savedBounds.maxZ));
+        // Vanilla writes the entity position itself in 26.2.
     }
 
     @Override
-    public void readAdditionalSaveData(final @NotNull CompoundTag compound) {
-        final Vec3 pos = VecHelper.readNBT(compound.getListOrEmpty("Pos")); // we need to grab this from the NBT due to schematics
+    public void readAdditionalSaveData(final @NotNull ValueInput input) {
+        // The position is read back explicitly because schematics place glue
+        // before the entity itself is positioned.
+        final Vec3 pos = input.read("Pos", Vec3.CODEC).orElseGet(this::position);
 
-        final Vec3 from = VecHelper.readNBT(compound.getListOrEmpty("From"));
-        final Vec3 to = VecHelper.readNBT(compound.getListOrEmpty("To"));
+        final Vec3 from = input.read("From", Vec3.CODEC).orElse(Vec3.ZERO);
+        final Vec3 to = input.read("To", Vec3.CODEC).orElse(Vec3.ZERO);
         final AABB bb = new AABB(from, to).move(pos);
 
         final Level level = this.level();
