@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.directional_gearshift;
 
+import net.minecraft.world.level.redstone.Orientation;
 import com.simibubi.create.content.kinetics.RotationPropagator;
 import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -90,7 +91,7 @@ public class DirectionalGearshiftBlock extends DirectionalAxisKineticBlock imple
     }
 
     @Override
-    public void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block blockIn, final BlockPos fromPos, final boolean isMoving) {
+    protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block blockIn, final @Nullable Orientation orientation, final boolean isMoving) {
         if (level.isClientSide())
             return;
 
@@ -109,8 +110,8 @@ public class DirectionalGearshiftBlock extends DirectionalAxisKineticBlock imple
         final Direction leftDirection = this.getLeftDirection(state);
         final Direction rightDirection = this.getRightDirection(state);
 
-        final int leftSignal = level.getSignal(pos.offset(leftDirection.getNormal()), leftDirection);
-        final int rightSignal = level.getSignal(pos.offset(rightDirection.getNormal()), rightDirection);
+        final int leftSignal = level.getSignal(pos.offset(leftDirection.getUnitVec3i()), leftDirection);
+        final int rightSignal = level.getSignal(pos.offset(rightDirection.getUnitVec3i()), rightDirection);
 
         final boolean previouslyLeftPowered = state.getValue(LEFT_POWERED);
         if (previouslyLeftPowered != (leftSignal > 0)) {

@@ -50,7 +50,7 @@ public class SimulatedCreativeTab {
 
 		for (final SimulatedSection section : sections) {
 			Identifier id = SimResourceManagers.SIMULATED_SECTION.getId(section);
-			int yValue = SECTION_Y_VALUES.getInt(id);
+			int yValue = SECTION_Y_VALUES.getIntOr(id, 0);
 			final int sectionRow = (yValue - CURRENT_ROW);
 			if(sectionRow < 0 || sectionRow > 4) continue;
 

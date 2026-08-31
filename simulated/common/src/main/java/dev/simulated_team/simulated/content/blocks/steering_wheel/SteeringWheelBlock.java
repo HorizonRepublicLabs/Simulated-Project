@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.steering_wheel;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.foundation.block.IBE;
@@ -71,7 +73,7 @@ public class SteeringWheelBlock extends HorizontalDirectionalBlock
                 player.isLocalPlayer()) {
             final VoxelShape wheel = (onFloor ? SimBlockShapes.STEERING_WHEEL_FLOOR : SimBlockShapes.STEERING_WHEEL_CEILING).get(facing);
             final VoxelShape mount = SimBlockShapes.STEERING_WHEEL_MOUNT.get(facing);
-            return lookingAtWheel(player, pos, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true), wheel, mount) ? wheel : mount;
+            return lookingAtWheel(player, pos, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true), wheel, mount) ? wheel : mount;
         }
 
         if (state.getValue(ON_FLOOR)) {
@@ -142,7 +144,7 @@ public class SteeringWheelBlock extends HorizontalDirectionalBlock
 
     @Override
     public @Nullable InteractionResult quietUse(final Player player, final InteractionHand hand, final BlockPos pos, final BlockState state) {
-        if (lookingAtWheel(player, pos, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true), state)) {
+        if (lookingAtWheel(player, pos, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true), state)) {
             return this.getBlockEntityOptional(player.level(), pos).map( be -> {
                 if (!be.held &&
                         !be.isMaterialValid(player.getItemInHand(hand)) &&
@@ -188,9 +190,8 @@ public class SteeringWheelBlock extends HorizontalDirectionalBlock
     }
 
     @Override
-    public BlockState updateShape(final BlockState pState, final Direction pDirection, final BlockState pNeighborState,
-                                  final LevelAccessor pLevel, final BlockPos pCurrentPos, final BlockPos pNeighborPos) {
-        this.updateWater(pLevel, pState, pCurrentPos);
+    protected BlockState updateShape(final BlockState pState, final LevelReader pLevel, final ScheduledTickAccess ticks, final BlockPos pCurrentPos, final Direction pDirection, final BlockPos pNeighborPos, final BlockState pNeighborState, final RandomSource random) {
+        this.updateWater(pLevel, ticks, pState, pCurrentPos);
         return pState;
     }
 

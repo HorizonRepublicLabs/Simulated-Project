@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.network.packets;
 
+import net.minecraft.world.phys.Vec3;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.util.Observable;
 import foundry.veil.api.network.handler.ServerPacketContext;
@@ -26,7 +27,7 @@ public record BlockEntityObservedPacket(BlockPos pos) implements CustomPacketPay
         final ServerPlayer player = context.player();
 
         // More than 4 blocks + interaction range is way too far to observe a block
-        if (!player.canInteractWithBlock(this.pos, 4.0)) {
+        if (!Vec3.atCenterOf(this.pos).closerThan(player.getEyePosition(), player.blockInteractionRange())) {
             return;
         }
 

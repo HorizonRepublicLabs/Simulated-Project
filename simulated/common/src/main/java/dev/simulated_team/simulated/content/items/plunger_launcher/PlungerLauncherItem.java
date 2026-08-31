@@ -1,5 +1,9 @@
 package dev.simulated_team.simulated.content.items.plunger_launcher;
 
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Avatar;
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.content.equipment.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
@@ -55,18 +59,18 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
     public InteractionResult use(final Level level, final Player player, final InteractionHand interactionHand) {
         final ItemStack heldStack = player.getItemInHand(interactionHand);
         if (SimEntityService.INSTANCE.isFake(player)) {
-            return InteractionResultHolder.fail(heldStack);
+            return InteractionResult.FAIL;
         }
 
         if (ShootableGadgetItemMethods.shouldSwap(player, heldStack, interactionHand, s -> s.getItem() instanceof PlungerLauncherItem)) {
-            return InteractionResultHolder.fail(heldStack);
+            return InteractionResult.FAIL;
         }
 
         if (!level.isClientSide()) {
             if (player.isShiftKeyDown()) {
                 LaunchedPlungerServerHandler.removePlayerPlungers(player);
-                player.displayClientMessage(SimLang.translate("plunger_launcher.clear_plungers").color(0xaaaaaa).component(),true);
-                return InteractionResultHolder.success(heldStack);
+                CreateLang.sendStatus(player, SimLang.translate("plunger_launcher.clear_plungers").color(0xaaaaaa).component(),true);
+                return InteractionResult.SUCCESS;
             }
 
             final BarrelAndCorrectionInfo info = this.getCorrectionInfo(player, interactionHand);
@@ -74,7 +78,7 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
             level.playSound(null, barrelPos.x, barrelPos.y, barrelPos.z, SimSoundEvents.PLUNGER_LAUNCH.event(), SoundSource.PLAYERS, 1.0f, 1.0f);
 
             // add new plunger and set relevant data
-            final LaunchedPlungerEntity newPlunger = SimEntityTypes.PLUNGER.create(level);
+            final LaunchedPlungerEntity newPlunger = SimEntityTypes.PLUNGER.create(level, EntitySpawnReason.TRIGGERED);
             newPlunger.setPos(barrelPos);
 
             newPlunger.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.5F, 0.0F);
@@ -107,13 +111,13 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
 //            VeilPacketManager.tracking(player).sendPacket(new PlungerLauncherShootPacket(interactionHand));
 
             if (!BacktankUtil.canAbsorbDamage(player, maxUses()))
-                heldStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(interactionHand));
+                heldStack.hurtAndBreak(1, player, interactionHand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         } else {
             // The first-person animation belongs to the client render layer,
             // which is not part of the 26.2 port yet.
         }
 
-        return InteractionResultHolder.success(heldStack);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -167,16 +171,15 @@ public class PlungerLauncherItem extends Item implements CustomArmPoseItem {
     }
 
     @Override
-    public HumanoidModel.@Nullable ArmPose getArmPose(final ItemStack stack, final AbstractClientPlayer player, final InteractionHand hand) {
+    public HumanoidModel.@Nullable ArmPose getArmPose(final ItemStack stack, final Avatar player, final InteractionHand hand) {
         return HumanoidModel.ArmPose.CROSSBOW_HOLD;
     }
 
     @Override
-    public boolean canAttackBlock(final BlockState state, final Level level, final BlockPos pos, final Player player) {
+    public boolean canDestroyBlock(final ItemStack itemStack, final BlockState state, final Level level, final BlockPos pos, final LivingEntity player) {
         return false;
     }
 
-    @Override
     public int getEnchantmentValue() {
         return 1;
     }

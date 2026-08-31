@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.config.server.blocks;
 
+import net.createmod.catnip.api.config.ConfigSpecBuilder;
 import com.simibubi.create.infrastructure.config.CStress;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
@@ -8,7 +9,6 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class SimStress extends CStress {
 
@@ -16,13 +16,15 @@ public class SimStress extends CStress {
     private static final Object2DoubleMap<Identifier> DEFAULT_CAPACITIES = new Object2DoubleOpenHashMap<>();
 
     @Override
-    public void registerAll(final ModConfigSpec.Builder builder) {
-        builder.comment(new String[]{".", Comments.su, Comments.impact}).push("impact");
-        DEFAULT_IMPACTS.forEach((id, value) -> this.impacts.put(id, builder.define(id.getPath(), value)));
-        builder.pop();
-        builder.comment(new String[]{".", Comments.su, Comments.capacity}).push("capacity");
-        DEFAULT_CAPACITIES.forEach((id, value) -> this.capacities.put(id, builder.define(id.getPath(), value)));
-        builder.pop();
+    public void registerAll(final ConfigSpecBuilder builder) {
+        builder.comment(".", Comments.su, Comments.impact).push("impact");
+        DEFAULT_IMPACTS.forEach((id, value) -> this.impacts.put(id,
+                builder.defineInRange(id.getPath(), (double) value, 0, Double.MAX_VALUE)));
+        builder.pop(1);
+        builder.comment(".", Comments.su, Comments.capacity).push("capacity");
+        DEFAULT_CAPACITIES.forEach((id, value) -> this.capacities.put(id,
+                builder.defineInRange(id.getPath(), (double) value, 0, Double.MAX_VALUE)));
+        builder.pop(1);
     }
 
     public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> setNoImpact() {

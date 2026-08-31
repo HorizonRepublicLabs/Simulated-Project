@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.data.advancements;
 
+import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,6 +29,11 @@ public class SimpleSimulatedTrigger extends SimulatedCriterionTriggerBase<Simula
     }
 
     public static class Instance extends SimulatedCriterionTriggerBase.Instance {
+
+        @Override
+        public void validate(final ValidationContextSource context) {
+            // Nothing to validate; the trigger carries no predicates.
+        }
 
         public Instance(final Identifier id) {
             super(id);

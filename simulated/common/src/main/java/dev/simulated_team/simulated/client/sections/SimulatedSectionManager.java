@@ -6,6 +6,8 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 
@@ -31,11 +33,11 @@ public class SimulatedSectionManager {
 		return sortedSections;
 	}
 
-	public static class ReloadListener extends SimpleJsonResourceReloadListener {
+	public static class ReloadListener extends SimpleJsonResourceReloadListener<JsonElement> {
 
 		private static final Gson GSON = new Gson();
 		public ReloadListener() {
-			super(GSON, "simulated_sections");
+			super(ExtraCodecs.JSON, FileToIdConverter.json("simulated_sections"));
 		}
 
 		@Override

@@ -94,13 +94,13 @@ public class SpringRenderer extends SmartBlockEntityRenderer<SpringBlockEntity> 
 
         final BlockPos blockPos = be.getBlockPos();
 
-        final Vector3dc center = be.getCenter();
-        final Vector3d otherCenter = other.getCenter();
+        final Vector3dc center = Vec3.atCenterOf(be);
+        final Vector3d otherCenter = Vec3.atCenterOf(other);
 
         final Direction facing = state.getValue(SpringBlock.FACING);
         final Direction otherFacing = other.getBlockState().getValue(SpringBlock.FACING);
         final Vector3dc normalA = JOMLConversion.atLowerCornerOf(facing.getUnitVec3i());
-        final Vector3d normalB = JOMLConversion.atLowerCornerOf(otherFacing.getNormal());
+        final Vector3d normalB = JOMLConversion.atLowerCornerOf(otherFacing.getUnitVec3i());
 
         ps.translate(center.x() - (blockPos.getX()), center.y() - (blockPos.getY()), center.z() - (blockPos.getZ()));
 
@@ -266,7 +266,7 @@ public class SpringRenderer extends SmartBlockEntityRenderer<SpringBlockEntity> 
             return facing.getAxis().isHorizontal() ? new Vec3(0, 1, 0) : new Vec3(0, 0, -1);
         }
 
-        return Vec3.atLowerCornerOf(Direction.getNearest(dir.x, dir.y, dir.z).getOpposite().getNormal());
+        return Vec3.atLowerCornerOf(Direction.getNearest(dir.x, dir.y, dir.z).getOpposite().getUnitVec3i());
     }
 
     /**

@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.simibubi.create.content.redstone.link.RedstoneLinkBlockEntity;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -55,16 +57,13 @@ public class LinkedTypewriterItem extends BlockItem {
 
             //reset if we click on another link
             if (LinkedTypewriterInteractionHandler.getMode() == LinkedTypewriterInteractionHandler.Mode.BINDING_FROM_ITEM) {
-                LinkedTypewriterItemBindHandler.reset();
                 return InteractionResult.CONSUME;
             }
 
             //the rest of this needs to be handled on the client...
             LinkedTypewriterInteractionHandler.setMode(LinkedTypewriterInteractionHandler.Mode.BINDING_FROM_ITEM);
-            LinkedTypewriterItemBindHandler.setClickedPos(clickedPos);
             return InteractionResult.SUCCESS;
         } else if (level.isClientSide()) {
-            LinkedTypewriterItemBindHandler.reset();
         }
 
         return super.useOn(context);
@@ -74,20 +73,19 @@ public class LinkedTypewriterItem extends BlockItem {
     public InteractionResult use(final Level level, final Player player, final InteractionHand usedHand) {
         final BlockHitResult blockHitResult = RaycastHelper.rayTraceRange(level, player, player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE));
         if (blockHitResult.getType() == HitResult.Type.MISS && level.isClientSide()) {
-            LinkedTypewriterItemBindHandler.reset();
         }
 
         return super.use(level, player, usedHand);
     }
 
     @Override
-    public void appendHoverText(final ItemStack stack, final TooltipContext context, final List<Component> tooltipComponents, final TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    public void appendHoverText(final ItemStack stack, final TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltipComponents, final TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, display, tooltipComponents, tooltipFlag);
         if (stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
-            final CompoundTag tag = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
-            if (tag.contains("Keys", CompoundTag.TAG_LIST)) {
-                final int keyCount = tag.getList("Keys", CompoundTag.TAG_COMPOUND).size();
-                tooltipComponents.add(Component.translatable("simulated.linked_typewriter.key_count", keyCount).withStyle(ChatFormatting.GOLD));
+            final CompoundTag tag = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTagWithoutId();
+            if (tag.contains("Keys")) {
+                final int keyCount = tag.getListOrEmpty("Keys").size();
+                tooltipComponents.accept(Component.translatable("simulated.linked_typewriter.key_count", keyCount).withStyle(ChatFormatting.GOLD));
             }
         }
     }

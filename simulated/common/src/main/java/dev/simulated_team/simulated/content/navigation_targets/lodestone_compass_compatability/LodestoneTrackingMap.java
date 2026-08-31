@@ -1,5 +1,8 @@
 package dev.simulated_team.simulated.content.navigation_targets.lodestone_compass_compatability;
 
+import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.resources.Identifier;
 import dev.engine_room.flywheel.lib.util.LevelAttached;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.SubLevelHelper;
@@ -42,12 +45,16 @@ public class LodestoneTrackingMap extends SavedData {
 
 	private static final LevelAttached<LodestoneTrackingMap> LODESTONE_MAP = new LevelAttached<>(level -> {
 		if (level instanceof ServerLevel sl) {
-			return sl.getDataStorage().computeIfAbsent(
-					new Factory<>(
-							() -> new LodestoneTrackingMap(sl),
-							(tag, prov) -> LodestoneTrackingMap.load(sl, tag),
-							null
-					), FILE_ID);
+			// 26.2 describes saved data with a codec backed type.
+			return sl.getDataStorage().computeIfAbsent(new SavedDataType<>(
+					Identifier.withDefaultNamespace(FILE_ID),
+					() -> new LodestoneTrackingMap(sl),
+					CompoundTag.CODEC.xmap(
+							tag -> LodestoneTrackingMap.load(sl, tag),
+							data -> data.save(new CompoundTag(), sl.registryAccess())
+					),
+					DataFixTypes.LEVEL
+			));
 		}
 
 		return null;
@@ -84,7 +91,6 @@ public class LodestoneTrackingMap extends SavedData {
 		this.associatedLevel = new WeakReference<>(level);
 	}
 
-	@Override
 	@NotNull
 	public CompoundTag save(final @NotNull CompoundTag compoundTag, final HolderLookup.@NotNull Provider provider) {
 		final ListTag lodestoneInformationList = new ListTag();

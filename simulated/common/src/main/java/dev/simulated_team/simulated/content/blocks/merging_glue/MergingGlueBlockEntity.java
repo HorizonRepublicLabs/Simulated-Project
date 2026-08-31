@@ -265,7 +265,7 @@ public class MergingGlueBlockEntity extends SmartBlockEntity implements BlockEnt
             this.endRotation = SimAssemblyHelper.rotationFrom90DegRots(-turns);
         } else {
             final Vec3i normal = direction.getUnitVec3i();
-            final Vec3i partnerNormal = partnerDirection.getNormal();
+            final Vec3i partnerNormal = partnerDirection.getUnitVec3i();
 
             double angle = Math.atan2(partnerNormal.getX(), partnerNormal.getZ()) - Math.atan2(normal.getX(), normal.getZ());
             if (direction.getAxis() == partnerDirection.getAxis()) {

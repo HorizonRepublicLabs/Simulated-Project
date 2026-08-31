@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.nameplate;
 
+import net.minecraft.nbt.NbtOps;
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -109,7 +110,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
      * this method is only called on the server. Data is synced to the client when data is sent afterwards
      */
     public void checkAndUpdateController(final DyeColor color, final Direction facing) {
-        final BlockPos leftPos = this.getBlockPos().offset(facing.getClockWise(Direction.Axis.Y).getNormal());
+        final BlockPos leftPos = this.getBlockPos().offset(facing.getClockWise(Direction.Axis.Y).getUnitVec3i());
 
         final boolean wasController = this.controller;
         final BlockState leftState = this.getLevel().getBlockState(leftPos);
@@ -177,8 +178,8 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
             return getClosestDistance(nbe.findController(), point);
         }
 
-        final Vec3i dir = nbe.getBlockState().getValue(NameplateBlock.FACING).getCounterClockWise().getNormal();
-        Vec3 A = nbe.getBlockPos().getCenter();
+        final Vec3i dir = nbe.getBlockState().getValue(NameplateBlock.FACING).getCounterClockWise().getUnitVec3i();
+        Vec3 A = Vec3.atCenterOf(nbe.getBlockPos());
         Vec3 B = A.add(dir.getX() * nbe.controllerWidth, dir.getY() * nbe.controllerWidth, dir.getZ() * nbe.controllerWidth);
         final SubLevel subLevel = Sable.HELPER.getContaining(nbe);
         if (subLevel != null) {
@@ -326,7 +327,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
         if (this.controller) {
             tag.putInt("Width", this.controllerWidth);
         } else {
-            tag.put("ControllerPos", NbtUtils.writeBlockPos(this.controllerPos));
+            tag.put("ControllerPos", BlockPos.CODEC.encodeStart(NbtOps.INSTANCE, this.controllerPos).getOrThrow());
         }
     }
 
@@ -343,7 +344,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
 
         if (tag.contains("ControllerPos")) {
             this.controller = false;
-            this.controllerPos = NbtUtils.readBlockPos(tag, "ControllerPos").get();
+            this.controllerPos = BlockPos.CODEC.parse(NbtOps.INSTANCE, tag.get("ControllerPos")).getOrThrow();
         } else {
             this.controller = true;
             this.controllerPos = this.getBlockPos();
@@ -362,7 +363,7 @@ public class NameplateBlockEntity extends SmartBlockEntity implements ClipboardC
         }
 
         final Direction facing = this.getBlockState().getValue(NameplateBlock.FACING);
-        final Vec3i off = facing.getCounterClockWise(Direction.Axis.Y).getNormal();
+        final Vec3i off = facing.getCounterClockWise(Direction.Axis.Y).getUnitVec3i();
 
         final AABB bounds = AABB.encapsulatingFullBlocks(this.getBlockPos(), this.getBlockPos().offset(off.multiply(this.controllerWidth - 1)));
         return bounds;

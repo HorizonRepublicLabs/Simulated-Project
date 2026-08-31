@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.index;
 
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -31,10 +32,10 @@ public class SimItems {
 
     public static final ItemEntry<DiagramItem> CONTRAPTION_DIAGRAM =
             REGISTRATE.item("contraption_diagram", DiagramItem::new)
-                    .recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, c.get(), 1)
+                    .recipe((c, p) -> ShapelessRecipeBuilder.shapeless(ItemHelper.itemLookup(), RecipeCategory.MISC, c.get(), 1)
                             .requires(Items.PAPER)
                             .requires(SimBlocks.PHYSICS_ASSEMBLER)
-                            .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(SimBlocks.PHYSICS_ASSEMBLER))
+                            .unlockedBy("has_ingredient", p.has(SimBlocks.PHYSICS_ASSEMBLER))
                             .save(p))
                     .register();
 
@@ -42,26 +43,26 @@ public class SimItems {
             REGISTRATE.item("spring", SpringItem::new)
                     .properties(p -> p.component(SimDataComponents.BOUNCINESS, 1f))
                     .recipe((ctx, prov) ->
-                            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 2)
+                            ShapedRecipeBuilder.shaped(ItemHelper.itemLookup(), RecipeCategory.MISC, ctx.get(), 2)
                                     .pattern("S")
                                     .pattern("N")
                                     .pattern("S")
                                     .define('S', CommonMetal.IRON.plates)
                                     .define('N', CommonMetal.IRON.nuggets)
-                                    .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(CommonMetal.IRON.plates))
+                                    .unlockedBy("has_ingredient", prov.has(CommonMetal.IRON.plates))
                                     .save(prov)
                     )
                     .register();
 
     public static ItemEntry<RopeItem> ROPE_COUPLING = REGISTRATE
             .item("rope_coupling", RopeItem::new)
-            .recipe((ctx, prov) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 1)
+            .recipe((ctx, prov) -> ShapedRecipeBuilder.shaped(ItemHelper.itemLookup(), RecipeCategory.MISC, ctx.get(), 1)
                     .pattern(" S ")
                     .pattern("NSN")
                     .pattern(" S ")
                     .define('S', Tags.Items.STRINGS)
                     .define('N', Tags.Items.NUGGETS_IRON)
-                    .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(Tags.Items.STRINGS))
+                    .unlockedBy("has_ingredient", prov.has(Tags.Items.STRINGS))
                     .save(prov))
             .register();
 
@@ -91,13 +92,11 @@ public class SimItems {
     public static final ItemEntry<PhysicsStaffItem> PHYSICS_STAFF =
             REGISTRATE.item("creative_physics_staff", PhysicsStaffItem::new)
                     .properties(p -> p.rarity(Rarity.EPIC).stacksTo(1))
-                    .model(AssetLookup.itemModelWithPartials())
                     .register();
 
     public static final ItemEntry<PlungerLauncherItem> PLUNGER_LAUNCHER =
             REGISTRATE.item("plunger_launcher", PlungerLauncherItem::new)
                     .properties(p -> p.stacksTo(1).durability(200))
-                    .model(AssetLookup.itemModelWithPartials())
                     .tag(Tags.Items.ENCHANTABLES, ItemTags.DURABILITY_ENCHANTABLE)
                     .register();
 

@@ -20,7 +20,7 @@ public class PropellerAirParticle extends SimpleAnimatedParticle {
 
     protected PropellerAirParticle(final ClientLevel world, final double x, final double y, final double z, final double dx, final double dy,
                                    final double dz, final SpriteSet sprite, final boolean enableCollision, final boolean isVirtual) {
-        super(world, x, y, z, sprite, world.random.nextFloat() * .5f);
+        super(world, x, y, z, sprite, world.getRandom().nextFloat() * .5f);
         this.quadSize *= 0.75F;
         this.lifetime = lifeTime;
         this.bbWidth = this.bbHeight = 0.01f;

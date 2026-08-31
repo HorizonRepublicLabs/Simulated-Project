@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.spring;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -48,13 +50,12 @@ public class SpringBlock extends WrenchableDirectionalBlock implements IBE<Sprin
     }
 
     @Override
-    public ItemStack getCloneItemStack(final LevelReader levelReader, final BlockPos blockPos, final BlockState blockState) {
+    protected ItemStack getCloneItemStack(final LevelReader levelReader, final BlockPos blockPos, final BlockState blockState, final boolean includeData) {
         return SimItems.SPRING.asStack();
     }
 
     @Override
-    public void onRemove(final BlockState pState, final Level pLevel, final BlockPos pPos, final BlockState pNewState, final boolean pMovedByPiston) {
-        IBE.onRemove(pState, pLevel, pPos, pNewState);
+    protected void affectNeighborsAfterRemoval(final BlockState pState, final ServerLevel pLevel, final BlockPos pPos, final boolean pMovedByPiston) {
     }
 
     @Override
@@ -63,8 +64,8 @@ public class SpringBlock extends WrenchableDirectionalBlock implements IBE<Sprin
     }
 
     @Override
-    public BlockState updateShape(final BlockState pState, final Direction pFacing, final BlockState pFacingState, final LevelAccessor pLevel, final BlockPos pCurrentPos, final BlockPos pFacingPos) {
-        return pState.getValue(FACING).getOpposite() == pFacing && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
+    protected BlockState updateShape(final BlockState pState, final LevelReader pLevel, final ScheduledTickAccess ticks, final BlockPos pCurrentPos, final Direction pFacing, final BlockPos pFacingPos, final BlockState pFacingState, final RandomSource random) {
+        return pState.getValue(FACING).getOpposite() == pFacing && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pLevel, ticks, pCurrentPos, pFacing, pFacingPos, pFacingState, random);
     }
 
     public static boolean canAttach(final LevelReader pReader, final BlockPos pPos, final Direction pDirection) {

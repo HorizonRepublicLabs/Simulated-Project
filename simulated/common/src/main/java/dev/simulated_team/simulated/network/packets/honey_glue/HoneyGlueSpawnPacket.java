@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.network.packets.honey_glue;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.content.entities.honey_glue.HoneyGlueEntity;
 import dev.simulated_team.simulated.content.entities.honey_glue.HoneyGlueMaxSizing;
@@ -69,7 +70,7 @@ public record HoneyGlueSpawnPacket(BlockPos from, BlockPos to) implements Custom
             final ItemStack honeyGlueItem = player.getItemInHand(hand);
             honeyGlueItem.hurtAndBreak(1, level, player, (item) -> {});
 
-            final HoneyGlueEntity entity = SimEntityTypes.HONEY_GLUE.create(level);
+            final HoneyGlueEntity entity = SimEntityTypes.HONEY_GLUE.create(level, EntitySpawnReason.TRIGGERED);
             assert entity != null;
 
             entity.setBounds(newBounds);

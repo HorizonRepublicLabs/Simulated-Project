@@ -1,6 +1,7 @@
 package dev.simulated_team.simulated.neoforge.compat.jei;
 
 
+import net.minecraft.world.item.Items;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.index.SimBlocks;
 import net.minecraft.core.NonNullList;
@@ -31,7 +32,7 @@ public final class PortableEngineDyeingRecipeMaker {
         return Arrays.stream(DyeColor.values())
                 .filter(dc -> dc != DyeColor.RED)
                 .map(color -> {
-                    final DyeItem dye = DyeItem.byColor(color);
+                    final DyeItem dye = Items.DYE.pick(color);
                     final ItemStack dyeStack = new ItemStack(dye);
                     final TagKey<Item> colorTag = color.getTag();
                     final Ingredient.Value dyeList = new Ingredient.ItemValue(dyeStack);

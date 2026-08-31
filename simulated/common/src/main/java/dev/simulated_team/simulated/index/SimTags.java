@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.index;
 
+import net.minecraft.resources.ResourceKey;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.data.TagGen;
@@ -92,9 +93,9 @@ public class SimTags {
             final TagGen.CreateTagsProvider<Item> prov = new TagGen.CreateTagsProvider<>(provIn, Item::builtInRegistryHolder);
             prov.tag(ROTATE_WITH_NAV_ARROW)
                     .add(COMPASS, RECOVERY_COMPASS)
-                    .addOptional(Identifier.fromNamespaceAndPath("naturescompass", "naturescompass"));
+                    .addOptional(ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("naturescompass", "naturescompass")));
             prov.tag(ROTATE_WITH_NAV_ARROW)
-                    .addOptional(Identifier.fromNamespaceAndPath("explorerscompass", "explorerscompass"));
+                    .addOptional(ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("explorerscompass", "explorerscompass")));
             prov.tag(DESTROYS_ROPE)
                     .add(SHEARS)
                     .add(AllItems.WRENCH.asItem());

@@ -7,7 +7,7 @@ import net.minecraft.client.particle.*;
 public class AirPoofParticle extends TextureSheetParticle implements ParticleSubLevelKickable {
     protected AirPoofParticle(final ClientLevel level, final double x, final double y, final double z, final double xSpeed, final double ySpeed, final double zSpeed) {
         super(level, x, y, z, xSpeed, ySpeed, zSpeed);
-        this.alpha = level.random.nextFloat() * 0.2f + 0.3f;
+        this.alpha = level.getRandom().nextFloat() * 0.2f + 0.3f;
         this.xd = xSpeed;
         this.yd = ySpeed;
         this.zd = zSpeed;

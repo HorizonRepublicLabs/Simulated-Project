@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.throttle_lever;
 
+import net.minecraft.world.phys.Vec3;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -38,7 +39,7 @@ public class ThrottleLeverHandler extends BlockHoldInteraction {
     @Override
     public boolean activeTick(final Level level, final LocalPlayer player) {
         if (level.getBlockEntity(this.getInteractionPos()) instanceof ThrottleLeverBlockEntity &&
-                BlockHoldInteraction.inInteractionRange(player, this.getInteractionPos().getCenter(), 0)) {
+                BlockHoldInteraction.inInteractionRange(player, Vec3.atCenterOf(this.getInteractionPos()), 0)) {
             final float speed = 0.85f;
             this.lastAnimatedValue = this.animatedValue;
             this.animatedValue = this.animatedValue * (1 - speed) + this.signal / 15f * speed;
@@ -49,68 +50,9 @@ public class ThrottleLeverHandler extends BlockHoldInteraction {
 
     @Override
     public void renderOverlay(final int width, final int height, final boolean hideGui) {
-        if (hideGui)
-            return;
-
-        final int h = 14;
-        final int w = 100;
-        final int x;
-        final int y;
-        x = width / 2 - w / 2 + 16;
-        y = height / 2 - h / 2;
-        final PoseStack ps = graphics.pose();
-
-        ps.pushPose();
-
-        ps.translate(x + w / 2, y + h / 2, 0);
-        ps.mulPose(Axis.ZP.rotationDegrees(90.0f));
-        ps.translate(-x - w / 2, -y - h / 2, 0);
-
-        AllGuiTextures.BRASS_FRAME_TL.render(graphics, x, y);
-        AllGuiTextures.BRASS_FRAME_TR.render(graphics, x + w - 4, y);
-        AllGuiTextures.BRASS_FRAME_BL.render(graphics, x, y + h - 4);
-        AllGuiTextures.BRASS_FRAME_BR.render(graphics, x + w - 4, y + h - 4);
-        final int zLevel = 2;
-
-        UIRenderHelper.drawStretched(graphics, x, y + 4, 3, h - 8, zLevel, AllGuiTextures.BRASS_FRAME_LEFT);
-        UIRenderHelper.drawStretched(graphics, x + w - 3, y + 4, 3, h - 8, zLevel, AllGuiTextures.BRASS_FRAME_RIGHT);
-        UIRenderHelper.drawCropped(graphics, x + 4, y, w - 8, 3, zLevel, AllGuiTextures.BRASS_FRAME_TOP);
-        UIRenderHelper.drawCropped(graphics, x + 4, y + h - 3, w - 8, 3, zLevel, AllGuiTextures.BRASS_FRAME_BOTTOM);
-
-        final int valueBarX = x + 3;
-        final int valueBarWidth = w - 6;
-
-        for (int w1 = 0; w1 < valueBarWidth; w1 += AllGuiTextures.VALUE_SETTINGS_BAR.getWidth() - 1)
-            UIRenderHelper.drawCropped(graphics, valueBarX + w1, y + 3,
-                    Math.min(AllGuiTextures.VALUE_SETTINGS_BAR.getWidth() - 1, valueBarWidth - w1), 8,
-                    zLevel, AllGuiTextures.VALUE_SETTINGS_BAR);
-
-        ps.popPose();
-
-
-        ps.pushPose();
-        ps.translate(0.0, 0.0, 4.0);
-        final float partialTick = AnimationTickHolder.getPartialTicks();
-        final float currentValue = this.lastAnimatedValue * (1 - partialTick) + this.animatedValue * partialTick;
-
-        final float cursorY = ((1.0f - 2.0f * currentValue) * 3.0f * h) + 2;
-        final int cx = x + w / 2 - 7;
-        final float cy = y + h / 2 - 9 + cursorY;
-        final int cursorWidth = 14;
-        ps.pushPose();
-        ps.translate(0, cy, 0);
-
-        AllGuiTextures.VALUE_SETTINGS_CURSOR_LEFT.render(graphics, cx - 3, 0);
-        UIRenderHelper.drawCropped(graphics, cx, 0, cursorWidth, 14, zLevel, AllGuiTextures.VALUE_SETTINGS_CURSOR);
-        AllGuiTextures.VALUE_SETTINGS_CURSOR_RIGHT.render(graphics, cx + cursorWidth, 0);
-
-        ps.translate(0.0, 0.0, 4.0);
-
-        graphics.drawString(Minecraft.getInstance().font, String.valueOf(this.inverted ? 15 - this.signal : this.signal), cx + 1, 3, SimColors.THROTTLE_VALUE_BROWN, false);
-
-        ps.popPose();
-
-        ps.popPose();
+        // The throttle's overlay is drawn through GuiGraphics, which 26.2
+        // replaced with the gui render state pipeline. The lever still works;
+        // only its readout is missing until the client render layer is ported.
     }
 
     @Override

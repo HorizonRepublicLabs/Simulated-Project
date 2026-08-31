@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.rope;
 
+import net.minecraft.core.UUIDUtil;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.simibubi.create.AllBlocks;
@@ -151,7 +152,7 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
         final ServerLevel level = (ServerLevel) this.getLevel();
         if (level == null) return List.of();
 
-        final ChunkPos chunk = new ChunkPos(this.getPos());
+        final ChunkPos chunk = ChunkPos.containing(this.getPos());
 
         return level.getChunkSource().chunkMap.getPlayers(chunk, false);
     }
@@ -196,7 +197,8 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
         final RopeAttachment endAttachment = strand.getAttachment(RopeAttachmentPoint.END);
 
         // todo: no nice way to grab a potentially causing player to check for infinite materials :p
-        final boolean tileDrops = level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS);
+        final boolean tileDrops = !(level instanceof final ServerLevel serverLevel)
+                || serverLevel.getGameRules().get(GameRules.BLOCK_DROPS);
 
         if (endAttachment == null) {
             this.destroyRope(null, this.getAttachmentPoint(), tileDrops);
@@ -207,19 +209,19 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
         final BlockEntity blockEntity = level.getBlockEntity(blockAttachment);
 
         if (blockEntity == null) {
-            this.destroyRope(null, blockAttachment.getCenter(), tileDrops);
+            this.destroyRope(null, Vec3.atCenterOf(blockAttachment), tileDrops);
             return;
         }
 
         if (!(blockEntity instanceof final SmartBlockEntity smartBlockEntity)) {
-            this.destroyRope(null, blockAttachment.getCenter(), tileDrops);
+            this.destroyRope(null, Vec3.atCenterOf(blockAttachment), tileDrops);
             return;
         }
 
         final RopeStrandHolderBehavior holderBehavior = smartBlockEntity.getBehaviour(RopeStrandHolderBehavior.TYPE);
 
         if (holderBehavior == null) {
-            this.destroyRope(null, blockAttachment.getCenter(), tileDrops);
+            this.destroyRope(null, Vec3.atCenterOf(blockAttachment), tileDrops);
         }
     }
 
@@ -256,7 +258,7 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
             return false;
         }
 
-        this.destroyRope(null, null, dropItem && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS));
+        this.destroyRope(null, null, dropItem && level.getGameRules().get(GameRules.BLOCK_DROPS));
 
         final double distance = ropeTarget.distanceTo(ropeStart);
         final int oneLongSegments = Mth.floor(distance);
@@ -434,7 +436,7 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
         nbt.putBoolean("OwnStrand", this.strandOwner);
 
         if (this.attachedRopeID != null) {
-            nbt.putUUID("HasRopeAttached", this.attachedRopeID);
+            nbt.store("HasRopeAttached", UUIDUtil.CODEC, this.attachedRopeID);
         }
 
         final ServerRopeStrand strand = this.getOwnedStrand();
@@ -449,7 +451,7 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
         this.strandOwner = nbt.getBooleanOr("OwnStrand", false);
 
         if (nbt.contains("HasRopeAttached")) {
-            this.attachedRopeID = nbt.getUUID("HasRopeAttached");
+            this.attachedRopeID = nbt.read("HasRopeAttached", UUIDUtil.CODEC).orElseThrow();
         } else {
             this.attachedRopeID = null;
         }
@@ -571,7 +573,8 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
             this.removeClientStrand();
         }
 
-        final boolean tileDrops = level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS);
+        final boolean tileDrops = !(level instanceof final ServerLevel serverLevel)
+                || serverLevel.getGameRules().get(GameRules.BLOCK_DROPS);
 
         if (!this.strandOwner && attachedStrand != null) {
             final RopeAttachment startAttachment = attachedStrand.getAttachment(RopeAttachmentPoint.START);

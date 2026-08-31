@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.worldgen;
 
+import net.minecraft.world.level.storage.LevelData;
+import net.minecraft.core.GlobalPos;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.sublevel.SubLevel;
@@ -26,12 +28,16 @@ public class EndSeaPreset extends SimulatedWorldPreset {
 	@Override
 	public void onPlayerJoin(final ServerLevel level, final ServerPlayer player) {
 		if(!level.dimension().equals(Level.END)) {
-			player.setRespawnPosition(Level.END, BlockPos.containing(PLAYER_SPAWN_POS), 0.0f, true, false);
+			// 26.2 carries the respawn point in a config record and teleports
+			// through a transition describing the destination.
+			player.setRespawnPosition(new ServerPlayer.RespawnConfig(
+					new LevelData.RespawnData(
+							new GlobalPos(Level.END, BlockPos.containing(PLAYER_SPAWN_POS)), 0.0f, 0.0f),
+					true), false);
 
 			final ServerLevel endLevel = level.getServer().getLevel(Level.END);
-			final TeleportTransition transition = new TeleportTransition(endLevel, player, TeleportTransition.DO_NOTHING);
-			player.changeDimension(transition);
-			player.teleportTo(PLAYER_SPAWN_POS.x(), PLAYER_SPAWN_POS.y(), PLAYER_SPAWN_POS.z());
+			player.teleport(new TeleportTransition(endLevel, PLAYER_SPAWN_POS, Vec3.ZERO, 0.0f, 0.0f,
+					TeleportTransition.DO_NOTHING));
 		}
 	}
 

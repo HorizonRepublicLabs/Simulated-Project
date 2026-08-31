@@ -112,7 +112,7 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
         if (subLevel == null)
             return;
 
-        final Vector3d ld = JOMLConversion.toJOML(Vec3.atLowerCornerOf(Direction.DOWN.getNormal()));
+        final Vector3d ld = JOMLConversion.toJOML(Vec3.atLowerCornerOf(Direction.DOWN.getUnitVec3i()));
         subLevel.logicalPose().orientation().transformInverse(ld);
 
         this.XAngle = ld.y() < 0 || ld.z() * ld.z() > 0.001 ? atan2(ld.z(), -ld.y()) : 0;
@@ -126,9 +126,9 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
     }
 
     public void randomNudge() {
-        final Vec3 v = (VecHelper.offsetRandomly(new Vec3(0, 0, 0), this.level.random, 0.2f));
+        final Vec3 v = (VecHelper.offsetRandomly(new Vec3(0, 0, 0), this.level.getRandom(), 0.2f));
         this.angleVelocities.set(v.x, v.y, v.z);
-        this.eulerAngles.set(0, 0, this.level.random.nextFloat() * Math.PI * 2);
+        this.eulerAngles.set(0, 0, this.level.getRandom().nextFloat() * Math.PI * 2);
     }
 
     void animateClientRotation(final SubLevel subLevel, final Pose3dc pose) {
@@ -147,7 +147,7 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
 
         this.addCompassTorque(pose, acceleration, target);
         if (this.compassTarget.isRandom())
-            acceleration.z += (2 * this.level.random.nextFloat() - 1) * 2.1;
+            acceleration.z += (2 * this.level.getRandom().nextFloat() - 1) * 2.1;
 
         acceleration.div(this.angleInertia);
         final Vector3d relativeVelocity = this.angleVelocities.add(shellVelocity, new Vector3d());
@@ -234,8 +234,8 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
         final int newPower = angleLimit == 0 ? 0 : max(min((int) (14.5 * angle / Math.toRadians(angleLimit) + 0.5), 15), 0);
         if (this.redstoneMap.get(dir) != newPower) {
             this.redstoneMap.put(dir, newPower);
-            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
-            this.level.updateNeighborsAt(this.worldPosition.relative(dir), this.getBlockState().getBlock());
+            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock(), null);
+            this.level.updateNeighborsAt(this.worldPosition.relative(dir), this.getBlockState().getBlock(), null);
         }
     }
 
@@ -329,7 +329,7 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
         if (tag.contains("Powers")) {
             final CompoundTag powers = (CompoundTag) tag.get("Powers");
             for (final Map.Entry<Direction, Integer> entry : this.redstoneMap.entrySet()) {
-                entry.setValue(powers.getInt(entry.getKey().getName()));
+                entry.setValue(powers.getIntOr(entry.getKey().getName(), 0));
             }
         }
         if (!clientPacket) {
@@ -558,11 +558,11 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
         private boolean isRandom = false;
 
         public void update(final Vec3 pos, final Level level) {
-            this.isRandom = !level.dimensionType().natural();
+            this.isRandom = !!level.dimensionType().hasCeiling();
             if (!this.isRandom) {
                 this.target.set(0, 0, -1);
             } else {
-                final RandomSource r = level.random;
+                final RandomSource r = level.getRandom();
                 if (this.randomTargetTimer-- < 0) {
 
                     final float radius = 1.0f;
@@ -570,7 +570,7 @@ public class GimbalSensorBlockEntity extends SmartBlockEntity implements IHaveGo
                             (r.nextFloat() - .5f) * 2 * radius,
                             (r.nextFloat() - .5f) * 2 * radius,
                             (r.nextFloat() - .5f) * 2 * radius);
-                    this.randomTargetTimer = level.random.nextInt(5, 15);
+                    this.randomTargetTimer = level.getRandom().nextInt(5, 15);
                 }
                 final float nudge = 0.3f;
                 this.randomTarget.add(

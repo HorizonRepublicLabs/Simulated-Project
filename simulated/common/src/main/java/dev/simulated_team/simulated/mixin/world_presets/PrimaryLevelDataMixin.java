@@ -24,7 +24,7 @@ public class PrimaryLevelDataMixin implements PrimaryLevelDataExtension {
 
 	@Unique
 	private static final String simulated$WORLD_PRESET_KEY = "simulated:world_preset";
-	private Identifier simulated$worldPresetKey = WorldPresets.NORMAL.location();
+	private Identifier simulated$worldPresetKey = WorldPresets.NORMAL.identifier();
 
 	@Inject(method = "parse", at = @At("RETURN"), remap = false)
 	private static <T> void simulated$parse(final Dynamic<T> dynamic, final LevelSettings levelSettings, final PrimaryLevelData.SpecialWorldProperty specialWorldProperty, final WorldOptions worldOptions, final Lifecycle lifecycle, final CallbackInfoReturnable<PrimaryLevelData> cir) {

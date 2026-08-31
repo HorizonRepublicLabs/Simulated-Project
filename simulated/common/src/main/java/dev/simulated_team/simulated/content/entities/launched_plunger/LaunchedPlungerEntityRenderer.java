@@ -107,9 +107,9 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
         if (entity.isPlunged()) {
             selfNormal = Vec3.atLowerCornerOf(dir.getUnitVec3i());
             if (dir.getAxis().isHorizontal()) {
-                perpendicularNormal = Vec3.atLowerCornerOf(Direction.UP.getNormal());
+                perpendicularNormal = Vec3.atLowerCornerOf(Direction.UP.getUnitVec3i());
             } else {
-                perpendicularNormal = Vec3.atLowerCornerOf(Direction.NORTH.getNormal());
+                perpendicularNormal = Vec3.atLowerCornerOf(Direction.NORTH.getUnitVec3i());
             }
         } else {
             selfNormal = entity.calculateViewVector(-Mth.lerp(pt, entity.xRotO, entity.getXRot()),-Mth.lerp(pt, entity.yRotO, entity.getYRot())).reverse();
@@ -148,7 +148,7 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
             Vec3 otherNormal = Vec3.ZERO;
             if (other.isPlunged()) {
                 final Direction otherDir = other.getData(LaunchedPlungerEntity.PLUNGED_DIRECTION);
-                otherNormal = Vec3.atLowerCornerOf(otherDir.getNormal());
+                otherNormal = Vec3.atLowerCornerOf(otherDir.getUnitVec3i());
             } else {
                 otherNormal = other.calculateViewVector(-Mth.lerp(pt, other.xRotO, other.getXRot()),-Mth.lerp(pt, other.yRotO, other.getYRot())).reverse();
             }

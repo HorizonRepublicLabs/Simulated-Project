@@ -1,5 +1,6 @@
 package dev.ryanhcode.offroad.index;
 
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockItem;
@@ -45,15 +46,14 @@ public class OffroadBlocks {
                             .isRedstoneConductor((state, level, pos) -> false))
                     .transform(pickaxeOnly())
                     .transform(OffroadStress.setImpact(8))
-                    .blockstate(BlockStateGen.directionalAxisBlockProvider())
-                    .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+                    .recipe((c, p) -> ShapedRecipeBuilder.shaped(ItemHelper.itemLookup(), RecipeCategory.MISC, c.get(), 1)
                             .pattern("S")
                             .pattern("G")
                             .pattern("I")
                             .define('S', ItemTags.WOODEN_SLABS)
                             .define('G', AllBlocks.GEARBOX)
                             .define('I', AllBlocks.INDUSTRIAL_IRON_BLOCK)
-                            .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(AllBlocks.INDUSTRIAL_IRON_BLOCK))
+                            .unlockedBy("has_ingredient", p.has(AllBlocks.INDUSTRIAL_IRON_BLOCK))
                             .save(p))
                     .item()
                     .transform(customItemModel())
@@ -69,14 +69,14 @@ public class OffroadBlocks {
                     .transform(pickaxeOnly())
                     .onRegister(movementBehaviour(new RockCuttingWheelActor()))
                     .properties(BlockBehaviour.Properties::noOcclusion)
-                    .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+                    .recipe((c, p) -> ShapedRecipeBuilder.shaped(ItemHelper.itemLookup(), RecipeCategory.MISC, c.get(), 1)
                             .pattern("C")
                             .pattern("G")
                             .pattern("S")
                             .define('C', AllBlocks.CRUSHING_WHEEL)
                             .define('G', AllBlocks.INDUSTRIAL_IRON_BLOCK)
                             .define('S', CommonMetal.IRON.plates)
-                            .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(AllBlocks.INDUSTRIAL_IRON_BLOCK))
+                            .unlockedBy("has_ingredient", p.has(AllBlocks.INDUSTRIAL_IRON_BLOCK))
                             .save(p))
                     .item()
                     .properties(x -> x.component(OffroadDataComponents.TIRE, TireLike.ROCKCUTTING_WHEEL))
@@ -92,18 +92,17 @@ public class OffroadBlocks {
                             .isRedstoneConductor((state, level, pos) -> false))
                     .transform(axeOrPickaxe())
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
-                    .blockstate(BlockStateGen.horizontalBlockProvider(true))
                     .transform(OffroadStress.setImpact(16.0))
                     .item(RollerBlockItem::new)
                     .transform(customItemModel())
-                    .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+                    .recipe((c, p) -> ShapedRecipeBuilder.shaped(ItemHelper.itemLookup(), RecipeCategory.MISC, c.get(), 1)
                             .pattern("C")
                             .pattern("S")
                             .pattern("P")
                             .define('C', AllBlocks.ANDESITE_CASING)
                             .define('S', SimItems.SPRING)
                             .define('P', CommonMetal.IRON.plates)
-                            .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(AllBlocks.ANDESITE_CASING))
+                            .unlockedBy("has_ingredient", p.has(AllBlocks.ANDESITE_CASING))
                             .save(p))
                     .register();
 

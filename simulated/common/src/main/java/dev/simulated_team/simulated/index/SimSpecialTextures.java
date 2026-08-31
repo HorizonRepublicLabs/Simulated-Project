@@ -14,7 +14,7 @@ public enum SimSpecialTextures implements BindableTexture {
         this.location = Simulated.path(ASSET_PATH + filename);
 	}
 
-	public Identifier getLocation() {
+	public Identifier getId() {
 		return this.location;
 	}
 }

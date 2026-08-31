@@ -244,7 +244,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
     }
 
     @Override
-    public InteractionResult interact(final Player player, final InteractionHand hand) {
+    public InteractionResult interact(final Player player, final InteractionHand hand, final Vec3 location) {
         return InteractionResult.PASS;
     }
 
@@ -253,7 +253,7 @@ public class HoneyGlueEntity extends Entity implements SpecialEntityItemRequirem
     }
 
     @Override
-    public boolean hurt(final DamageSource source, final float amount) {
+    public boolean hurtServer(final ServerLevel level, final DamageSource source, final float amount) {
         return false;
     }
 

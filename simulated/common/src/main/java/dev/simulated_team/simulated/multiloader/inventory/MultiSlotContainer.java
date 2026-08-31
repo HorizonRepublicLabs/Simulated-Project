@@ -105,7 +105,7 @@ public abstract class MultiSlotContainer implements AbstractContainer {
 
     @Override
     public ItemStack extractSlot(final int index, final int amountToExtract, final boolean simulate) {
-        final ContainerSlot slot = this.getSlot(index);
+        final ContainerSlot slot = this.sable$getContainerSlot(index);
         if (slot.isEmpty())
             return ItemStack.EMPTY;
 
@@ -222,10 +222,10 @@ public abstract class MultiSlotContainer implements AbstractContainer {
     }
 
     private void shiftSlot(final SlotAndItemHolder holder) {
-        final ContainerSlot next = this.getSlot(holder.nextIndex());
+        final ContainerSlot next = this.sable$getContainerSlot(holder.nextIndex());
         if (next.isEmpty()) {
             next.setStack(holder.stack());
-            this.getSlot(holder.currentIndex()).setStack(ItemStack.EMPTY);
+            this.sable$getContainerSlot(holder.currentIndex()).setStack(ItemStack.EMPTY);
         }
     }
 
@@ -305,7 +305,7 @@ public abstract class MultiSlotContainer implements AbstractContainer {
      * @param slot The slot to get
      * @return The ContainerSlot in that slot
      */
-    public ContainerSlot getSlot(final int slot) {
+    public ContainerSlot sable$getContainerSlot(final int slot) {
         return this.inventory.get(slot);
     }
 
@@ -452,11 +452,11 @@ public abstract class MultiSlotContainer implements AbstractContainer {
     }
 
     public ContainerSlot getFirst() {
-        return this.getSlot(0);
+        return this.sable$getContainerSlot(0);
     }
 
     public ContainerSlot getLast() {
-        return this.getSlot(this.getContainerSize() - 1);
+        return this.sable$getContainerSlot(this.getContainerSize() - 1);
     }
 
     public record SlotAndItemHolder(int currentIndex, int nextIndex, ItemStack stack) {

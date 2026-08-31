@@ -89,7 +89,7 @@ public class BoreheadBearingScenes {
         scene.idle(25);
 
         scene.overlay().showText(100)
-                .pointAt(boreheadCenter.getCenter().add(0, 0.5, 0))
+                .pointAt(Vec3.atCenterOf(boreheadCenter).add(0, 0.5, 0))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .text("When a Storage Container and Rock Cutting Wheels are present, it can be used as a Drill");
@@ -107,7 +107,7 @@ public class BoreheadBearingScenes {
         scene.idle(40);
 
         scene.overlay().showText(100)
-                .pointAt(boreheadCenter.getCenter().add(-1, 0, 0))
+                .pointAt(Vec3.atCenterOf(boreheadCenter).add(-1, 0, 0))
                 .colored(PonderPalette.GREEN)
                 .placeNearTarget()
                 .text("Rock Cutting Wheels will automatically attach to blocks and each other without need of Super Glue");

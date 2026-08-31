@@ -1,5 +1,7 @@
 package dev.eriksonn.aeronautics.content.blocks.mounted_potato_cannon;
 
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.redstone.Orientation;
 import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import dev.eriksonn.aeronautics.index.AeroBlockEntityTypes;
@@ -64,7 +66,7 @@ public class MountedPotatoCannonBlock extends DirectionalAxisKineticBlock implem
 					if (!player.hasInfiniteMaterials()) {
 						heldItem.shrink((int) inserted);
 					}
-					return InteractionResult.sidedSuccess(level.isClientSide());
+					return InteractionResult.SUCCESS;
 				}
 			}
 
@@ -87,7 +89,7 @@ public class MountedPotatoCannonBlock extends DirectionalAxisKineticBlock implem
 	}
 
 	@Override
-	public void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block block, final BlockPos fromPos, final boolean isMoving) {
+	protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block block, final @Nullable Orientation orientation, final boolean isMoving) {
 		if (level.isClientSide()) {
 			return;
 		}

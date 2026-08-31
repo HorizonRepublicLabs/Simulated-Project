@@ -41,7 +41,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class SwivelBearingBlock extends DirectionalKineticBlock implements IBE<SwivelBearingBlockEntity>, IRotate, ExtraKinetics.ExtraKineticsBlock, BlockSubLevelAssemblyListener {
     public static final BooleanProperty ASSEMBLED = BooleanProperty.create("assembled");
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    private static final int placementHelperId = PlacementHelpers.register(new CogwheelPlacementExtension((i) -> i.getItem() instanceof CogwheelBlockItem, SimBlocks.SWIVEL_BEARING::has));
+    private static final IPlacementHelper placementHelper = PlacementHelpers.register(new CogwheelPlacementExtension((i) -> i.getItem() instanceof CogwheelBlockItem, SimBlocks.SWIVEL_BEARING::has));
 
     public SwivelBearingBlock(final Properties properties) {
         super(properties);
@@ -73,9 +73,8 @@ public class SwivelBearingBlock extends DirectionalKineticBlock implements IBE<S
         }
 
         final ItemStack heldItem = player.getItemInHand(interactionHand);
-        final IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-        if (helper.matchesItem(heldItem)) {
-            return helper
+                if (placementHelper.matchesItem(heldItem)) {
+            return placementHelper
                     .getOffset(player, level, blockState, blockPos, blockHitResult)
                     .placeInWorld(level, (BlockItem) heldItem.getItem(), player, interactionHand, blockHitResult);
         }

@@ -37,7 +37,6 @@ public class SimPacketManager {
         INSTANCE.registerServerbound(TypewriterKeyInteractionPacket.TYPE, TypewriterKeyInteractionPacket.CODEC, TypewriterKeyInteractionPacket::handle);
         INSTANCE.registerServerbound(TypewriterKeySavePacket.TYPE, TypewriterKeySavePacket.CODEC, TypewriterKeySavePacket::handle);
         INSTANCE.registerServerbound(TypewriterDisconnectUser.TYPE, TypewriterDisconnectUser.CODEC, TypewriterDisconnectUser::handle);
-        INSTANCE.registerServerbound(TypewriterMenuModifySlots.TYPE, TypewriterMenuModifySlots.CODEC, TypewriterMenuModifySlots::handle);
         INSTANCE.registerServerbound(TypewriterSaveKeyToItemPacket.TYPE, TypewriterSaveKeyToItemPacket.CODEC, TypewriterSaveKeyToItemPacket::handle);
 
         INSTANCE.registerServerbound(SteeringWheelPacket.TYPE, SteeringWheelPacket.CODEC, SteeringWheelPacket::handle);

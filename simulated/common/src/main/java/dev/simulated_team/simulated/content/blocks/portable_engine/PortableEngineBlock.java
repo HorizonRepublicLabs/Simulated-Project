@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.portable_engine;
 
+import net.minecraft.server.level.ServerLevel;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
@@ -62,8 +63,8 @@ public class PortableEngineBlock extends HorizontalKineticBlock implements IBE<P
     }
 
     @Override
-    public void onRemove(final BlockState state, final Level level, final BlockPos pos, final BlockState newState, final boolean isMoving) {
-        if (state.hasBlockEntity() && !SimBlocks.PORTABLE_ENGINES.contains(newState.getBlock())) {
+    protected void affectNeighborsAfterRemoval(final BlockState state, final ServerLevel level, final BlockPos pos, final boolean isMoving) {
+        if (state.hasBlockEntity()) {
             final PortableEngineBlockEntity be = (PortableEngineBlockEntity) level.getBlockEntity(pos);
 
             if (be != null && !be.inventory.isEmpty())
@@ -109,7 +110,7 @@ public class PortableEngineBlock extends HorizontalKineticBlock implements IBE<P
         final DyeColor color = SimItemService.getDyeColor(heldItem);
         if (color != null) {
             if (!level.isClientSide())
-                level.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0f, 1.1f - level.random.nextFloat() * .2f);
+                level.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0f, 1.1f - level.getRandom().nextFloat() * .2f);
 
             final BlockState newState = BlockHelper.copyProperties(blockState, SimBlocks.PORTABLE_ENGINES.get(color).getDefaultState());
             level.setBlockAndUpdate(blockPos, newState);
@@ -147,7 +148,7 @@ public class PortableEngineBlock extends HorizontalKineticBlock implements IBE<P
                 final int transferAmount = Math.min(targetAmount - currentItemStack.getCount(), heldItem.getCount());
 
                 if (transferAmount <= 0)
-                    return InteractionResult.sidedSuccess(level.isClientSide());
+                    return InteractionResult.SUCCESS;
 
                 slot.shrink(-transferAmount);
                 heldItem.shrink(transferAmount);
@@ -170,7 +171,7 @@ public class PortableEngineBlock extends HorizontalKineticBlock implements IBE<P
 
         be.notifyUpdate();
 
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -186,7 +187,7 @@ public class PortableEngineBlock extends HorizontalKineticBlock implements IBE<P
     }
 
     @Override
-    public int getAnalogOutputSignal(final BlockState pState, final Level pLevel, final BlockPos pPos) {
+    protected int getAnalogOutputSignal(final BlockState pState, final Level pLevel, final BlockPos pPos, final Direction direction) {
         final PortableEngineBlockEntity be = this.getBlockEntity(pLevel, pPos);
         final int power = 0;
 

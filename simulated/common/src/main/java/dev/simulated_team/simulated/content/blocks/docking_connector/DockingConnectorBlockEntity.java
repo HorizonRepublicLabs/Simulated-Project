@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.docking_connector;
 
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.core.UUIDUtil;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import dev.ryanhcode.sable.Sable;
@@ -191,7 +193,7 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
         super.lazyTick();
 
         if (this.state == DockingConnectorState.EXTENDED || this.state == DockingConnectorState.LOCKING) {
-            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
+            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock(), null);
         }
     }
 
@@ -257,7 +259,7 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
 
         final SubLevel subLevel = Sable.HELPER.getContaining(this);
 
-        final SimMovementContext context = SimMovementContext.getMovementContext(this.level, this.getBlockPos().getCenter());
+        final SimMovementContext context = SimMovementContext.getMovementContext(this.level, Vec3.atCenterOf(this.getBlockPos()));
         final List<SimMovementContext> contexts = controller.findNearby(context);
 
         for (final SimMovementContext movementContext : contexts) {
@@ -381,7 +383,7 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
                 this.tank.connect(this.otherConnectorPosition, otherConnector.tank);
                 this.battery.connect(otherConnector.battery);
 
-                this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
+                this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock(), null);
                 if (this.constraintSmoother != null) {
                     final ServerSubLevelContainer container = SubLevelContainer.getContainer((ServerLevel) this.level);
                     this.constraintSmoother.step(container, this, 1);
@@ -414,7 +416,7 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
         this.removeConstraint();
         this.sendData();
 
-        this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
+        this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock(), null);
     }
 
     @Override
@@ -440,11 +442,11 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
         tag.putFloat("Feet", this.feet.getValue());
 
         if (this.otherConnectorPosition != null) {
-            tag.put("OtherConnector", NbtUtils.writeBlockPos(this.otherConnectorPosition));
+            tag.put("OtherConnector", BlockPos.CODEC.encodeStart(NbtOps.INSTANCE, this.otherConnectorPosition).getOrThrow());
         }
 
         if (this.otherConnectorSubLevelId != null) {
-            tag.putUUID("OtherConnectorSubLevelId", this.otherConnectorSubLevelId);
+            tag.store("OtherConnectorSubLevelId", UUIDUtil.CODEC, this.otherConnectorSubLevelId);
         }
 
         tag.put("Inventory", this.inventory.write(registries));
@@ -465,13 +467,13 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
         this.feet.setValue(this.feet.getValue());
 
         if (tag.contains("OtherConnector")) {
-            this.otherConnectorPosition = NbtUtils.readBlockPos(tag, "OtherConnector").orElse(null);
+            this.otherConnectorPosition = BlockPos.CODEC.parse(NbtOps.INSTANCE, tag.get("OtherConnector")).result().orElse(null);
         } else {
             this.otherConnectorPosition = null;
         }
 
         if (tag.contains("OtherConnectorSubLevelId")) {
-            this.otherConnectorSubLevelId = tag.getUUID("OtherConnectorSubLevelId");
+            this.otherConnectorSubLevelId = tag.read("OtherConnectorSubLevelId", UUIDUtil.CODEC).orElseThrow();
         }
 
         this.inventory.read(registries, tag.getCompoundOrEmpty("Inventory"));
@@ -510,18 +512,18 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
 
     @Override
     public Vector3d setMagneticMoment(final Vector3d v) {
-        v.set(JOMLConversion.toJOML(Vec3.atLowerCornerOf(this.getBlockState().getValue(DockingConnectorBlock.FACING).getNormal())));
+        v.set(JOMLConversion.toJOML(Vec3.atLowerCornerOf(this.getBlockState().getValue(DockingConnectorBlock.FACING).getUnitVec3i())));
         v.mul(Math.sqrt(SimConfigService.INSTANCE.server().physics.dockingConnectorStrength.get()));
         return v;
     }
 
     @Override
     public Vec3 getMagnetPosition() {
-        return Vec3.atCenterOf(this.getBlockPos()).add(Vec3.atLowerCornerOf(this.getBlockState().getValue(RedstoneMagnetBlock.FACING).getNormal()).scale(1.4));
+        return Vec3.atCenterOf(this.getBlockPos()).add(Vec3.atLowerCornerOf(this.getBlockState().getValue(RedstoneMagnetBlock.FACING).getUnitVec3i()).scale(1.4));
     }
 
     public Vec3 getTipPosition() {
-        return Vec3.atCenterOf(this.getBlockPos()).add(Vec3.atLowerCornerOf(this.getBlockState().getValue(RedstoneMagnetBlock.FACING).getNormal()).scale(1.5));
+        return Vec3.atCenterOf(this.getBlockPos()).add(Vec3.atLowerCornerOf(this.getBlockState().getValue(RedstoneMagnetBlock.FACING).getUnitVec3i()).scale(1.5));
     }
 
     @Override
@@ -530,7 +532,7 @@ public class DockingConnectorBlockEntity extends SmartBlockEntity implements Sim
     }
 
     public AABB getBoundingBox(final BlockState state) {
-        return Shulker.getProgressAabb(1, state.getValue(ShulkerBoxBlock.FACING), this.getExtensionDistance(1.0F));
+        return Shulker.getProgressAabb(1.0F, state.getValue(ShulkerBoxBlock.FACING), this.getExtensionDistance(1.0F), Vec3.ZERO);
     }
 
     @Override

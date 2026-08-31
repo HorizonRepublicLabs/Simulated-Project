@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.ponder;
 
+import com.simibubi.create.foundation.utility.CreateLang;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.util.SimDistUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -46,7 +47,7 @@ public class SceneScheduler {
      */
     public void run(boolean debug) {
         if (this.ran) {
-            SimDistUtil.getClientPlayer().displayClientMessage(
+            CreateLang.sendStatus(SimDistUtil.getClientPlayer(), 
                     Component.literal("Set of scheduled sequences being re-run! See logs for more info")
                             .withStyle(ChatFormatting.RED), false);
             debug = true;
@@ -104,7 +105,7 @@ public class SceneScheduler {
                 }
             }
             if (hasSyncing && isDeadlocked) {
-                SimDistUtil.getClientPlayer().displayClientMessage(Component.literal(
+                CreateLang.sendStatus(SimDistUtil.getClientPlayer(), Component.literal(
                         "Ponder sequence deadlock! See logs for more info").withStyle(ChatFormatting.RED), false);
                 debug = true;
                 Simulated.LOGGER.error("Every sequence is awaiting syncs that will never happen");
@@ -227,7 +228,7 @@ public class SceneScheduler {
          */
         public int getDuration() {
             if (!this.independent) {
-                SimDistUtil.getClientPlayer().displayClientMessage(Component.literal(
+                CreateLang.sendStatus(SimDistUtil.getClientPlayer(), Component.literal(
                         "Getting independent timestamp of synced sequence " + this.id).withStyle(ChatFormatting.RED), false);
                 Simulated.LOGGER.error("Getting independent timestamp of synced sequence " + this.id);
             }

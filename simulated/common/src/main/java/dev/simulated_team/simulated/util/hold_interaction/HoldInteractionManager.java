@@ -64,7 +64,7 @@ public class HoldInteractionManager {
      */
     public static void renderOverlay(final int width, final int height) {
         if (active != null) {
-            active.renderOverlay(width, height, Minecraft.getInstance().options.hideGui);
+            active.renderOverlay(width, height, false);
         }
     }
 
@@ -73,6 +73,6 @@ public class HoldInteractionManager {
     }
 
     public static boolean unblockedShift() {
-        return ((LocalPlayer) SimDistUtil.getClientPlayer()).input.shiftKeyDown;
+        return ((LocalPlayer) SimDistUtil.getClientPlayer()).input.keyPresses.shift();
     }
 }

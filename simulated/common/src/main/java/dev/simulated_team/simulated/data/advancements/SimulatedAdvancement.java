@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.data.advancements;
 
+import com.simibubi.create.foundation.item.ItemHelper;
+import net.minecraft.world.item.ItemStackTemplate;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import dev.simulated_team.simulated.util.SimColors;
 import net.minecraft.advancements.*;
@@ -61,7 +63,7 @@ public class SimulatedAdvancement {
             this.builder.addCriterion("0", this.builtinTrigger.createCriterion(this.builtinTrigger.instance()));
         }
 
-        this.builder.display(t.icon, Component.translatable(this.titleKey()),
+        this.builder.display(ItemStackTemplate.fromStack(t.icon), Component.translatable(this.titleKey()),
                 Component.translatable(this.descriptionKey()).withStyle(s -> s.withColor(SimColors.ADVANCABLE_GOLD)),
                 id.equals("root") ? this.background : null, t.type.advancementType, t.type.toast, t.type.announce, t.type.hide);
 
@@ -80,7 +82,7 @@ public class SimulatedAdvancement {
     public boolean isAlreadyAwardedTo(final Player player) {
         if (!(player instanceof final ServerPlayer sp))
             return true;
-        final AdvancementHolder advancement = sp.getServer()
+        final AdvancementHolder advancement = sp.level().getServer()
                 .getAdvancements()
                 .get(Identifier.fromNamespaceAndPath(this.modid, this.id));
         if (advancement == null)
@@ -230,7 +232,7 @@ public class SimulatedAdvancement {
 
         public Builder whenItemCollected(final TagKey<Item> tag) {
             return this.externalTrigger(InventoryChangeTrigger.TriggerInstance
-                    .hasItems(ItemPredicate.Builder.item().of(tag).build()));
+                    .hasItems(ItemPredicate.Builder.item().of(ItemHelper.itemLookup(), tag).build()));
         }
 
         public  Builder awardedForFree() {

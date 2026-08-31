@@ -86,8 +86,8 @@ public class RedstoneAccumulatorBlockEntity extends SmartBlockEntity implements 
             if (tempSignal != this.outputSignal) this.setOutputSignal(tempSignal);
         } else {
             this.delayTicks = Math.min(this.delayTicks + 1 , this.inputDelay.value);
-            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
-            this.level.updateNeighborsAt(this.worldPosition.relative(facing), this.getBlockState().getBlock());
+            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock(), null);
+            this.level.updateNeighborsAt(this.worldPosition.relative(facing), this.getBlockState().getBlock(), null);
         }
         if(this.level.isClientSide()) this.lerpedState.tickChaser();
         this.lerpedState.chase(this.outputSignal, 0.4, LerpedFloat.Chaser.EXP);

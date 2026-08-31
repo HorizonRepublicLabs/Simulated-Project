@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.rope;
 
+import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import dev.ryanhcode.sable.Sable;
@@ -42,7 +43,7 @@ public interface RopeHolderBlock <T extends SmartBlockEntity> extends BlockSubLe
             final RopeStrandHolderBehavior otherHolder = smartBlockEntity.getBehaviour(RopeStrandHolderBehavior.TYPE);
             if (otherHolder == null) return InteractionResult.FAIL;
 
-            otherHolder.destroyRope(player, pos.getCenter(), !player.hasInfiniteMaterials());
+            otherHolder.destroyRope(player, Vec3.atCenterOf(pos), !player.hasInfiniteMaterials());
             return InteractionResult.SUCCESS;
         });
     }

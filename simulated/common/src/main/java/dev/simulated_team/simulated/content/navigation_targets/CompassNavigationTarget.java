@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.navigation_targets;
 
+import net.minecraft.server.level.ServerLevel;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.simulated_team.simulated.content.blocks.nav_table.NavTableBlockEntity;
 import dev.simulated_team.simulated.content.blocks.nav_table.navigation_target.NavigationTarget;
@@ -26,6 +27,8 @@ public class CompassNavigationTarget implements NavigationTarget {
 			}
 		}
 
-		return level.getSharedSpawnPos().getCenter();
+		return level instanceof final ServerLevel serverLevel
+                ? Vec3.atCenterOf(serverLevel.getRespawnData().globalPos().pos())
+                : Vec3.ZERO;
 	}
 }

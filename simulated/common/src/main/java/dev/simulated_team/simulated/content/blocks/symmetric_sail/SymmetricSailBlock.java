@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Set;
 
 public class SymmetricSailBlock extends RotatedPillarBlock implements IWrenchable, BlockSubLevelLiftProvider, SpecialBlockItemRequirement {
-    private static final int placementHelperId = PlacementHelpers.register(new SymmetricSailPlacementHelper(SymmetricSailBlock::checkItem, SymmetricSailBlock::checkState));
+    private static final IPlacementHelper placementHelper = PlacementHelpers.register(new SymmetricSailPlacementHelper(SymmetricSailBlock::checkItem, SymmetricSailBlock::checkState));
 
     protected final DyeColor color;
 
@@ -131,12 +131,11 @@ public class SymmetricSailBlock extends RotatedPillarBlock implements IWrenchabl
         final DyeColor color = SimItemService.getDyeColor(heldItem);
         if (color != null) {
             if (!level.isClientSide())
-                level.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0f, 1.1f - level.random.nextFloat() * .2f);
+                level.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0f, 1.1f - level.getRandom().nextFloat() * .2f);
             this.applyDye(blockState, level, blockPos, blockHitResult.getLocation(), color);
             return InteractionResult.SUCCESS;
         }
 
-        final IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
         if (placementHelper.matchesItem(heldItem)) {
             placementHelper.getOffset(player, level, blockState, blockPos, blockHitResult).placeInWorld(level, (BlockItem) heldItem.getItem(), player, interactionHand, blockHitResult);
             return InteractionResult.SUCCESS;
@@ -159,15 +158,11 @@ public class SymmetricSailBlock extends RotatedPillarBlock implements IWrenchabl
     }
 
     @Override
-    public void fallOn(final Level level, final BlockState state, final BlockPos pos, final Entity entity, final float fallDistance) {
-        super.fallOn(level, state, pos, entity, 0);
-    }
+    public void fallOn(final Level level, final BlockState state, final BlockPos pos, final Entity entity, final double fallDistance) {
+        // 26.2 folded the post-fall bounce hook into fallOn.
+        super.fallOn(level, state, pos, entity, 0.0);
 
-    @Override
-    public void updateEntityAfterFallOn(final BlockGetter level, final Entity entity) {
-        if (entity.isSuppressingBounce()) {
-            super.updateEntityAfterFallOn(level, entity);
-        } else {
+        if (!entity.isSuppressingBounce()) {
             this.bounce(entity);
         }
     }
@@ -191,7 +186,7 @@ public class SymmetricSailBlock extends RotatedPillarBlock implements IWrenchabl
     }
 
     @Override
-    public ItemStack getCloneItemStack(final LevelReader level, final BlockPos pos, final BlockState state) {
+    protected ItemStack getCloneItemStack(final LevelReader level, final BlockPos pos, final BlockState state, final boolean includeData) {
         return SimBlocks.WHITE_SYMMETRIC_SAIL.asStack();
     }
 

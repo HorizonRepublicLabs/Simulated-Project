@@ -270,15 +270,15 @@ public interface BlockEntityLiftingGasProvider {
                              double clientBalloonTarget, double clientBalloonLift,
                              double clientBalloonChange, Vec3 gasCenter) {
         public static void writeToNBT(final CompoundTag tag, final ServerBalloon balloon) {
-            if (balloon != null && balloon.getCenter() != null) {
+            if (balloon != null && Vec3.atCenterOf(balloon) != null) {
                 tag.putInt("Volume", balloon.getCapacity());
                 tag.putDouble("Filled", balloon.getTotalFilledVolume());
                 tag.putDouble("Target", balloon.getTotalTargetVolume());
                 tag.putDouble("Delta", balloon.getTotalVolumeChange());
                 tag.putDouble("Lift", balloon.getTotalLift());
-                tag.putDouble("CenterX", balloon.getCenter().x);
-                tag.putDouble("CenterY", balloon.getCenter().y);
-                tag.putDouble("CenterZ", balloon.getCenter().z);
+                tag.putDouble("CenterX", Vec3.atCenterOf(balloon).x);
+                tag.putDouble("CenterY", Vec3.atCenterOf(balloon).y);
+                tag.putDouble("CenterZ", Vec3.atCenterOf(balloon).z);
             }
         }
 

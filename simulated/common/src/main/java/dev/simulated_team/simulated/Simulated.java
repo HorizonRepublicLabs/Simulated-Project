@@ -40,12 +40,12 @@ public final class Simulated {
         SimBlocks.register();
         SimItems.register();
         SimBlockEntityTypes.register();
-        SimParticleTypes.register();
+        // SimParticleTypes belongs to the staged-out client layer.
         SimSoundEvents.init();
         SimSpriteShifts.init();
         SimPacketManager.init();
         SimEntityTypes.register();
-        SimMenuTypes.register();
+        // SimMenuTypes belongs to the staged-out client layer.
         SimNavigationTargets.register();
         SimDataComponents.register();
         SimItemAttributeTypes.init();

@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.rope.rope_connector;
 
+import net.minecraft.server.level.ServerLevel;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.contraption.BlockMovementChecks;
 import com.simibubi.create.foundation.block.IBE;
@@ -65,8 +66,7 @@ public class RopeConnectorBlock extends AbstractDirectionalAxisBlock implements 
     }
 
     @Override
-    public void onRemove(final BlockState pState, final Level pLevel, final BlockPos pPos, final BlockState pNewState, final boolean pIsMoving) {
-        IBE.onRemove(pState, pLevel, pPos, pNewState);
+    protected void affectNeighborsAfterRemoval(final BlockState pState, final ServerLevel pLevel, final BlockPos pPos, final boolean pIsMoving) {
     }
 
     @Override

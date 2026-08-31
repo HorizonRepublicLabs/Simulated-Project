@@ -78,12 +78,12 @@ public class SimNeoForgeCommonEvents {
 
 	@SubscribeEvent
 	public static void serverStopped(final ServerStoppedEvent event) {
-		SimulatedCommonEvents.onServerStopped(event.getServer());
+		SimulatedCommonEvents.onServerStopped(event.level().getServer());
 	}
 
 	@SubscribeEvent
 	public static void postServerTick(final ServerTickEvent.Post event) {
-		final MinecraftServer server = event.getServer();
+		final MinecraftServer server = event.level().getServer();
 		for (final ServerLevel level : server.getAllLevels()) {
 			SimulatedCommonEvents.onServerTickEnd(level);
 		}

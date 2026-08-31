@@ -1,5 +1,8 @@
 package dev.simulated_team.simulated.content.blocks.lasers.laser_pointer;
 
+import net.minecraft.core.component.DataComponents;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.redstone.Orientation;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -75,8 +78,8 @@ public class LaserPointerBlock extends DirectionalBlock implements IBE<LaserPoin
     }
 
     @Override
-    public void neighborChanged(final BlockState state, final Level world, final BlockPos pos, final Block neighborBlock, final BlockPos fromPos, final boolean moving) {
-        super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
+    protected void neighborChanged(final BlockState state, final Level world, final BlockPos pos, final Block neighborBlock, final @Nullable Orientation orientation, final boolean moving) {
+        super.neighborChanged(state, world, pos, neighborBlock, orientation, moving);
         if (!world.isClientSide()) {
             final boolean powered = world.hasNeighborSignal(pos);
             world.setBlock(pos, state.setValue(POWERED, powered), 7);
@@ -126,8 +129,9 @@ public class LaserPointerBlock extends DirectionalBlock implements IBE<LaserPoin
 
         int newColor = -1;
         boolean newRainbow = be.isRainbow();
-        if (itemStack.getItem() instanceof final DyeItem dyeItem) {
-            final DyeColor gatheredColor = dyeItem.getDyeColor();
+        final DyeColor dyeComponent = itemStack.get(DataComponents.DYE);
+        if (dyeComponent != null) {
+            final DyeColor gatheredColor = dyeComponent;
             newColor = gatheredColor.getTextColor();
         } else if (itemStack.is(SimTags.Items.LASER_POINTER_LENS)) {
             newColor = SimColors.MEDIA_OURPLE;

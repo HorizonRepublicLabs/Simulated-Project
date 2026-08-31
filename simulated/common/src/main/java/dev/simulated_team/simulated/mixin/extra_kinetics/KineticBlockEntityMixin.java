@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.mixin.extra_kinetics;
 
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.util.ProblemReporter;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -167,11 +169,11 @@ public abstract class KineticBlockEntityMixin extends SmartBlockEntity implement
         if (this instanceof final ExtraKinetics ek) {
             final KineticBlockEntity extraKinetics = ek.getExtraKinetics();
             if (extraKinetics != null) {
-                final CompoundTag extraKineticsTag = compound.getCompound(ek.getExtraKineticsSaveName());
+                final CompoundTag extraKineticsTag = compound.getCompoundOrEmpty(ek.getExtraKineticsSaveName());
                 if (clientPacket) {
                     extraKinetics.readClient(extraKineticsTag, registries);
                 } else {
-                    extraKinetics.loadCustomOnly(extraKineticsTag, registries);
+                    extraKinetics.loadCustomOnly(TagValueInput.create(ProblemReporter.DISCARDING, registries, extraKineticsTag));
                 }
             }
         }

@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.network.packets.linked_typewriter;
 
+import dev.simulated_team.simulated.index.SimBlockEntityTypes;
+import net.minecraft.world.item.component.TypedEntityData;
 import com.mojang.serialization.DataResult;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.LinkedTypewriterEntries;
@@ -37,7 +39,7 @@ public record TypewriterSaveKeyToItemPacket(InteractionHand hand, LinkedTypewrit
 
         CompoundTag currentTag = new CompoundTag();
         if (item.has(DataComponents.BLOCK_ENTITY_DATA)) {
-            currentTag = item.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
+            currentTag = item.get(DataComponents.BLOCK_ENTITY_DATA).copyTagWithoutId();
         } else {
             currentTag.putString("id", item.getItem().toString());
         }
@@ -59,7 +61,7 @@ public record TypewriterSaveKeyToItemPacket(InteractionHand hand, LinkedTypewrit
 
         for (int i = 0; i < keys.size(); i++) {
             final Tag key = keys.get(i);
-            final int glfwKey = ((CompoundTag) key).getInt("GLFWKey");
+            final int glfwKey = ((CompoundTag) key).getIntOr("GLFWKey", 0);
 
             if (glfwKey == this.entry.glfwKeyCode) {
                 alreadyPresent = true;
@@ -74,7 +76,8 @@ public record TypewriterSaveKeyToItemPacket(InteractionHand hand, LinkedTypewrit
 
         currentTag.put("Keys", keys);
         if (item.is(SimBlocks.LINKED_TYPEWRITER.asItem())) {
-            CustomData.set(DataComponents.BLOCK_ENTITY_DATA, item, currentTag);
+            item.set(DataComponents.BLOCK_ENTITY_DATA,
+                    TypedEntityData.of(SimBlockEntityTypes.LINKED_TYPEWRITER.get(), currentTag));
         }
     }
 

@@ -101,7 +101,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
         // Check if Nav table should update surrounding blocks
         if (this.selectivelyUpdateNeighbors()) {
             this.notifyUpdate();
-            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
+            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock(), null);
         }
 
         final NavigationTarget navigationTarget = this.getNavTableItem();
@@ -312,7 +312,7 @@ public class NavTableBlockEntity extends SmartBlockEntity implements Clearable {
             }
 
             this.signalStrengthCache.put(direction, curStrength);
-            this.level.updateNeighborsAt(this.worldPosition.relative(direction), state.getBlock());
+            this.level.updateNeighborsAt(this.worldPosition.relative(direction), state.getBlock(), null);
             notifyUpdate = true;
         }
 

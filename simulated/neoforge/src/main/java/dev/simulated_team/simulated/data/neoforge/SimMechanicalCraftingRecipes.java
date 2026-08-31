@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.data.neoforge;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeGen;
@@ -23,7 +24,7 @@ public class SimMechanicalCraftingRecipes extends MechanicalCraftingRecipeGen {
                     .patternLine("BBBBT")
                     .patternLine("BBBBB")
                     .patternLine(" GPG ")
-                    .key('B', Ingredient.of(ItemTags.BUTTONS))
+                    .key('B', Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(ItemTags.BUTTONS)))
                     .key('T', AllItems.TRANSMITTER)
                     .key('G', CommonMetal.GOLD.plates)
                     .key('P', AllItems.PRECISION_MECHANISM)

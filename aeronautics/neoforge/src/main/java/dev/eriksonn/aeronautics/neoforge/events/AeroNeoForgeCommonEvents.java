@@ -38,12 +38,12 @@ public class AeroNeoForgeCommonEvents {
 
 	@SubscribeEvent
 	public static void serverStop(ServerStoppedEvent event) {
-		AeronauticsCommonEvents.onServerStopped(event.getServer());
+		AeronauticsCommonEvents.onServerStopped(event.level().getServer());
 	}
 
 	@SubscribeEvent
 	public static void postServerTick(ServerTickEvent.Post event) {
-		final MinecraftServer server = event.getServer();
+		final MinecraftServer server = event.level().getServer();
 		for (final ServerLevel level : server.getAllLevels()) {
 			AeronauticsCommonEvents.onServerTickEnd(level);
 		}

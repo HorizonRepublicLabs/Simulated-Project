@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.redstone_magnet;
 
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.redstone.Orientation;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import dev.simulated_team.simulated.data.advancements.SimAdvancements;
@@ -40,7 +42,7 @@ public class RedstoneMagnetBlock extends WrenchableDirectionalBlock implements I
     }
 
     @Override
-    public void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block blockIn, final BlockPos fromPos,
+    protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block blockIn, final @Nullable Orientation orientation,
                                 final boolean isMoving) {
         if (level.isClientSide())
             return;

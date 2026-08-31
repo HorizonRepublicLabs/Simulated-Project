@@ -1,5 +1,8 @@
 package dev.simulated_team.simulated.content.blocks.nameplate;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.redstone.Orientation;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -58,7 +61,7 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
     public static final EnumProperty<Position> POSITION = EnumProperty.create("position", Position.class);
     public static final MapCodec<NameplateBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(propertiesCodec(), DyeColor.CODEC.fieldOf("DyeColor").forGetter(NameplateBlock::getColor)).apply(instance, NameplateBlock::new));
 
-    private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+    private static final IPlacementHelper placementHelper = PlacementHelpers.register(new PlacementHelper());
 
     protected final DyeColor color;
 
@@ -123,11 +126,11 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
         return SimBlockShapes.NAMEPLATE.get(pState.getValue(FACING));
     }
 
-    public Position getPositionState(final LevelAccessor level, final BlockPos pos, final Direction facing) {
+    public Position getPositionState(final LevelReader level, final BlockPos pos, final Direction facing) {
         Position outPos = Position.SINGLE;
 
-        final BlockState leftState = level.getBlockState(pos.offset(facing.getClockWise(Direction.Axis.Y).getNormal()));
-        final BlockState rightState = level.getBlockState(pos.offset(facing.getCounterClockWise(Direction.Axis.Y).getNormal()));
+        final BlockState leftState = level.getBlockState(pos.offset(facing.getClockWise(Direction.Axis.Y).getUnitVec3i()));
+        final BlockState rightState = level.getBlockState(pos.offset(facing.getCounterClockWise(Direction.Axis.Y).getUnitVec3i()));
 
         final boolean left = leftState.getBlock() instanceof final NameplateBlock npb && npb.getColor() == this.getColor();
         final boolean right = rightState.getBlock() instanceof final NameplateBlock npb && npb.getColor() == this.getColor();
@@ -151,7 +154,6 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
     @Override
     protected InteractionResult useItemOn(final ItemStack itemStack, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
         if (!player.isShiftKeyDown() && player.mayBuild()) {
-            final IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
             if (itemStack.getItem() instanceof final BlockItem bi && blockState.is(bi.getBlock()) && placementHelper.matchesItem(itemStack)) {
                 final InteractionResult result = placementHelper.getOffset(player, level, blockState, blockPos, blockHitResult)
                         .placeInWorld(level, (BlockItem) itemStack.getItem(), player, interactionHand, blockHitResult);
@@ -182,7 +184,7 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
                     dummySign.setText(text, true);
                     dummySign.setWaxed(controller.waxed);
 
-                    if (signApplicator.canApplyToSign(text, player) && signApplicator.tryApplyToSign(controller.getLevel(), dummySign, true, player)) {
+                    if (signApplicator.canApplyToSign(text, itemStack, player) && signApplicator.tryApplyToSign(controller.getLevel(), dummySign, true, itemStack, player)) {
                         text = dummySign.getFrontText();
                         controller.setTextColor(text.getColor(), true);
                         controller.glowing = text.hasGlowingText();
@@ -200,7 +202,8 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
             this.withBlockEntityDo(level, blockPos, nbe -> {
                 final NameplateBlockEntity controller = nbe.findController();
                 if(!controller.waxed) {
-                    NameplateScreen.setScreen(nbe);
+                    // The nameplate screen belongs to the client render layer,
+                    // which is not part of the 26.2 port yet.
                 } else {
                     level.playSound(player, blockPos, SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
                 }
@@ -211,15 +214,13 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
     }
 
     @Override
-    public void neighborChanged(final BlockState state, final Level level, final BlockPos selfPos, final Block neighborBlock, final BlockPos neighborPos, final boolean pMovedByPiston) {
-        super.neighborChanged(state, level, selfPos, neighborBlock, neighborPos, pMovedByPiston);
+    protected void neighborChanged(final BlockState state, final Level level, final BlockPos selfPos, final Block neighborBlock, final @Nullable Orientation orientation, final boolean pMovedByPiston) {
+        super.neighborChanged(state, level, selfPos, neighborBlock, orientation, pMovedByPiston);
         if (level.getBlockEntity(selfPos) instanceof NameplateBlockEntity nbe) {
 
-            if (neighborPos.equals(selfPos.relative(state.getValue(FACING).getClockWise(Direction.Axis.Y)))) {
-                nbe.checkAndUpdateController(this.color, state.getValue(FACING));
-            } else {
-                nbe.findController().checkAndUpdateController(this.color, state.getValue(FACING));
-            }
+            // 26.2 no longer names the changed neighbour, so the controller is
+            // re-resolved from the nameplate itself.
+            nbe.findController().checkAndUpdateController(this.color, state.getValue(FACING));
 
             if (!NameplateBlockEntity.hasSupport(nbe)) {
                 level.destroyBlock(selfPos, true);
@@ -228,9 +229,9 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
     }
 
     @Override
-    public BlockState updateShape(final BlockState pState, final Direction pDirection, final BlockState pNeighborState, final LevelAccessor pLevel, final BlockPos pPos, final BlockPos pNeighborPos) {
+    protected BlockState updateShape(final BlockState pState, final LevelReader pLevel, final ScheduledTickAccess ticks, final BlockPos pPos, final Direction pDirection, final BlockPos pNeighborPos, final BlockState pNeighborState, final RandomSource random) {
         final Position posState = this.getPositionState(pLevel, pPos, pState.getValue(FACING));
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos).setValue(POSITION, posState);
+        return super.updateShape(pState, pLevel, ticks, pPos, pDirection, pNeighborPos, pNeighborState, random).setValue(POSITION, posState);
     }
 
     @Override

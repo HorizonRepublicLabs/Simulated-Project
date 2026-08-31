@@ -6,7 +6,6 @@ import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.SubLevelHelper;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
-import dev.simulated_team.simulated.content.particle.MagnetFieldParticleData;
 import dev.simulated_team.simulated.service.SimConfigService;
 import dev.simulated_team.simulated.util.SimMovementContext;
 import net.createmod.catnip.api.math.VecHelper;
@@ -77,7 +76,7 @@ public class RedstoneMagnetBlockEntity extends SmartBlockEntity implements SimMa
         //todo: do this in the behaviour or using common method or something
         if (this.latestSubLevel != null) {
             final MagnetMap<RedstoneMagnetBlockEntity> map = RedstoneMagnetBlockEntity.GLOBAL_REDSTONE_MAGNET_MAP;
-            final SimMovementContext context = SimMovementContext.getMovementContext(this.getLevel(), this.getBlockPos().getCenter());
+            final SimMovementContext context = SimMovementContext.getMovementContext(this.getLevel(), Vec3.atCenterOf(this.getBlockPos()));
             final List<SimMovementContext> contexts = map.findNearby(context);
             for (final SimMovementContext movementContext : contexts) {
                 if (movementContext.subLevel() != this.latestSubLevel) {
@@ -113,19 +112,19 @@ public class RedstoneMagnetBlockEntity extends SmartBlockEntity implements SimMa
 
     private void spawnParticles() {
         final float probability = 0.1f * (this.signalStrength / 15f);
-        if (probability > 0 && this.level.random.nextFloat() < probability) {
-            final boolean negative = this.level.random.nextBoolean();
+        if (probability > 0 && this.level.getRandom().nextFloat() < probability) {
+            final boolean negative = this.level.getRandom().nextBoolean();
 
-            Vec3i dir = (this.getBlockState().getValue(RedstoneMagnetBlock.FACING)).getNormal();
+            Vec3i dir = (this.getBlockState().getValue(RedstoneMagnetBlock.FACING)).getUnitVec3i();
             if (negative) {
                 dir = dir.multiply(-1);
             }
 
             final BlockPos blockpos = this.getBlockPos().offset(dir);
-            if (this.level.getBlockState(blockpos).isSolidRender(this.level, blockpos)) {
+            if (this.level.getBlockState(blockpos).isSolidRender()) {
                 return;
             }
-            final Vector3d offset = JOMLConversion.toJOML(VecHelper.offsetRandomly(new Vec3(0, 0, 0), this.level.random, 0.35f));
+            final Vector3d offset = JOMLConversion.toJOML(VecHelper.offsetRandomly(new Vec3(0, 0, 0), this.level.getRandom(), 0.35f));
             final Vector3d pos = JOMLConversion.toJOML(Vec3.atLowerCornerOf(dir));
             offset.fma(-pos.dot(offset), pos);
             pos.mul(0.55);
@@ -150,7 +149,7 @@ public class RedstoneMagnetBlockEntity extends SmartBlockEntity implements SimMa
                 this.nearbyMagnetPositions.put(JOMLConversion.toJOML(movementContext.globalPosition()), otherMagneticMoment);
             }
 
-            final int steps = 4 + (int) (20 * (this.signalStrength / 15f) * this.level.random.nextFloat());
+            final int steps = 4 + (int) (20 * (this.signalStrength / 15f) * this.level.getRandom().nextFloat());
 
             this.particleEmitters.add(new MagnetParticleEmitter(pos, this.nearbyMagnetPositions, steps, this.level, negative));
         }
@@ -173,7 +172,7 @@ public class RedstoneMagnetBlockEntity extends SmartBlockEntity implements SimMa
 
     @Override
     public Vector3d setMagneticMoment(final Vector3d v) {
-        v.set(JOMLConversion.toJOML(Vec3.atLowerCornerOf(this.getBlockState().getValue(RedstoneMagnetBlock.FACING).getNormal())));
+        v.set(JOMLConversion.toJOML(Vec3.atLowerCornerOf(this.getBlockState().getValue(RedstoneMagnetBlock.FACING).getUnitVec3i())));
         v.mul((this.signalStrength / 15.0) * Math.sqrt(SimConfigService.INSTANCE.server().physics.redstoneMagnetStrength.get()));
         return v;
     }
@@ -222,7 +221,7 @@ public class RedstoneMagnetBlockEntity extends SmartBlockEntity implements SimMa
             this.pos.add(this.newNudge);
             this.oldNudge.set(this.newNudge);
             this.rk4(this.pos, this.newNudge);
-            ((ServerLevel) this.level).sendParticles(new MagnetFieldParticleData(this.negative), this.pos.x, this.pos.y, this.pos.z, 1, 0.01, 0.01, 0.01, 0);
+            // The magnet field particle belongs to the staged-out particle layer.
 //            ((ServerLevel) this.level).sendParticles(new MagnetFieldParticleData2(JOMLConversion.toMojang(oldNudge),JOMLConversion.toMojang(newNudge),this.negative,Math.min(this.time+1,this.startTime-time)), pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
         }
         static final Vector3d k1 = new Vector3d();

@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.redstone.modulating_receiver;
 
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.redstone.Orientation;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.contraption.BlockMovementChecks;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -108,17 +110,16 @@ public class ModulatingLinkedReceiverBlock extends WrenchableDirectionalBlock im
     }
 
     @Override
-    public void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block blockIn, final BlockPos fromPos,
+    protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block blockIn, final @Nullable Orientation orientation,
                                 final boolean isMoving) {
         if (level.isClientSide())
             return;
 
-        final Direction blockFacing = state.getValue(FACING);
-        if (fromPos.equals(pos.relative(blockFacing.getOpposite()))) {
+        // 26.2 no longer hands over the neighbour position, so any neighbour
+        // change is handled.
             if (!this.canSurvive(state, level, pos)) {
                 level.destroyBlock(pos, true);
             }
-        }
     }
 
     @Override
@@ -138,7 +139,8 @@ public class ModulatingLinkedReceiverBlock extends WrenchableDirectionalBlock im
     protected InteractionResult useItemOn(final ItemStack itemStack, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
         if (!player.getMainHandItem().is(SimBlocks.LINKED_TYPEWRITER.asItem())) { //TODO: make this more generalized
 	        if (level.isClientSide()) {
-                this.withBlockEntityDo(level, blockPos, ModulatingLinkedReceiverScreen::open);
+                // The receiver screen belongs to the client render layer, which
+                // is not part of the 26.2 port yet.
 	        }
 
 	        return InteractionResult.SUCCESS;

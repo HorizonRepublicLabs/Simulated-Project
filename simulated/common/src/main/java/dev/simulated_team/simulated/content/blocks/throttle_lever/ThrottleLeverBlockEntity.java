@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.throttle_lever;
 
+import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -64,7 +65,8 @@ public class ThrottleLeverBlockEntity extends SmartBlockEntity implements IHaveG
             this.clientPressedLerp.updateChaseTarget(pressed ? 1 : 0);
             this.clientPressedLerp.tickChaser();
 
-            ThrottleLeverClientGripHandler.tickGrip(this);
+            // The first-person grip is drawn by the client render layer, which
+            // is not part of the 26.2 port yet.
         }
     }
 
@@ -100,7 +102,7 @@ public class ThrottleLeverBlockEntity extends SmartBlockEntity implements IHaveG
 
     @Override
     public AABB getRenderBoundingBox() {
-        return AABB.ofSize(this.getBlockPos().getCenter(), 1.5, 1.5, 1.5);
+        return AABB.ofSize(Vec3.atCenterOf(this.getBlockPos()), 1.5, 1.5, 1.5);
     }
 
     public int getState() {

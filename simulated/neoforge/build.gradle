@@ -100,6 +100,12 @@ sourceSets.main.java {
 
 // Reduced 26.2 port: GuiGraphics and the neoforge model generators are gone.
 sourceSets.main.java {
+    exclude 'dev/simulated_team/simulated/content/items/rope/RopeItem/ClientRopeItemHandler.java'
+    exclude 'dev/simulated_team/simulated/content/particle/**'
+    exclude 'dev/simulated_team/simulated/index/SimParticleTypes.java'
+    exclude 'dev/simulated_team/simulated/mixin/throttle_lever/**'
+    exclude 'dev/simulated_team/simulated/content/blocks/throttle_lever/ThrottleLeverClientGripHandler.java'
+    exclude 'dev/simulated_team/simulated/**/*Visual.java'
     exclude 'dev/simulated_team/simulated/content/blocks/redstone/linked_typewriter/screen/**'
     exclude 'dev/simulated_team/simulated/client/SearchAlias.java'
     exclude 'dev/simulated_team/simulated/content/blocks/redstone/linked_typewriter/screen/*Screen.java'
@@ -108,9 +114,7 @@ sourceSets.main.java {
     exclude 'dev/simulated_team/simulated/index/SimRenderTypes.java'
     exclude 'dev/simulated_team/simulated/index/ponder/**'
     exclude 'dev/simulated_team/simulated/index/SimResourceManagers.java'
-    exclude 'dev/simulated_team/simulated/content/blocks/steering_wheel/SteeringWheelHandler.java'
     exclude 'dev/simulated_team/simulated/content/physics_staff/PhysicsStaffClientHandler.java'
-    exclude 'dev/simulated_team/simulated/content/blocks/physics_assembler/PhysicsAssemblerGUIHandler.java'
     exclude 'dev/simulated_team/simulated/index/SimPonderScenes.java'
     exclude 'dev/simulated_team/simulated/mixin/new_ponder/**'
     exclude 'dev/simulated_team/simulated/ponder/**'

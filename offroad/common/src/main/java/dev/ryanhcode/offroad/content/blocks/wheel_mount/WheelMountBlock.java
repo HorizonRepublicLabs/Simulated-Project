@@ -1,5 +1,6 @@
 package dev.ryanhcode.offroad.content.blocks.wheel_mount;
 
+import net.minecraft.server.level.ServerLevel;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
@@ -47,7 +48,7 @@ public class WheelMountBlock extends HorizontalKineticBlock implements IBE<Wheel
     }
 
     @Override
-    public void onRemove(final BlockState state, final Level level, final BlockPos pos, final BlockState newState, final boolean isMoving) {
+    protected void affectNeighborsAfterRemoval(final BlockState state, final ServerLevel level, final BlockPos pos, final boolean isMoving) {
         if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
             final WheelMountBlockEntity be = (WheelMountBlockEntity) level.getBlockEntity(pos);
 
@@ -142,7 +143,7 @@ public class WheelMountBlock extends HorizontalKineticBlock implements IBE<Wheel
                 mount.sendData();
                 passed[0] = true;
 
-                final float pitch = 0.8f + level.random.nextFloat() * 0.4f;
+                final float pitch = 0.8f + level.getRandom().nextFloat() * 0.4f;
                 final float volume = .75f;
 
                 if (oldSlotItem.isEmpty() && !newSlotItem.isEmpty()) {

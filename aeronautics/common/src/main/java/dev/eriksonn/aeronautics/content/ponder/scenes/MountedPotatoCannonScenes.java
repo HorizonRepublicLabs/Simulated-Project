@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.content.ponder.scenes;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileEntity;
 import com.simibubi.create.foundation.particle.AirParticleData;
@@ -166,7 +167,7 @@ public class MountedPotatoCannonScenes {
 
 	private static ElementLink<EntityElement> spawnPotatoCannonProjectile(final SceneBuilder scene, final ItemStack stack, final Vec3 pos, final Vec3 aiming, final boolean physics) {
 		return scene.world().createEntity(level -> {
-			final PotatoProjectileEntity entity = Objects.requireNonNull(AllEntityTypes.POTATO_PROJECTILE.create(level), "entity");
+			final PotatoProjectileEntity entity = Objects.requireNonNull(AllEntityTypes.POTATO_PROJECTILE.create(level, EntitySpawnReason.TRIGGERED), "entity");
 			entity.setItem(stack);
 			entity.setPos(pos);
 			entity.xo = pos.x;

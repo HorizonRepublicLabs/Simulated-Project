@@ -49,9 +49,9 @@ public enum SimKeys {
 	public static void registerTo(final Consumer<KeyMapping> consumer) {
 		for (final SimKeys key : values()) {
 			if (key.conflictSafe) {
-				key.keybind = new KeyMapping(key.description, key.key, Simulated.MOD_NAME);
+				key.keybind = new KeyMapping(key.description, key.key, new KeyMapping.Category(Simulated.path("main")));
 			} else {
-				key.keybind = new KeyMapping(key.description, key.key, Simulated.MOD_NAME);
+				key.keybind = new KeyMapping(key.description, key.key, new KeyMapping.Category(Simulated.path("main")));
 			}
 			if (!key.modifiable)
 				continue;

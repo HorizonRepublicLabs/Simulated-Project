@@ -1,5 +1,6 @@
 package dev.ryanhcode.offroad.content.items.tire;
 
+import com.simibubi.create.foundation.utility.CreateLang;
 import dev.simulated_team.simulated.util.SimColors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -19,7 +20,7 @@ public class TireItem extends Item {
         final Player player = context.getPlayer();
 
         if (player != null && player.level().isClientSide()) {
-            player.displayClientMessage(Component.translatable("item.offroad.tire.placement_error")
+            CreateLang.sendStatus(player, Component.translatable("item.offroad.tire.placement_error")
                     .setStyle(Style.EMPTY.withColor(SimColors.NUH_UH_RED)), true);
         }
 

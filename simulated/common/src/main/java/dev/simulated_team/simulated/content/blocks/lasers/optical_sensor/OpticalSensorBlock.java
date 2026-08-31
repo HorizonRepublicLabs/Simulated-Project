@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.lasers.optical_sensor;
 
+import net.minecraft.server.level.ServerLevel;
 import com.simibubi.create.content.redstone.DirectedDirectionalBlock;
 import com.simibubi.create.foundation.block.IBE;
 import dev.simulated_team.simulated.index.SimBlockEntityTypes;
@@ -76,11 +77,8 @@ public class OpticalSensorBlock extends DirectedDirectionalBlock implements IBE<
     }
 
     @Override
-    public void onRemove(final BlockState state, final @NotNull Level level, final @NotNull BlockPos pos, final @NotNull BlockState newState, final boolean isMoving) {
-        if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
-            IBE.onRemove(state, level, pos, newState);
-            level.removeBlockEntity(pos);
-        }
+    protected void affectNeighborsAfterRemoval(final BlockState state, final ServerLevel level, final BlockPos pos, final boolean isMoving) {
+        // 26.2 removes the block entity itself; nothing to do here.
     }
 
     @Override

@@ -137,7 +137,7 @@ public class DiagramScreen extends AbstractSimiScreen {
         screen.config = config;
         screen.updateViewportOrientation();
 
-        minecraft.setScreen(screen);
+        minecraft.gui.setScreen(screen);
         minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.VILLAGER_WORK_CARTOGRAPHER, 1.0f));
     }
 
@@ -775,7 +775,7 @@ public class DiagramScreen extends AbstractSimiScreen {
             final Map<ForceGroup, List<ForceClusterFinder.Cluster>> clusters = new HashMap<>();
 
             for (final Identifier groupId : this.config.enabledForceGroups()) {
-                final ForceGroup group = ForceGroups.REGISTRY.get(groupId);
+                final ForceGroup group = ForceGroups.REGISTRY.getValue(groupId);
                 assert group != null;
 
                 final List<QueuedForceGroup.PointForce> forces = this.serverData.forces().get(group);
@@ -791,7 +791,7 @@ public class DiagramScreen extends AbstractSimiScreen {
             }
 
             for (final Identifier groupId : this.config.enabledForceGroups()) {
-                final ForceGroup group = ForceGroups.REGISTRY.get(groupId);
+                final ForceGroup group = ForceGroups.REGISTRY.getValue(groupId);
                 assert group != null;
 
                 final List<ForceClusterFinder.Cluster> cluster = clusters.get(group);

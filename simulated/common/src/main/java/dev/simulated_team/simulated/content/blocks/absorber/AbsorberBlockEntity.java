@@ -48,7 +48,7 @@ public class AbsorberBlockEntity extends SmartBlockEntity {
      * @return true if the position is safe (enclosed by solid blocks), false otherwise
      */
     private static boolean dfs(final LevelAccelerator accelerator, final BlockPos pos, final Set<BlockPos> visited, final Set<BlockPos> enclosed) {
-        boolean safe = pos.getY() <= accelerator.getMaxBuildHeight();
+        boolean safe = pos.getY() <= accelerator.getMaxY();
         visited.add(pos);
 
         final BlockState state = accelerator.getBlockState(pos);
@@ -115,7 +115,7 @@ public class AbsorberBlockEntity extends SmartBlockEntity {
             final float t = this.animationTimer.getValue();
             final float offset = 0.5f+t*t*0.5f;
             for (int i = 0; i < 2; i++) {
-                this.level.addParticle(ParticleTypes.SPLASH,pos.getX()+ this.level.random.nextFloat(),pos.getY()+offset,pos.getZ()+ this.level.random.nextFloat(),0,0,0);
+                this.level.addParticle(ParticleTypes.SPLASH,pos.getX()+ this.level.getRandom().nextFloat(),pos.getY()+offset,pos.getZ()+ this.level.getRandom().nextFloat(),0,0,0);
             }
 
         }

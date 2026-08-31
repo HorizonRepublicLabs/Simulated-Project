@@ -199,12 +199,6 @@ public class SimBlockEntityTypes {
 
     public static final BlockEntityEntry<AugerShaftBlockEntity> AUGER_SHAFT = REGISTRATE
             .blockEntity("auger_shaft", AugerShaftBlockEntity::new)
-            .visual(() -> (ctx, blockEntity, partialTick) -> {
-                if (blockEntity.getBlockState().getBlock() instanceof AugerCogBlock) {
-                    return new AugerCogVisual(ctx, blockEntity, partialTick);
-                }
-                return SingleAxisRotatingVisual.shaft(ctx, blockEntity, partialTick);
-            })
             .onRegister(SimInventoryService.INSTANCE.registerInventory((be, dir) -> {
                 if (dir == null) {
                     return null; //don't just give our inventory to non-directional requests.

@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
+import net.minecraft.core.UUIDUtil;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -123,12 +125,12 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
 
     public void sendConnectMessage(final Player player) {
         final Component customName = this.components().getOrDefault(DataComponents.CUSTOM_NAME, SimLang.translate("linked_typewriter.title").component());
-        player.displayClientMessage(SimLang.translate("linked_typewriter.start_controlling", customName.getString()).component(), true);
+        CreateLang.sendStatus(player, SimLang.translate("linked_typewriter.start_controlling", customName.getString()).component(), true);
     }
 
     public void sendDisconnectMessage(final Player player) {
         final Component customName = this.components().getOrDefault(DataComponents.CUSTOM_NAME, SimLang.translate("linked_typewriter.title").component());
-        player.displayClientMessage(SimLang.translate("linked_typewriter.stop_controlling", customName.getString()).component(), true);
+        CreateLang.sendStatus(player, SimLang.translate("linked_typewriter.stop_controlling", customName.getString()).component(), true);
     }
 
     public boolean checkUser(final UUID user) {
@@ -226,7 +228,7 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
         tag.put("Keys", this.entryMap.saveKeys(registries));
 
         if (this.currentUser != null) {
-            tag.putUUID("CurrentUser", this.currentUser);
+            tag.store("CurrentUser", UUIDUtil.CODEC, this.currentUser);
         }
     }
 
@@ -235,9 +237,9 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
         super.read(tag, registries, clientPacket);
 
         this.typedEntry = tag.getStringOr("typedEntry", "");
-        this.entryMap = LinkedTypewriterEntries.readKeys(registries, tag.getList("Keys", 10), this.getBlockPos());
+        this.entryMap = LinkedTypewriterEntries.readKeys(registries, tag.getListOrEmpty("Keys"), this.getBlockPos());
         if (tag.contains("CurrentUser")) {
-            this.currentUser = tag.getUUID("CurrentUser");
+            this.currentUser = tag.read("CurrentUser", UUIDUtil.CODEC).orElseThrow();
         } else {
             this.currentUser = null;
         }
@@ -293,7 +295,7 @@ public class LinkedTypewriterBlockEntity extends SmartBlockEntity implements Men
         if (simulate) {
             return true;
         }
-        this.entryMap = LinkedTypewriterEntries.readKeys(registries, tag.getList("Keys", 10), this.getBlockPos());
+        this.entryMap = LinkedTypewriterEntries.readKeys(registries, tag.getListOrEmpty("Keys"), this.getBlockPos());
         return true;
     }
 

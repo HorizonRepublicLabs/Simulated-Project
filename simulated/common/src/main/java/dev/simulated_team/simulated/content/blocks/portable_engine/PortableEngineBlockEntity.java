@@ -137,7 +137,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
     }
 
     protected static BlockPos getCameraPos() {
-        final Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
+        final Entity renderViewEntity = Minecraft.getInstance().getCameraEntity();
         if (renderViewEntity == null) {
             return BlockPos.ZERO;
         }
@@ -215,15 +215,15 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
         if (this.burnTime > 0 && !this.isCurrentFuelInfinite()) {
             this.burnTime--;
             if (PortableEngineBlock.analogPower(this.burnTime) != PortableEngineBlock.analogPower(this.burnTime + 1)) {
-                this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
+                this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock(), null);
             }
         }
         if (this.burnTime <= 0 && !this.inventory.isEmpty()) {
             this.burnTime = SimItemService.INSTANCE.getBurnTime(stack);
             this.superHeated = this.getNextSuperHeated();
             if (this.burnTime > 0) {
-                if (stack.getCount() == 1 && stack.getItem().hasCraftingRemainingItem()) {
-                    slot.setStack(slot.getType().getCraftingRemainingItem().getDefaultInstance());
+                if (stack.getCount() == 1 && stack.getItem().getCraftingRemainder() != null) {
+                    slot.setStack(slot.getType().getCraftingRemainder().create());
                 } else {
                     slot.shrink(1);
                 }
@@ -261,7 +261,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
         if (!isLitState && isLit) {
             this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(LIT, true), 2);
             this.level.playSound(null, this.worldPosition, SimSoundEvents.PORTABLE_ENGINE_ROARS.event(), SoundSource.BLOCKS,
-                    .125f + this.level.random.nextFloat() * .125f, .75f - this.level.random.nextFloat() * .25f);
+                    .125f + this.level.getRandom().nextFloat() * .125f, .75f - this.level.getRandom().nextFloat() * .25f);
 
             Vec3 pos = VecHelper.getCenterOf(this.worldPosition);
 
@@ -311,7 +311,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
                     }
                 }
                 this.burnTime += 20 * 5;
-                this.level.playSound(null, this.getBlockPos(), SoundEvents.GENERIC_EAT, SoundSource.BLOCKS, 1.0f, 1.0f);
+                this.level.playSound(null, this.getBlockPos(), SoundEvents.GENERIC_EAT.value(), SoundSource.BLOCKS, 1.0f, 1.0f);
             }
         }
     }
@@ -324,7 +324,7 @@ public class PortableEngineBlockEntity extends GeneratingKineticBlockEntity impl
         boolean openHatch = false;
 
         final BlockPos pos = this.getBlockPos();
-        final Vec3 center = pos.getCenter();
+        final Vec3 center = Vec3.atCenterOf(pos);
         final List<Player> players = this.level.getEntitiesOfClass(Player.class, new AABB(pos).inflate(7.0));
 
         for (final Player player : players) {

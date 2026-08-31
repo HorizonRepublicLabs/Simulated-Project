@@ -52,7 +52,7 @@ public class MergingGlueRenderer extends SmartBlockEntityRenderer<MergingGlueBlo
         final Direction facing = state.getValue(SpringBlock.FACING);
         final Direction otherFacing = other.getBlockState().getValue(SpringBlock.FACING);
         final Vector3dc normalA = JOMLConversion.atLowerCornerOf(facing.getUnitVec3i());
-        final Vector3d normalB = JOMLConversion.atLowerCornerOf(otherFacing.getNormal());
+        final Vector3d normalB = JOMLConversion.atLowerCornerOf(otherFacing.getUnitVec3i());
 
         final VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(Simulated.path("textures/block/merging_glue/strand.png")));
 
@@ -63,11 +63,11 @@ public class MergingGlueRenderer extends SmartBlockEntityRenderer<MergingGlueBlo
         final boolean horizontal = facing.getAxis().isHorizontal();
 
         final Vector3dc rightA = horizontal ?
-                JOMLConversion.atLowerCornerOf(facing.getClockWise().getNormal(), new Vector3d()) :
+                JOMLConversion.atLowerCornerOf(facing.getClockWise().getUnitVec3i(), new Vector3d()) :
                 OrientedBoundingBox3d.FORWARD;
 
         final Vector3d rightB = horizontal ?
-                JOMLConversion.atLowerCornerOf(otherFacing.getCounterClockWise().getNormal(), new Vector3d()) :
+                JOMLConversion.atLowerCornerOf(otherFacing.getCounterClockWise().getUnitVec3i(), new Vector3d()) :
                 new Vector3d(OrientedBoundingBox3d.FORWARD);
 
         final Vector3dc upA = horizontal ?

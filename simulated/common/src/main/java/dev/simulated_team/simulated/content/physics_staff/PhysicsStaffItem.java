@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.physics_staff;
 
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -19,7 +21,7 @@ public class PhysicsStaffItem extends Item {
     }
 
     @Override
-    public boolean canAttackBlock(final BlockState state, final Level world, final BlockPos pos, final Player player) {
+    public boolean canDestroyBlock(final ItemStack itemStack, final BlockState state, final Level world, final BlockPos pos, final LivingEntity player) {
         return false;
     }
 }

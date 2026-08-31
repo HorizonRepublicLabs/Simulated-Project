@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.spring;
 
+import net.minecraft.core.UUIDUtil;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import dev.ryanhcode.sable.Sable;
@@ -108,7 +109,7 @@ public class SpringBlockEntity extends SmartBlockEntity implements BlockEntitySu
         double newDesiredLength = Math.clamp(this.desiredLength + delta, 1, SpringItemHandler.MAX_LENGTH);
         newDesiredLength = Math.round(newDesiredLength / 0.25) * 0.25;
 
-        final double currentLength = Sable.HELPER.distanceSquaredWithSubLevels(level, this.worldPosition.getCenter(), this.partnerPos.getCenter()) + 1;
+        final double currentLength = Sable.HELPER.distanceSquaredWithSubLevels(level, Vec3.atCenterOf(this.worldPosition), Vec3.atCenterOf(this.partnerPos)) + 1;
         if (delta < 0 && currentLength > newDesiredLength * newDesiredLength * 4) {
             return "too_stretched";
         }
@@ -214,8 +215,8 @@ public class SpringBlockEntity extends SmartBlockEntity implements BlockEntitySu
         }
 
         //#region alignment torque
-        final Vector3d globalNormalA = JOMLConversion.atLowerCornerOf(state.getValue(SpringBlock.FACING).getNormal());
-        final Vector3d globalNormalB = JOMLConversion.atLowerCornerOf(partner.getBlockState().getValue(SpringBlock.FACING).getNormal());
+        final Vector3d globalNormalA = JOMLConversion.atLowerCornerOf(state.getValue(SpringBlock.FACING).getUnitVec3i());
+        final Vector3d globalNormalB = JOMLConversion.atLowerCornerOf(partner.getBlockState().getValue(SpringBlock.FACING).getUnitVec3i());
 
         subLevel.logicalPose().transformNormal(globalNormalA);
         if (partnerSubLevel != null) {
@@ -392,7 +393,7 @@ public class SpringBlockEntity extends SmartBlockEntity implements BlockEntitySu
         // we can avoid all that logic if there is no schematic context, or we're placing into a schematic level (just carry over the nbt into it)
         if (schematicContext == null || schematicContext.getType() == SubLevelSchematicSerializationContext.Type.PLACE) {
             if (this.partnerSubLevel != null) {
-                tag.putUUID("GoalSubLevel", this.partnerSubLevel);
+                tag.store("GoalSubLevel", UUIDUtil.CODEC, this.partnerSubLevel);
             }
 
             BlockPos partnerPos = this.partnerPos;
@@ -437,7 +438,7 @@ public class SpringBlockEntity extends SmartBlockEntity implements BlockEntitySu
         }
 
         if (id != null) {
-            tag.putUUID("GoalSubLevel", id);
+            tag.store("GoalSubLevel", UUIDUtil.CODEC, id);
         }
     }
 
@@ -456,8 +457,8 @@ public class SpringBlockEntity extends SmartBlockEntity implements BlockEntitySu
         final boolean isPlacingFromSchematic = schematicContext != null && schematicContext.getType() == SubLevelSchematicSerializationContext.Type.PLACE;
         SubLevelSchematicSerializationContext.SchematicMapping mapping = null;
 
-        if (tag.hasUUID("GoalSubLevel")) {
-            UUID subLevelID = tag.getUUID("GoalSubLevel");
+        if (tag.read("GoalSubLevel", UUIDUtil.CODEC).isPresent()) {
+            UUID subLevelID = tag.read("GoalSubLevel", UUIDUtil.CODEC).orElseThrow();
 
             if (isPlacingFromSchematic) {
                 mapping = schematicContext.getMapping(subLevelID);
@@ -533,8 +534,8 @@ public class SpringBlockEntity extends SmartBlockEntity implements BlockEntitySu
             return new AABB(this.getBlockPos());
         }
 
-        final Vec3 center = this.getBlockPos().getCenter();
-        Vec3 partnerPos = this.partnerPos.getCenter();
+        final Vec3 center = Vec3.atCenterOf(this.getBlockPos());
+        Vec3 partnerPos = Vec3.atCenterOf(this.partnerPos);
 
         final SubLevel subLevel = Sable.HELPER.getContaining(this);
         final SubLevel partnerSubLevel = Sable.HELPER.getContaining(this.level, this.partnerPos);

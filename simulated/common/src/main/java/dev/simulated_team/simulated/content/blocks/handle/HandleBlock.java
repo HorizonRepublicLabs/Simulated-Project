@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.handle;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.redstone.Orientation;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllItems;
@@ -103,16 +105,14 @@ public class HandleBlock extends AbstractDirectionalAxisBlock implements IBE<Han
     }
 
     @Override
-    public void neighborChanged(final BlockState state, final Level worldIn, final BlockPos pos, final Block blockIn, final BlockPos fromPos,
-                                final boolean isMoving) {
+    protected void neighborChanged(final BlockState state, final Level worldIn, final BlockPos pos, final Block blockIn, final @Nullable Orientation orientation, final boolean isMoving) {
         if (worldIn.isClientSide())
             return;
 
-        final Direction blockFacing = state.getValue(FACING);
-        if (fromPos.equals(pos.relative(blockFacing.getOpposite()))) {
-            if (!this.canSurvive(state, worldIn, pos)) {
-                worldIn.destroyBlock(pos, true);
-            }
+        // 26.2 no longer hands over the neighbour position, so any neighbour
+        // change re-checks whether the handle can still survive.
+        if (!this.canSurvive(state, worldIn, pos)) {
+            worldIn.destroyBlock(pos, true);
         }
     }
 
@@ -127,7 +127,7 @@ public class HandleBlock extends AbstractDirectionalAxisBlock implements IBE<Han
     }
 
     @Override
-    protected int getAnalogOutputSignal(final BlockState state, final Level level, final BlockPos pos) {
+    protected int getAnalogOutputSignal(final BlockState state, final Level level, final BlockPos pos, final Direction direction) {
         if (level.getBlockEntity(pos) instanceof final HandleBlockEntity be) {
             return be.hasPlayer() ? 15 : 0;
         }
@@ -163,8 +163,8 @@ public class HandleBlock extends AbstractDirectionalAxisBlock implements IBE<Han
 
 
     public enum Variant implements StringRepresentable {
-        IRON(Ingredient.of(Tags.Items.NUGGETS_IRON)),
-        COPPER(Ingredient.of(AllTags.commonItemTag("nuggets/copper"))),
+        IRON(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(Tags.Items.NUGGETS_IRON))),
+        COPPER(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(AllTags.commonItemTag("nuggets/copper")))),
         DYED(null);
 
         @Nullable final Ingredient ingredient;

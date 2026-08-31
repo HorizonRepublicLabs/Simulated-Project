@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.command;
 
+import net.minecraft.server.permissions.Permissions;
+import net.createmod.catnip.api.platform.services.PlatformHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -26,9 +28,9 @@ public class SimCommand {
     public static void register(final CommandDispatcher<CommandSourceStack> dispatcher, final CommandBuildContext buildContext) {
         final LiteralArgumentBuilder<CommandSourceStack> cmd = Commands.literal("simulated");
 
-        if(CatnipServices.PLATFORM.isDevelopmentEnvironment()) {
+        if(PlatformHelper.INSTANCE.isDevelopmentEnvironment()) {
             cmd.then(Commands.literal("debugthing")
-                    .requires(command -> command.hasPermission(2))
+                    .requires(command -> command.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                     .then(Commands.literal("start")
                             .then(Commands.argument("steps", IntegerArgumentType.integer()).executes(SimDebugThingCommands::start)))
                     .then(Commands.literal("stop").executes(SimDebugThingCommands::stop))
@@ -37,13 +39,13 @@ public class SimCommand {
         }
 
         cmd.then(Commands.literal("lock")
-                .requires(command -> command.hasPermission(2))
+                .requires(command -> command.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                 .then(Commands.argument("sub_levels", SubLevelArgumentType.subLevels())
                         .executes(ctx -> lockSubLevels(ctx, true))
                         .then(Commands.argument("locked", BoolArgumentType.bool())
                                 .executes(ctx -> lockSubLevels(ctx, false)))));
         cmd.then(Commands.literal("glue")
-                .requires(command -> command.hasPermission(2))
+                .requires(command -> command.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                 .then(Commands.argument("from", BlockPosArgument.blockPos())
                         .then(Commands.argument("to", BlockPosArgument.blockPos())
                                 .executes(SimCommand::glueArea))));

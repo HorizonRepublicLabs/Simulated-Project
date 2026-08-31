@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.nav_table;
 
+import net.minecraft.server.level.ServerLevel;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -115,7 +116,7 @@ public class NavTableBlock extends DirectionalBlock implements IBE<NavTableBlock
                 nav.setChanged();
                 nav.sendData();
 
-                final float pitch = 0.8f + level.random.nextFloat() * 0.4f;
+                final float pitch = 0.8f + level.getRandom().nextFloat() * 0.4f;
                 final float volume = .75f;
 
                 if (extract.isEmpty() && !newSlotItem.isEmpty()) {
@@ -180,9 +181,8 @@ public class NavTableBlock extends DirectionalBlock implements IBE<NavTableBlock
     }
 
     @Override
-    public void onRemove(final BlockState state, final Level level, final BlockPos pos, final BlockState newState, final boolean movedByPiston) {
+    protected void affectNeighborsAfterRemoval(final BlockState state, final ServerLevel level, final BlockPos pos, final boolean movedByPiston) {
         this.withBlockEntityDo(level, pos, NavTableBlockEntity::dropHeldItem);
-        IBE.onRemove(state, level, pos, newState);
     }
 
     @Override

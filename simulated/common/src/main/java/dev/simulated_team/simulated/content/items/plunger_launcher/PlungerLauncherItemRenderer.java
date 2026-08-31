@@ -45,7 +45,7 @@ public class PlungerLauncherItemRenderer extends CustomRenderedItemModelRenderer
         renderer.render(model.getOriginalModel(), light);
 
         final LocalPlayer player = Minecraft.getInstance().player;
-        final DeltaTracker timer = Minecraft.getInstance().getTimer();
+        final DeltaTracker timer = Minecraft.getInstance().getDeltaTracker();
         final float partialTicks = timer.getGameTimeDeltaPartialTick(false);
 
         final PlayerLaunchedPlungerExtension duck = (PlayerLaunchedPlungerExtension) player;
@@ -79,7 +79,7 @@ public class PlungerLauncherItemRenderer extends CustomRenderedItemModelRenderer
 
         ms.translate(2 / 16f * (first ? -1 : 1), -1 / 16f, -5 / 16f);
 
-        final DeltaTracker timer = Minecraft.getInstance().getTimer();
+        final DeltaTracker timer = Minecraft.getInstance().getDeltaTracker();
         final float partialTicks = timer.getGameTimeDeltaPartialTick(false);
 
         final ItemCooldowns cooldowns = Minecraft.getInstance().player.getCooldowns();
@@ -121,7 +121,7 @@ public class PlungerLauncherItemRenderer extends CustomRenderedItemModelRenderer
 
                 final Vec3 focusPos1 = LaunchedPlungerEntityRenderer.getFirstPersonFocusPos(0f);
                 for (int i = 0; i < Math.random() * 4; i++) {
-                    final Vec3 m2 = VecHelper.offsetRandomly(player.getViewVector(0), player.level().random, 0.5f);
+                    final Vec3 m2 = VecHelper.offsetRandomly(player.getViewVector(0), player.level().getRandom(), 0.5f);
                     player.level().addParticle(new AirParticleData(1, 1 / 4f), focusPos1.x, focusPos1.y, focusPos1.z, m2.x, m2.y, m2.z);
                 }
 

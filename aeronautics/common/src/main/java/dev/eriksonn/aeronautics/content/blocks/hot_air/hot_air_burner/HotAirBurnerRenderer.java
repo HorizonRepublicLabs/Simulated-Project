@@ -48,7 +48,7 @@ public class HotAirBurnerRenderer extends SmartBlockEntityRenderer<HotAirBurnerB
         ms.translate(-0.5, 0.35, 0.5);
 
         final BlockPos pos = be.getBlockPos();
-        final Vec3 center = pos.getCenter();
+        final Vec3 center = Vec3.atCenterOf(pos);
 
         final Minecraft minecraft = Minecraft.getInstance();
         Vec3 camera = minecraft.gameRenderer.mainCamera().position();

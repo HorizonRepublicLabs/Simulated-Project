@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.mixin.extendo_grip;
 
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -15,7 +17,7 @@ public abstract class ExtendoGripItemMixin extends Item {
     }
 
     @Override
-    public boolean canAttackBlock(final BlockState state, final Level level, final BlockPos pos, final Player player) {
-        return !player.isCreative();
+    public boolean canDestroyBlock(final ItemStack itemStack, final BlockState state, final Level level, final BlockPos pos, final LivingEntity user) {
+        return !(user instanceof final Player player && player.isCreative());
     }
 }

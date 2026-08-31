@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.lasers.optical_sensor;
 
+import net.minecraft.core.component.DataComponents;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
@@ -104,7 +105,7 @@ public class OpticalSensorBlockEntity extends AbstractLaserBlockEntity implement
                 final boolean shouldPower = this.checkFilter(context);
                 if (this.lastRayDistance != this.rayDistance || this.getBlockState().getValue(OpticalSensorBlock.POWERED) != shouldPower) {
                     this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(OpticalSensorBlock.POWERED, shouldPower));
-                    this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
+                    this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock(), null);
                     this.invalidateRenderBoundingBox();
                 }
 
@@ -180,8 +181,8 @@ public class OpticalSensorBlockEntity extends AbstractLaserBlockEntity implement
      * @return true if successful opacity change
      */
     public boolean tryApplyDye(final ItemStack item) {
-        if (item.getItem() instanceof final DyeItem dyeItem) {
-            final Color color = new Color(dyeItem.getDyeColor().getTextColor());
+        if (item.get(DataComponents.DYE) != null) {
+            final Color color = new Color(item.get(DataComponents.DYE).getTextColor());
             
             // color is grayscale
             if (color.getRed() == color.getGreen() && color.getGreen() == color.getBlue()) {

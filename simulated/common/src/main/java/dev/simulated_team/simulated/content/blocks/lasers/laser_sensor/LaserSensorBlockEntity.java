@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.lasers.laser_sensor;
 
+import net.minecraft.core.component.DataComponents;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -65,11 +66,11 @@ public class LaserSensorBlockEntity extends SmartBlockEntity implements Clearabl
             if ((this.currentPower == 0) == (this.nextPower == 0)) {
                 this.currentPower = this.nextPower;
                 this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(LaserSensorBlock.POWERED, this.nextPower > 0));
-                this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
+                this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock(), null);
             } else if (this.updateCooldown <= 0) {
                 this.currentPower = this.nextPower;
                 this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(LaserSensorBlock.POWERED, this.nextPower > 0));
-                this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
+                this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock(), null);
 
                 // Grant Advancement
                 final boolean powered = this.getBlockState().getValue(LaserSensorBlock.POWERED);
@@ -142,8 +143,8 @@ public class LaserSensorBlockEntity extends SmartBlockEntity implements Clearabl
 
         if (stack.is(SimTags.Items.LASER_POINTER_LENS)) {
             color = SimColors.MEDIA_OURPLE;
-        } else if (item instanceof final DyeItem dyeItem) {
-            color = dyeItem.getDyeColor().getTextColor();
+        } else if (stack.get(DataComponents.DYE) != null) {
+            color = stack.get(DataComponents.DYE).getTextColor();
         }
 
         return testColor == color;

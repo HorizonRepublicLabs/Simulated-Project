@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
+import net.minecraft.client.input.KeyEvent;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.foundation.utility.ControlsUtil;
@@ -70,10 +71,8 @@ public class LinkedTypewriterInteractionHandler {
     }
 
     public static void tick() {
-        LinkedTypewriterRenderer.tick();
 
         if (getMode() == Mode.BINDING_FROM_ITEM) {
-            LinkedTypewriterItemBindHandler.tick();
         }
 
         final LinkedTypewriterBlockEntity be = TYPEWRITER.get();
@@ -87,14 +86,13 @@ public class LinkedTypewriterInteractionHandler {
             associateTypewriter(null);
         }
 
-        if (getMode() != Mode.SCREEN_BINDING && Minecraft.getInstance().screen != null && !be.isRemoved()) {
+        if (getMode() != Mode.SCREEN_BINDING && Minecraft.getInstance().gui.screen() != null && !be.isRemoved()) {
             VeilPacketManager.server().sendPacket(new TypewriterDisconnectUser(be.getBlockPos()));
             associateTypewriter(null);
         }
     }
 
     private static void stopInteraction() {
-        LinkedTypewriterRenderer.resetKeys();
         renderPressed.clear();
     }
 
@@ -108,7 +106,6 @@ public class LinkedTypewriterInteractionHandler {
         final LinkedTypewriterBlockEntity be = TYPEWRITER.get();
 
         if (getMode() == Mode.BINDING_FROM_ITEM) {
-            LinkedTypewriterItemBindHandler.keyPress(key, scanCode, action, modifiers);
             return;
         }
 
@@ -120,7 +117,7 @@ public class LinkedTypewriterInteractionHandler {
                     be.disconnectUser();
                     VeilPacketManager.server().sendPacket(new TypewriterDisconnectUser(be.getBlockPos()));
 
-                    minecraft.setScreen(null);
+                    minecraft.gui.setScreen(null);
                 }
 
                 if (frequency != null) {
@@ -142,7 +139,7 @@ public class LinkedTypewriterInteractionHandler {
                 }
 
                 for (final KeyMapping control : ControlsUtil.getControls()) {
-                    if (control.matches(key, scanCode)) {
+                    if (control.matches(new KeyEvent(key, scanCode, modifiers))) {
                         control.consumeClick();
                         control.setDown(false);
                         break;
@@ -158,7 +155,7 @@ public class LinkedTypewriterInteractionHandler {
 
     public static void preventPress(final int key, final int scanCode) {
         for (final KeyMapping mapping : Minecraft.getInstance().options.keyMappings) {
-            if (mapping.matches(key, scanCode)) {
+            if (mapping.matches(new KeyEvent(key, scanCode, 0))) {
                 // TODO: there might be a better, more robust way to prevent keystrokes from propagating
                 mapping.consumeClick();
                 mapping.setDown(false);
@@ -225,7 +222,7 @@ public class LinkedTypewriterInteractionHandler {
 
             linkedControllerItems = emptyData;
         } else {
-            linkedControllerItems = new ObjectArrayList<>(linkedControllerData.stream().toList());
+            linkedControllerItems = new ObjectArrayList<>(linkedControllerData.allItemsCopyStream().toList());
 
             while (linkedControllerItems.size() < 12) {
                 linkedControllerItems.add(ItemStack.EMPTY);

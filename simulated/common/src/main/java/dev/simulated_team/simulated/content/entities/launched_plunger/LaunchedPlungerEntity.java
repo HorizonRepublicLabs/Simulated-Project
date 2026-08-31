@@ -1,5 +1,10 @@
 package dev.simulated_team.simulated.content.entities.launched_plunger;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.core.UUIDUtil;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.entity.EntitySubLevelUtil;
 import dev.ryanhcode.sable.api.physics.constraint.ConstraintJointAxis;
@@ -51,7 +56,11 @@ import java.util.UUID;
 
 public class LaunchedPlungerEntity extends ThrowableProjectile {
 
-    public static final EntityDataAccessor<Optional<UUID>> OTHER_PLUNGER = SynchedEntityData.defineId(LaunchedPlungerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    // 26.2 no longer ships a uuid entity data serializer, so the partner's uuid
+    // rides its own serializer built from the uuid stream codec.
+    private static final EntityDataSerializer<Optional<UUID>> OPTIONAL_UUID_SERIALIZER =
+            EntityDataSerializer.forValueType(ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC));
+    public static final EntityDataAccessor<Optional<UUID>> OTHER_PLUNGER = SynchedEntityData.defineId(LaunchedPlungerEntity.class, OPTIONAL_UUID_SERIALIZER);
     public static final EntityDataAccessor<Integer> OTHER_PLUNGER_ID = SynchedEntityData.defineId(LaunchedPlungerEntity.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Direction> PLUNGED_DIRECTION = SynchedEntityData.defineId(LaunchedPlungerEntity.class, EntityDataSerializers.DIRECTION);
@@ -151,7 +160,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
 
         if (this.getData(IS_PLUNGED)) {
             this.setDeltaMovement(Vec3.ZERO);
-            this.lookAt(EntityAnchorArgument.Anchor.FEET, this.position().add(Vec3.atLowerCornerOf(this.getData(PLUNGED_DIRECTION).getNormal()).scale(0.05f)));
+            this.lookAt(EntityAnchorArgument.Anchor.FEET, this.position().add(Vec3.atLowerCornerOf(this.getData(PLUNGED_DIRECTION).getUnitVec3i()).scale(0.05f)));
 
             if (this.firstTick) {
                 this.plungedTime = 20;
@@ -191,7 +200,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
         Vec3 pos = this.getPosition(partialTick);
 
         if (this.isPlunged()) {
-            pos = pos.add(Vec3.atLowerCornerOf(this.getData(PLUNGED_DIRECTION).getNormal()).scale(0.6));
+            pos = pos.add(Vec3.atLowerCornerOf(this.getData(PLUNGED_DIRECTION).getUnitVec3i()).scale(0.6));
         }
 
         return pos;
@@ -204,7 +213,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
         Vec3 pos = this.position();
 
         if (this.isPlunged()) {
-            pos = pos.add(Vec3.atLowerCornerOf(this.getData(PLUNGED_DIRECTION).getNormal()).scale(0.6));
+            pos = pos.add(Vec3.atLowerCornerOf(this.getData(PLUNGED_DIRECTION).getUnitVec3i()).scale(0.6));
         }
 
         return pos;
@@ -298,7 +307,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
     }
 
     @Override
-    protected AABB makeBoundingBox() {
+    protected AABB makeBoundingBox(final Vec3 position) {
         final AABB bb = this.getDimensions(this.getPose()).makeBoundingBox(this.position());
         return bb.move(0.0, -bb.getYsize() / 2.0, 0.0);
     }
@@ -353,7 +362,7 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
         this.removeConstraint();
 
         if (!this.level().isClientSide()) {
-            this.playSound(SimSoundEvents.PLUNGER_RELEASE.event(), 1.0f, 0.9f + 0.2f * this.level().random.nextFloat());
+            this.playSound(SimSoundEvents.PLUNGER_RELEASE.event(), 1.0f, 0.9f + 0.2f * this.level().getRandom().nextFloat());
             LaunchedPlungerServerHandler.removeLaunchedPlunger(this.level(), this);
         }
 
@@ -366,35 +375,29 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
     }
 
     @Override
-    protected void addAdditionalSaveData(final CompoundTag compoundTag) {
-        final Optional<UUID> other = this.getData(OTHER_PLUNGER);
-        other.ifPresent(value -> compoundTag.putUUID("OtherPlunger", value));
+    protected void addAdditionalSaveData(final ValueOutput output) {
+        output.storeNullable("OtherPlunger", UUIDUtil.CODEC, this.getData(OTHER_PLUNGER).orElse(null));
+        output.store("PlungedBlockPos", BlockPos.CODEC, this.getData(PLUNGED_BLOCK_POS));
+        output.store("TargetPos", Vec3.CODEC, this.getData(TARGET_POS));
+        output.store("PlungedDir", Direction.CODEC, this.getData(PLUNGED_DIRECTION));
+        output.putBoolean("IsPlunged", this.getData(IS_PLUNGED));
+        output.putBoolean("IsFirst", this.getData(IS_FIRST));
 
-        compoundTag.put("PlungedBlockPos", NbtUtils.writeBlockPos(this.getData(PLUNGED_BLOCK_POS)));
-        compoundTag.put("TargetPos", VecHelper.writeNBT(this.getData(TARGET_POS)));
-        NBTHelper.writeEnum(compoundTag, "PlungedDir", this.getData(PLUNGED_DIRECTION));
-        compoundTag.putBoolean("IsPlunged", this.getData(IS_PLUNGED));
-
-        compoundTag.putBoolean("IsFirst", this.getData(IS_FIRST));
-
-        super.addAdditionalSaveData(compoundTag);
+        super.addAdditionalSaveData(output);
     }
 
     @Override
-    protected void readAdditionalSaveData(final CompoundTag compoundTag) {
-        this.setData(IS_PLUNGED, compoundTag.getBooleanOr("IsPlunged", false));
+    protected void readAdditionalSaveData(final ValueInput input) {
+        this.setData(IS_PLUNGED, input.getBooleanOr("IsPlunged", false));
 
-        this.setData(PLUNGED_DIRECTION, NBTHelper.readEnum(compoundTag, "PlungedDir", Direction.class));
-        this.setData(PLUNGED_BLOCK_POS, NbtUtils.readBlockPos(compoundTag, "PlungedBlockPos").get());
-        this.setData(TARGET_POS, VecHelper.readNBT((ListTag) compoundTag.get("TargetPos")));
+        this.setData(PLUNGED_DIRECTION, input.read("PlungedDir", Direction.CODEC).orElse(Direction.UP));
+        this.setData(PLUNGED_BLOCK_POS, input.read("PlungedBlockPos", BlockPos.CODEC).orElse(BlockPos.ZERO));
+        this.setData(TARGET_POS, input.read("TargetPos", Vec3.CODEC).orElse(Vec3.ZERO));
 
-        this.setData(IS_FIRST, compoundTag.getBooleanOr("IsFirst", false));
+        this.setData(IS_FIRST, input.getBooleanOr("IsFirst", false));
+        this.setData(OTHER_PLUNGER, input.read("OtherPlunger", UUIDUtil.CODEC));
 
-        if (compoundTag.contains("OtherPlunger")) {
-            this.setData(OTHER_PLUNGER, Optional.of(compoundTag.getUUID("OtherPlunger")));
-        }
-
-        super.readAdditionalSaveData(compoundTag);
+        super.readAdditionalSaveData(input);
     }
 
     public void resetPlunged() {
@@ -493,10 +496,12 @@ public class LaunchedPlungerEntity extends ThrowableProjectile {
     }
 
     @Override
-    public void load(final CompoundTag compound) {
-        super.load(compound);
-        this.setOwner(null); // Sets the owner to null so that plungers without a pair will be removed when loaded
-        this.ownerUUID = null;
+    public void load(final ValueInput input) {
+        super.load(input);
+        // Clearing the owner makes a plunger without a pair remove itself when
+        // it loads. 26.2 keeps the owner in an entity reference, so dropping the
+        // reference is all that is needed.
+        this.setOwner((Entity) null);
     }
 
     public boolean isPlunged() {

@@ -1,5 +1,10 @@
 package dev.simulated_team.simulated.content.physics_staff;
 
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.resources.Identifier;
 import dev.ryanhcode.sable.api.physics.PhysicsPipeline;
 import dev.ryanhcode.sable.api.physics.constraint.ConstraintJointAxis;
 import dev.ryanhcode.sable.api.physics.constraint.PhysicsConstraintHandle;
@@ -62,7 +67,7 @@ public class PhysicsStaffServerHandler extends SavedData {
     }
 
     public static void sendAllData(final Player player) {
-        final MinecraftServer server = player.getServer();
+        final MinecraftServer server = player.level().getServer();
         assert server != null;
 
         for (final ServerLevel level : server.getAllLevels()) {
@@ -94,14 +99,22 @@ public class PhysicsStaffServerHandler extends SavedData {
 
     private static PhysicsStaffServerHandler create(final ServerLevel level, final CompoundTag nbt, final HolderLookup.Provider registries) {
         final PhysicsStaffServerHandler sd = new PhysicsStaffServerHandler(level);
-        sd.loadLocks(nbt.getList(ID, Tag.TAG_INT_ARRAY));
+        sd.loadLocks(nbt.getListOrEmpty(ID));
         return sd;
     }
 
     public static PhysicsStaffServerHandler get(final ServerLevel level) {
+        // 26.2 describes saved data with a codec backed type.
         final PhysicsStaffServerHandler data = level.getChunkSource().getDataStorage().computeIfAbsent(
-                new SavedData.Factory<>(PhysicsStaffServerHandler::new, (nbt, lookup) -> create(level, nbt, lookup), null),
-                PhysicsStaffServerHandler.ID);
+                new SavedDataType<>(
+                        Identifier.withDefaultNamespace(PhysicsStaffServerHandler.ID),
+                        PhysicsStaffServerHandler::new,
+                        CompoundTag.CODEC.xmap(
+                                nbt -> create(level, nbt, level.registryAccess()),
+                                d -> d.save(new CompoundTag(), level.registryAccess())
+                        ),
+                        DataFixTypes.LEVEL
+                ));
         data.level = level;
 
         return data;
@@ -185,7 +198,6 @@ public class PhysicsStaffServerHandler extends SavedData {
         );
     }
 
-    @Override
     public @NotNull CompoundTag save(final CompoundTag tag, final HolderLookup.@NotNull Provider provider) {
         final ListTag tags = new ListTag();
         this.saveLocks(tags);
@@ -196,13 +208,15 @@ public class PhysicsStaffServerHandler extends SavedData {
 
     private void loadLocks(final ListTag list) {
         for (final Tag tag : list) {
-            final UUID uuid = NbtUtils.loadUUID(tag);
+            final UUID uuid = UUIDUtil.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
             this.locks.put(uuid, new Lock(uuid, null));
         }
     }
 
     private void saveLocks(final ListTag list) {
-        list.addAll(this.locks.keySet().stream().map(NbtUtils::createUUID).toList());
+        list.addAll(this.locks.keySet().stream()
+                .map(uuid -> UUIDUtil.CODEC.encodeStart(NbtOps.INSTANCE, uuid).getOrThrow())
+                .toList());
     }
 
     public boolean isLocked(final SubLevel subLevel) {

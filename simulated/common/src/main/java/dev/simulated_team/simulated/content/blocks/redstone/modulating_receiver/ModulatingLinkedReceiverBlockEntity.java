@@ -106,9 +106,9 @@ public class ModulatingLinkedReceiverBlockEntity extends AbstractLinkedReceiverB
     protected void read(final CompoundTag compound, final HolderLookup.Provider registries, final boolean clientPacket) {
         this.distanceToClosest = compound.getDoubleOr("DistanceToClosest", 0.0);
 
-        if (!clientPacket ||
-                !(Minecraft.getInstance().screen instanceof final ModulatingLinkedReceiverScreen screen) ||
-                !screen.isThisBlock(this.getBlockPos())) {
+        // The receiver's screen belongs to the client render layer, which is not
+        // part of the 26.2 port yet, so a sync never has a screen to defer to.
+        if (!clientPacket) {
             this.minRange = compound.getIntOr("MinRange", 0);
             this.maxRange = compound.getIntOr("MaxRange", 0);
         }

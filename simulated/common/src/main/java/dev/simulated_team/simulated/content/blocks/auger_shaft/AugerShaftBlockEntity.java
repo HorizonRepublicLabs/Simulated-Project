@@ -9,7 +9,6 @@ import com.simibubi.create.content.redstone.displayLink.source.ItemThroughputDis
 import com.simibubi.create.foundation.utility.CreateLang;
 import dev.ryanhcode.sable.util.LevelAccelerator;
 import dev.simulated_team.simulated.content.blocks.auger_shaft.auger_groups.AugerDistributor;
-import dev.simulated_team.simulated.content.particle.AugerIndicatorParticleData;
 import dev.simulated_team.simulated.data.SimLang;
 import dev.simulated_team.simulated.multiloader.inventory.ContainerSlot;
 import dev.simulated_team.simulated.multiloader.inventory.InventoryLoaderWrapper;
@@ -344,7 +343,7 @@ public class AugerShaftBlockEntity extends KineticBlockEntity implements ItemRec
 
         final int count = this.inventory.slot.getStack().getCount();
         if (count > 0) {
-            CreateLang.translate("tooltip.chute.contains", Component.translatable(this.inventory.slot.getStack().getDescriptionId())
+            CreateLang.translate("tooltip.chute.contains", Component.translatable(this.inventory.slot.getStack().getItem().getDescriptionId())
                             .getString(), count)
                     .style(ChatFormatting.GREEN)
                     .forGoggles(tooltip);
@@ -424,13 +423,10 @@ public class AugerShaftBlockEntity extends KineticBlockEntity implements ItemRec
             particleSpeed *= (int) Math.signum(speed);
 
             for (int i = 0; i < 3; i++) {
-                final AugerIndicatorParticleData particleData =
-                        new AugerIndicatorParticleData(color, particleSpeed, radius1, radius2, i / 3f, 10, direction);
+                // The auger indicator particle belongs to the staged-out particle layer.
                 if (level instanceof final ServerLevel serverLevel) {
-                    serverLevel.sendParticles(particleData, vec.x, vec.y, vec.z, 20, 0, 0, 0, 1);
                 } else {
                     for (int j = 0; j < 20; j++) {
-                        level.addParticle(particleData, vec.x, vec.y, vec.z, 0, 0, 0);
                     }
                 }
             }

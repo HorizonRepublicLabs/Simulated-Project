@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.rope.strand.client;
 
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import dev.ryanhcode.sable.Sable;
@@ -244,13 +245,13 @@ public class ZiplineClientManager implements InteractCallback {
     public static boolean canStartRiding(final ClosestQuery query, final Player player, final boolean sendMessage) {
         if (!canStartRidingDistance(query, player)) {
             if (sendMessage) {
-                player.displayClientMessage(SimLang.translate("zipline.too_far").color(SimColors.NUH_UH_RED).component(), true);
+                CreateLang.sendStatus(player, SimLang.translate("zipline.too_far").color(SimColors.NUH_UH_RED).component(), true);
             }
             return false;
         }
         if (!canStartRidingSteepness(query, player)) {
             if (sendMessage) {
-                player.displayClientMessage(SimLang.translate("zipline.too_steep").color(SimColors.NUH_UH_RED).component(), true);
+                CreateLang.sendStatus(player, SimLang.translate("zipline.too_steep").color(SimColors.NUH_UH_RED).component(), true);
             }
             return false;
         }
@@ -309,7 +310,7 @@ public class ZiplineClientManager implements InteractCallback {
     public static void embark(final UUID rope) {
         final Minecraft mc = Minecraft.getInstance();
         final Component component = Component.translatable("mount.onboard", mc.options.keyShift.getTranslatedKeyMessage());
-        mc.gui.setOverlayMessage(component, false);
+        mc.gui.hud.setOverlayMessage(component, false);
         mc.getSoundManager()
                 .play(SimpleSoundInstance.forUI(SoundEvents.WOOL_HIT, 1f, 0.5f));
         ridingRope = rope;

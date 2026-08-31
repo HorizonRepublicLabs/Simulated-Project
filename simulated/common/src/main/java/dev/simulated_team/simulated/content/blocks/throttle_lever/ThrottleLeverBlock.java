@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.throttle_lever;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ARGB;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -51,12 +53,12 @@ public class ThrottleLeverBlock extends FaceAttachedHorizontalDirectionalBlock i
                 (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction1.getStepY();
         final double d2 =
                 (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction1.getStepZ();
-        level.addParticle(new DustParticleOptions(new Vector3f(1.0F, 0.0F, 0.0F), alpha), d0, d1, d2, 0.0D, 0.0D,
+        level.addParticle(new DustParticleOptions(ARGB.colorFromFloat(1.0F, 1.0F, 0.0F, 0.0F), alpha), d0, d1, d2, 0.0D, 0.0D,
                 0.0D);
     }
 
     static void updateNeighbors(final BlockState state, final Level world, final BlockPos pos) {
-        world.updateNeighborsAt(pos, state.getBlock());
+        world.updateNeighborsAt(pos, state.getBlock(), null);
         world.updateNeighborsAt(pos.relative(getConnectedDirection(state).getOpposite()), state.getBlock());
     }
 
@@ -131,8 +133,10 @@ public class ThrottleLeverBlock extends FaceAttachedHorizontalDirectionalBlock i
     }
 
     @Override
-    public void onRemove(final BlockState state, final Level level, final BlockPos pos, final BlockState newState, final boolean isMoving) {
-        if (isMoving || state.getBlock() == newState.getBlock())
+    protected void affectNeighborsAfterRemoval(final BlockState state, final ServerLevel level, final BlockPos pos, final boolean isMoving) {
+        // 26.2 no longer hands over the successor state; the hook only fires
+        // once the block is actually gone.
+        if (isMoving)
             return;
         this.withBlockEntityDo(level, pos, be -> {
             if (be.state != 0)

@@ -1,5 +1,8 @@
 package dev.simulated_team.simulated.content.blocks.auger_shaft;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.redstone.Orientation;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -59,7 +62,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 public class AugerShaftBlock extends RotatedPillarKineticBlock implements IBE<AugerShaftBlockEntity> {
 
-    public static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
+    public static final IPlacementHelper placementHelper = PlacementHelpers.register(new PlacementHelper());
 
     public static final EnumProperty<BarrelSection> SECTION = EnumProperty.create("section", BarrelSection.class);
     public static final BooleanProperty COG = BooleanProperty.create("cog");
@@ -110,9 +113,8 @@ public class AugerShaftBlock extends RotatedPillarKineticBlock implements IBE<Au
 
     @Override
     protected InteractionResult useItemOn(final ItemStack heldItem, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
-        final IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-        if (helper.matchesItem(heldItem))
-            return helper.getOffset(player, level, blockState, blockPos, blockHitResult)
+                if (placementHelper.matchesItem(heldItem))
+            return placementHelper.getOffset(player, level, blockState, blockPos, blockHitResult)
                     .placeInWorld(level, (BlockItem) heldItem.getItem(), player, interactionHand, blockHitResult);
 
         if (!(blockState.getBlock() instanceof AugerCogBlock)) {
@@ -173,7 +175,7 @@ public class AugerShaftBlock extends RotatedPillarKineticBlock implements IBE<Au
     }
 
     @Override
-    public BlockState updateShape(final BlockState state, final Direction dir, final BlockState neighborState, final LevelAccessor level, final BlockPos pos, final BlockPos neighborPos) {
+    protected BlockState updateShape(final BlockState state, final LevelReader level, final ScheduledTickAccess ticks, final BlockPos pos, final Direction dir, final BlockPos neighborPos, final BlockState neighborState, final RandomSource random) {
         //gather axis information
         final Direction.Axis axis = state.getValue(AXIS);
         final Direction directionPos = Direction.get(Direction.AxisDirection.POSITIVE, axis);
@@ -211,7 +213,7 @@ public class AugerShaftBlock extends RotatedPillarKineticBlock implements IBE<Au
             mutState = mutState.setValue(PROPERTY_BY_DIRECTION.get(dir), false);
         }
 
-        return super.updateShape(mutState, dir, neighborState, level, pos, neighborPos);
+        return super.updateShape(mutState, level, ticks, pos, dir, neighborPos, neighborState, random);
     }
 
     @Override
@@ -230,10 +232,10 @@ public class AugerShaftBlock extends RotatedPillarKineticBlock implements IBE<Au
     }
 
     @Override
-    protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block neighborBlock, final BlockPos neighborPos, final boolean movedByPiston) {
+    protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block neighborBlock, final @Nullable Orientation orientation, final boolean movedByPiston) {
 //        this.withBlockEntityDo(level, pos, (be) -> be.stopped = false);
 
-        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
     }
 
     @Override

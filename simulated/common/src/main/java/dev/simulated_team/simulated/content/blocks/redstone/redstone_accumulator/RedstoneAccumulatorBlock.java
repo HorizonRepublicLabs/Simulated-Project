@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.redstone.redstone_accumulator;
 
+import net.minecraft.util.ARGB;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.redstone.diodes.AbstractDiodeBlock;
 import com.simibubi.create.foundation.block.IBE;
@@ -82,8 +83,8 @@ public class RedstoneAccumulatorBlock extends AbstractDiodeBlock implements IBE<
         final Direction facing = state.getValue(RedstoneAccumulatorBlock.FACING).getOpposite();
         final BlockPos offset = pos.relative(facing.getOpposite());
 
-        final BlockPos leftSide = pos.offset(facing.getCounterClockWise().getNormal());
-        final BlockPos rightSide = pos.offset(facing.getClockWise().getNormal());
+        final BlockPos leftSide = pos.offset(facing.getCounterClockWise().getUnitVec3i());
+        final BlockPos rightSide = pos.offset(facing.getClockWise().getUnitVec3i());
 
         final boolean leftSignal = level.getSignal(leftSide, facing.getClockWise().getOpposite()) > 0;
         final boolean rightSignal = level.getSignal(rightSide, facing.getCounterClockWise().getOpposite()) > 0;
@@ -107,7 +108,7 @@ public class RedstoneAccumulatorBlock extends AbstractDiodeBlock implements IBE<
     @Override
     protected InteractionResult useItemOn(final ItemStack itemStack, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
         level.setBlock(blockPos, this.getUpdatedBlockstate(blockPos, blockState.cycle(INVERTED), level), 2);
-        level.updateNeighborsAt(blockPos, blockState.getBlock());
+        level.updateNeighborsAt(blockPos, blockState.getBlock(), null);
 
         final float f = !blockState.getValue(INVERTED) ? 0.6F : 0.5F;
         level.playSound(null, blockPos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
@@ -143,7 +144,7 @@ public class RedstoneAccumulatorBlock extends AbstractDiodeBlock implements IBE<
     }
 
     private static void addParticles(final BlockState state, final LevelAccessor level, final BlockPos pos, final float alpha) {
-        level.addParticle(new DustParticleOptions(new Vector3f(1.0F, 0.0F, 0.0F), alpha), pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0.0D, 0.0D,
+        level.addParticle(new DustParticleOptions(ARGB.colorFromFloat(1.0F, 1.0F, 0.0F, 0.0F), alpha), pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0.0D, 0.0D,
                 0.0D);
     }
 

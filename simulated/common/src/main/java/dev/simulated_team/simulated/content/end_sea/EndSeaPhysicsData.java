@@ -12,6 +12,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
@@ -60,7 +62,7 @@ public class EndSeaPhysicsData {
         }
     }
 
-    public static class ReloadListener extends SimpleJsonResourceReloadListener {
+    public static class ReloadListener extends SimpleJsonResourceReloadListener<JsonElement> {
 
         private static final Gson GSON = new Gson();
         public static final ReloadListener INSTANCE = new ReloadListener();
@@ -69,7 +71,7 @@ public class EndSeaPhysicsData {
         public static final Identifier ID = Simulated.path(NAME);
 
         public ReloadListener() {
-            super(GSON, NAME);
+            super(ExtraCodecs.JSON, FileToIdConverter.json(NAME));
         }
 
         @Override

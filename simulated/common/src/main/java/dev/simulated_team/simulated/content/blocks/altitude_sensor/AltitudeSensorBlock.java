@@ -163,7 +163,8 @@ public class AltitudeSensorBlock extends FaceAttachedHorizontalDirectionalBlock 
         return AllItems.WRENCH.isIn(stack) ? InteractionResult.TRY_WITH_EMPTY_HAND : this.onBlockEntityUseItemOn(level, pos, (be) -> {
 
             if (level.isClientSide()) {
-                this.withBlockEntityDo(level, pos, AltitudeSensorScreen::open);
+                // The sensor's screen belongs to the client render layer, which
+                // is not part of the 26.2 port yet.
             }
 
             return InteractionResult.SUCCESS;

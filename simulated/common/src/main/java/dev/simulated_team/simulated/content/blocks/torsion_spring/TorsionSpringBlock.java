@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.torsion_spring;
 
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.redstone.Orientation;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.foundation.block.IBE;
@@ -52,8 +54,8 @@ public class TorsionSpringBlock extends DirectionalKineticBlock implements IBE<T
     }
 
     @Override
-    protected void neighborChanged(final BlockState blockState, final Level level, final BlockPos blockPos, final Block block, final BlockPos blockPos2, final boolean bl) {
-        super.neighborChanged(blockState, level, blockPos, block, blockPos2, bl);
+    protected void neighborChanged(final BlockState blockState, final Level level, final BlockPos blockPos, final Block block, final @Nullable Orientation orientation, final boolean bl) {
+        super.neighborChanged(blockState, level, blockPos, block, orientation, bl);
         final boolean signal = level.hasNeighborSignal(blockPos);
         if (signal != blockState.getValue(POWERED)) {
             level.setBlock(blockPos, blockState.setValue(POWERED, signal), 2); // idk what this magic number does... copied from DiodeBlock

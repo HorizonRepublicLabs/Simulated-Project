@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.swivel_bearing;
 
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.core.UUIDUtil;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.bearing.BearingBlock;
@@ -264,14 +266,14 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
     private void playGrindingEffect() {
         final Direction facing = this.getBlockState().getValue(SwivelBearingBlock.FACING);
 
-        final RandomSource random = this.level.random;
+        final RandomSource random = this.level.getRandom();
 
         final int stepX = facing.getStepX();
         final int stepY = facing.getStepY();
         final int stepZ = facing.getStepZ();
 
         for (int i = 0; i < 2; i++) {
-            final Vec3 particlePos = this.getBlockPos().getCenter()
+            final Vec3 particlePos = Vec3.atCenterOf(this.getBlockPos())
                     .add(stepX * 7.0 / 16.0, stepY * 7.0 / 16.0, stepZ * 7.0 / 16.0)
                     .add((random.nextFloat() - 0.5f) * (stepX == 0 ? 1 : 0), (random.nextFloat() - 0.5f) * (stepY == 0 ? 1 : 0), (random.nextFloat() - 0.5f) * (stepZ == 0 ? 1 : 0));
 
@@ -371,7 +373,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
         final SubLevel subLevelA = this.getContainingSubLevel();
         final SubLevel subLevelB = this.getAttachedSubLevel();
 
-        final Vec3i facingVec3I = this.getBlockState().getValue(DirectionalKineticBlock.FACING).getNormal();
+        final Vec3i facingVec3I = this.getBlockState().getValue(DirectionalKineticBlock.FACING).getUnitVec3i();
         final Vector3dc facingVec = new Vector3d(facingVec3I.getX(), facingVec3I.getY(), facingVec3I.getZ());
 
         double inertiaA = Double.MAX_VALUE;
@@ -555,7 +557,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
             if (!plateState.is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK)) return;
 
             final Direction plateFacing = plateState.getValue(SwivelBearingPlateBlock.FACING);
-            this.attachConstraints(plateSubLevel, JOMLConversion.toJOML(platePos.relative(plateFacing).getCenter()));
+            this.attachConstraints(plateSubLevel, JOMLConversion.toJOML(Vec3.atCenterOf(platePos.relative(plateFacing))));
         }
     }
 
@@ -576,9 +578,9 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
 
         if (!plateState.is(SimBlocks.SWIVEL_BEARING_LINK_BLOCK)) return;
 
-        final Vector3d anchorPos = JOMLConversion.toJOML(this.getBlockPos().relative(this.getBlockState().getValue(DirectionalKineticBlock.FACING)).getCenter());
-        final Vec3 facingVec = Vec3.atLowerCornerOf(this.getBlockState().getValue(DirectionalKineticBlock.FACING).getNormal());
-        final Vec3 plateFacingVec = Vec3.atLowerCornerOf(plateState.getValue(DirectionalKineticBlock.FACING).getNormal());
+        final Vector3d anchorPos = JOMLConversion.toJOML(Vec3.atCenterOf(this.getBlockPos().relative(this.getBlockState().getValue(DirectionalKineticBlock.FACING))));
+        final Vec3 facingVec = Vec3.atLowerCornerOf(this.getBlockState().getValue(DirectionalKineticBlock.FACING).getUnitVec3i());
+        final Vec3 plateFacingVec = Vec3.atLowerCornerOf(plateState.getValue(DirectionalKineticBlock.FACING).getUnitVec3i());
 
         final RotaryConstraintConfiguration constraint = new RotaryConstraintConfiguration(
                 anchorPos,
@@ -619,11 +621,11 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
         }
 
         if (id != null) {
-            compound.putUUID("SubLevelID", id);
+            compound.store("SubLevelID", UUIDUtil.CODEC, id);
         }
 
         if (platePos != null) {
-            compound.put("SwivelPlate", NbtUtils.writeBlockPos(platePos));
+            compound.put("SwivelPlate", BlockPos.CODEC.encodeStart(NbtOps.INSTANCE, platePos).getOrThrow());
         }
 
         if (this.sequencedAngleLimit >= 0)
@@ -641,8 +643,8 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
 
         SubLevelSchematicSerializationContext.SchematicMapping mapping = null;
 
-        if (compound.hasUUID("SubLevelID")) {
-            UUID subLevelID = compound.getUUID("SubLevelID");
+        if (compound.read("SubLevelID", UUIDUtil.CODEC).isPresent()) {
+            UUID subLevelID = compound.read("SubLevelID", UUIDUtil.CODEC).orElseThrow();
 
             if (schematicContext != null) {
                 mapping = schematicContext.getMapping(subLevelID);
@@ -656,7 +658,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
         }
 
         if (compound.contains("SwivelPlate")) {
-            final BlockPos blockPos = NbtUtils.readBlockPos(compound, "SwivelPlate").orElseThrow();
+            final BlockPos blockPos = BlockPos.CODEC.parse(NbtOps.INSTANCE, compound.get("SwivelPlate")).getOrThrow();
             this.setPlatePos(blockPos);
         }
 
@@ -705,7 +707,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
     }
 
     private @NotNull Vector3d getConstraintPos(final BlockPos relative, final BlockPos offset) {
-        return JOMLConversion.toJOML(relative.offset(offset).getCenter());
+        return JOMLConversion.toJOML(Vec3.atCenterOf(relative.offset(offset)));
     }
 
     private void destroyPlate() {
@@ -849,7 +851,7 @@ public class SwivelBearingBlockEntity extends KineticBlockEntity implements Extr
         @Override
         public Vec3 getLocalOffset(final LevelAccessor level, final BlockPos pos, final BlockState state) {
             return super.getLocalOffset(level, pos, state)
-                    .subtract(Vec3.atLowerCornerOf(state.getValue(SwivelBearingBlock.FACING).getNormal())
+                    .subtract(Vec3.atLowerCornerOf(state.getValue(SwivelBearingBlock.FACING).getUnitVec3i())
                             .scale(5 / 16f));
         }
 
