@@ -26,6 +26,17 @@ neoForge {
             ideName = "Simulated NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
         }
 
+        client {
+            client()
+            gameDirectory = project.file('runs/client')
+        }
+
+        server {
+            server()
+            gameDirectory = project.file('runs/server')
+            programArgument 'nogui'
+        }
+
         data {
             data()
             gameDirectory = project.file('runs/data')
