@@ -57,8 +57,7 @@ if (project.path.endsWith(":common")) {
         compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.4.1'
         annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
-        // neoforge version for JEI compat
-        compileOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+        // No 26.2 build of JEI; the compat that used it is excluded.
 
         implementation ("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}") {
             exclude group: "foundry.veil"
@@ -74,12 +73,8 @@ if (project.path.endsWith(":common")) {
             exclude group: "com.tterrag.registrate"
         }
 
-        // Mod compat
-        compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-common-api:$computercraft_tweaked_version")
-        compileOnly("maven.modrinth:natures-compass:$minecraft_version-$natures_compass_version-neoforge")
-        compileOnly("maven.modrinth:explorers-compass:$minecraft_version-$explorers_compass_version-neoforge")
-        compileOnly("maven.modrinth:sodium:$sodium_version")
-        compileOnly("maven.modrinth:iris:$iris_version")
+        // Mod compat: none of cc-tweaked, natures-compass, explorers-compass,
+        // sodium or iris has a 26.2 build, so their compat is excluded.
     }
 }
 

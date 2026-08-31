@@ -11,12 +11,12 @@ import dev.eriksonn.aeronautics.index.*;
 import dev.eriksonn.aeronautics.neoforge.data.recipe.AeroProcessingRecipeGen;
 import dev.eriksonn.aeronautics.neoforge.index.AeroFluidsNeoForge;
 import dev.eriksonn.aeronautics.neoforge.service.NeoForgeAeroConfigService;
-import net.createmod.catnip.config.ConfigBase;
+import net.createmod.catnip.api.config.ConfigBase;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -75,7 +75,7 @@ public class AeroNeoForgeCommonEvents {
 					ConversionRecipe.create(AeroFluidsNeoForge.LEVITITE_BLEND.getBucket().get().getDefaultInstance(),
 							AeroBlocks.PEARLESCENT_LEVITITE.asItem().getDefaultInstance()));
 
-			ResourceLocation recipeId = Aeronautics.path("conversion_music_disc_cloud_skipper");
+			Identifier recipeId = Aeronautics.path("conversion_music_disc_cloud_skipper");
 			ConversionRecipe recipe = new StandardProcessingRecipe.Builder<>(ConversionRecipe::new, recipeId)
 					.withItemIngredients(Ingredient.of(AeroTags.ItemTags.CONVERTS_TO_CLOUD_SKIPPER))
 					.withSingleItemOutput(AeroItems.MUSIC_DISC_CLOUD_SKIPPER.asStack())

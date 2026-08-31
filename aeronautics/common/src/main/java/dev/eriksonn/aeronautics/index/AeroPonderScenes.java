@@ -3,16 +3,16 @@ package dev.eriksonn.aeronautics.index;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.content.ponder.scenes.*;
-import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import net.createmod.ponder.api.client.registration.PonderSceneRegistrationHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class AeroPonderScenes {
 
-    public static void register(final PonderSceneRegistrationHelper<ResourceLocation> registry) {
+    public static void register(final PonderSceneRegistrationHelper<Identifier> registry) {
         final PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registry.withKeyFunction(DeferredHolder::getId);
 
         helper.forComponents(aeroItemProvider("levitite_blend_bucket"))

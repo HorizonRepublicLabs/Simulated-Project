@@ -2,7 +2,7 @@ package dev.ryanhcode.offroad.neoforge;
 
 import dev.ryanhcode.offroad.Offroad;
 import dev.ryanhcode.offroad.OffroadClient;
-import net.createmod.catnip.config.ui.BaseConfigScreen;
+import net.createmod.catnip.api.client.config.BaseConfigScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;

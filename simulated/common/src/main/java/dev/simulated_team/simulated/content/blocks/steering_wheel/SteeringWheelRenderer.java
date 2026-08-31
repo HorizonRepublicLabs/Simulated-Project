@@ -8,12 +8,12 @@ import com.simibubi.create.foundation.model.BakedModelHelper;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperBufferFactory;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.render.SuperByteBufferCache;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperBufferFactory;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.SuperByteBufferCache;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -22,7 +22,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -85,7 +85,7 @@ public class SteeringWheelRenderer extends KineticBlockEntityRenderer<SteeringWh
 
     public static BakedModel generateModel(final BakedModel template, final BlockState planksBlockState) {
         final Block planksBlock = planksBlockState.getBlock();
-        final ResourceLocation id = RegisteredObjectsHelper.getKeyOrThrow(planksBlock);
+        final Identifier id = RegisteredObjectsHelper.getKeyOrThrow(planksBlock);
         final String wood = plankStateToWoodName(planksBlockState);
 
         if (wood == null)
@@ -104,7 +104,7 @@ public class SteeringWheelRenderer extends KineticBlockEntityRenderer<SteeringWh
     @Nullable
     private static String plankStateToWoodName(final BlockState planksBlockState) {
         final Block planksBlock = planksBlockState.getBlock();
-        final ResourceLocation id = RegisteredObjectsHelper.getKeyOrThrow(planksBlock);
+        final Identifier id = RegisteredObjectsHelper.getKeyOrThrow(planksBlock);
         final String path = id.getPath();
 
         if (path.endsWith("_planks")) // Covers most wood types

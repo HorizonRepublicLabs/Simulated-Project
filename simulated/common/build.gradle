@@ -35,3 +35,11 @@ artifacts {
     commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }
 
+// Reduced 26.2 port: none of JEI, cc-tweaked, natures-compass, explorers-compass,
+// sodium or iris has a 26.2 build, so the compat written against them is staged out.
+sourceSets.main.java {
+    exclude 'dev/simulated_team/simulated/compat/**'
+    exclude 'dev/simulated_team/simulated/neoforge/compat/**'
+    exclude 'dev/simulated_team/simulated/service/compat/**'
+    exclude 'dev/simulated_team/simulated/neoforge/service/compat/**'
+}

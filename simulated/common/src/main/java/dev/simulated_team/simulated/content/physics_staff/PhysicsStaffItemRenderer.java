@@ -14,7 +14,7 @@ import dev.simulated_team.simulated.index.SimRenderTypes;
 import dev.simulated_team.simulated.util.SimDistUtil;
 import dev.simulated_team.simulated.util.SimMathUtils;
 import foundry.veil.Veil;
-import net.createmod.catnip.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.irisshaders.iris.Iris;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;

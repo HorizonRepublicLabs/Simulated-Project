@@ -3,12 +3,12 @@ package dev.eriksonn.aeronautics.content.ponder;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.index.AeroPonderScenes;
-import net.createmod.ponder.api.level.PonderLevel;
-import net.createmod.ponder.api.registration.IndexExclusionHelper;
-import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
-import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
-import net.createmod.ponder.api.registration.SharedTextRegistrationHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.createmod.ponder.api.client.level.PonderLevel;
+import net.createmod.ponder.api.client.registration.IndexExclusionHelper;
+import net.createmod.ponder.api.client.registration.PonderSceneRegistrationHelper;
+import net.createmod.ponder.api.client.registration.PonderTagRegistrationHelper;
+import net.createmod.ponder.api.client.registration.SharedTextRegistrationHelper;
+import net.minecraft.resources.Identifier;
 
 public class AeroPonderPlugin extends CreatePonderPlugin {
     public AeroPonderPlugin() {
@@ -19,12 +19,12 @@ public class AeroPonderPlugin extends CreatePonderPlugin {
     }
 
     @Override
-    public void registerScenes(final PonderSceneRegistrationHelper<ResourceLocation> helper) {
+    public void registerScenes(final PonderSceneRegistrationHelper<Identifier> helper) {
         AeroPonderScenes.register(helper);
     }
 
     @Override
-    public void registerTags(final PonderTagRegistrationHelper<ResourceLocation> helper) {
+    public void registerTags(final PonderTagRegistrationHelper<Identifier> helper) {
         AeroPonderTags.register(helper);
     }
 

@@ -71,7 +71,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
@@ -584,7 +584,7 @@ public class SimBlocks {
                     .addLayer(() -> RenderType::cutoutMipped)
                     .blockstate((c, p) -> BlockStateGen.axisBlock(c, p, s -> {
                         String suffix = s.getValue(AnalogTransmissionBlock.POWERED) ? "_on" : "";
-                        ResourceLocation path = Simulated.path("block/" + c.getName() + "/block" + suffix);
+                        Identifier path = Simulated.path("block/" + c.getName() + "/block" + suffix);
                         return p.models().getExistingFile(path);
                     }))
                     .tag(AllTags.AllBlockTags.SAFE_NBT.tag)

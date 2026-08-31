@@ -3,13 +3,13 @@ package dev.simulated_team.simulated.content.entities.diagram;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.simulated_team.simulated.index.SimPartialModels;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 
 public class DiagramEntityRenderer extends EntityRenderer<DiagramEntity> {
@@ -38,7 +38,7 @@ public class DiagramEntityRenderer extends EntityRenderer<DiagramEntity> {
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(final DiagramEntity entity) {
+	public Identifier getTextureLocation(final DiagramEntity entity) {
 		return null;
 	}
 

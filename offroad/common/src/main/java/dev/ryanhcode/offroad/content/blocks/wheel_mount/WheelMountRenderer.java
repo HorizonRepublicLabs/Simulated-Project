@@ -12,15 +12,15 @@ import dev.ryanhcode.offroad.content.components.TireLike;
 import dev.ryanhcode.offroad.index.OffroadDataComponents;
 import dev.ryanhcode.offroad.index.OffroadPartialModels;
 import dev.simulated_team.simulated.util.SimColors;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -122,7 +122,7 @@ public class WheelMountRenderer extends KineticBlockEntityRenderer<WheelMountBlo
             ms.mulPose(Axis.ZP.rotation((float) Math.toRadians(rotation.z)));
 
             if (tireLike.model().isPresent()) {
-                final ResourceLocation model = tireLike.model().get();
+                final Identifier model = tireLike.model().get();
                 ms.translate(tireLike.offset().x, tireLike.offset().y, tireLike.offset().z);
                 final SuperByteBuffer wheel = CachedBuffers.partial(PartialModel.of(model), state);
                 wheel.light(light)

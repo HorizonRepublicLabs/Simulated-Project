@@ -6,18 +6,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.gui.AllIcons;
 import dev.simulated_team.simulated.Simulated;
-import net.createmod.catnip.gui.element.DelegatedStencilElement;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.client.gui.element.DelegatedStencilElement;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
 public class SimIcons extends AllIcons {
-    public static final ResourceLocation ICON_ATLAS = Simulated.path("textures/gui/icons.png");
+    public static final Identifier ICON_ATLAS = Simulated.path("textures/gui/icons.png");
     public static final int ICON_ATLAS_SIZE = 64;
 
     private static int x = 0, y = -1;

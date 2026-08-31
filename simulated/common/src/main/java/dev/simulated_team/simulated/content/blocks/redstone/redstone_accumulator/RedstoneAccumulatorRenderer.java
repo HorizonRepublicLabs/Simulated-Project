@@ -7,19 +7,19 @@ import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRende
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import foundry.veil.api.client.render.VeilRenderBridge;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.math.AngleHelper;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class RedstoneAccumulatorRenderer extends SmartBlockEntityRenderer<RedstoneAccumulatorBlockEntity> {
-    public static ResourceLocation SHADER_NAME = Simulated.path("redstone_accumulator/diode");
+    public static Identifier SHADER_NAME = Simulated.path("redstone_accumulator/diode");
     public static RenderType DIODE_RENDER_TYPE = RenderType.create("redstone_accumulator_diode", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 131072, true, false,
             RenderType.CompositeState.builder()
                     .setLightmapState(RenderStateShard.LIGHTMAP)

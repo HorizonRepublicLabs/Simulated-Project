@@ -7,7 +7,7 @@ import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
 import dev.simulated_team.simulated.index.SimGUITextures;
 import dev.simulated_team.simulated.index.SimSoundEvents;
 import dev.simulated_team.simulated.network.packets.contraption_diagram.DiagramDataPacket;
-import net.createmod.catnip.theme.Color;
+import net.createmod.catnip.api.theme.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -18,13 +18,13 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class DiagramForceGroupToggle extends AbstractWidget {
-    private final ResourceLocation groupId;
+    private final Identifier groupId;
     private final ForceGroup group;
     private final DiagramScreen diagramScreen;
     private int forceCount;

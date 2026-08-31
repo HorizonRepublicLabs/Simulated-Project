@@ -16,9 +16,9 @@ import dev.simulated_team.simulated.index.SimPartialModels;
 import dev.simulated_team.simulated.index.SimRenderTypes;
 import dev.simulated_team.simulated.util.CatmulRomSpline;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.api.client.animation.AnimationTickHolder;
+import net.createmod.catnip.api.client.render.CachedBuffers;
+import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -32,7 +32,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -403,8 +403,8 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
     }
 
     @Override
-    public ResourceLocation getTextureLocation(final LaunchedPlungerEntity entity) {
-        return ResourceLocation.withDefaultNamespace("missing");
+    public Identifier getTextureLocation(final LaunchedPlungerEntity entity) {
+        return Identifier.withDefaultNamespace("missing");
     }
 
     @Override
