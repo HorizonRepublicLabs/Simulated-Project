@@ -17,6 +17,7 @@ import net.createmod.catnip.api.client.lang.FontHelper;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Rarity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,9 @@ public class Aeronautics {
 
 	public static void setTooltips() {
 		getRegistrate().setTooltipModifierFactory(item -> {
-			final Rarity rarity = item.getDefaultInstance().getRarity();
+			// 26.2 binds a holder's components after registration, so building a
+			// default stack here would throw; the item's own map is already set.
+			final Rarity rarity = item.components().getOrDefault(DataComponents.RARITY, Rarity.COMMON);
 			FontHelper.Palette color = FontHelper.Palette.STANDARD_CREATE;
 			if (rarity == Rarity.EPIC)
 				color = new FontHelper.Palette(TooltipHelper.styleFromColor(SimColors.EPIC_OURPLE), TooltipHelper.styleFromColor(rarity.color()));

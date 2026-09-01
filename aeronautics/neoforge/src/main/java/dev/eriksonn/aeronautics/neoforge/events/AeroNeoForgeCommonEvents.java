@@ -60,12 +60,11 @@ public class AeroNeoForgeCommonEvents {
 			AeroArmInteractionPoints.init();
 
 			if (event.getRegistry() == BuiltInRegistries.TRIGGER_TYPES) {
-				AeroAdvancements.init();
+				// AeroAdvancements builds its icons from registered items, and 26.2
+				// binds item components only after registration finishes, so it is
+				// left to open itself once the registries are bound. The jei recipes
+				// build item stacks too and wait for common setup.
 				AeroAdvancementTriggers.register();
-
-				if (SimPlatformService.INSTANCE.isLoaded("jei")) {
-					jeiCompat();
-				}
 			}
 		}
 
@@ -109,6 +108,10 @@ public class AeroNeoForgeCommonEvents {
 		@SubscribeEvent
 		public static void commonSetup(FMLCommonSetupEvent event) {
 			AeroFluidsNeoForge.registerFluidInteractions();
+
+			if (SimPlatformService.INSTANCE.isLoaded("jei")) {
+				jeiCompat();
+			}
 		}
 
 		@SubscribeEvent
