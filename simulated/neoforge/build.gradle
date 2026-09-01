@@ -37,14 +37,16 @@ neoForge {
             programArgument 'nogui'
         }
 
-        data {
-            data()
+        // 26.2 splits datagen into a client and a server run, matching the
+        // GatherDataEvent split; the providers here attach to the client one.
+        clientData {
+            clientData()
             gameDirectory = project.file('runs/data')
             programArguments.addAll '--all',
                     '--mod', 'simulated',
                     '--output', generatedResources.absolutePath,
-                    '--existing', commonResources.absolutePath,
-                    '--existing-mod', 'create'
+                    // 26.2's data Main dropped --existing-mod
+                    '--existing', commonResources.absolutePath
         }
         
         gameTest {

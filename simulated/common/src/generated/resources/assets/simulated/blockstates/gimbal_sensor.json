@@ -1,11 +1,7 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "simulated:block/gimbal_sensor/block",
-      "y": 90
-    },
-    "axis=z": {
-      "model": "simulated:block/gimbal_sensor/block"
+    "": {
+      "model": "simulated:block/gimbal_sensor"
     }
   }
 }

@@ -8,6 +8,7 @@ import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.content.blocks.hot_air.gust.GustEntity;
 import dev.eriksonn.aeronautics.content.blocks.propeller.bearing.contraption.PropellerBearingContraptionEntity;
 import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
 public class AeroEntityTypes {
@@ -23,6 +24,7 @@ public class AeroEntityTypes {
 										.sized(1, 1)
 										.eyeHeight(0)
 										.fireImmune()))
+					.properties(EntityType.Builder::noLootTable)
 					.register();
 
     public static final EntityEntry<GustEntity> GUST =

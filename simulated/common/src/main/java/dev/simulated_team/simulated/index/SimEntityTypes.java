@@ -9,6 +9,7 @@ import dev.simulated_team.simulated.content.entities.launched_plunger.LaunchedPl
 import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
 import dev.simulated_team.simulated.service.SimEntityService;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
 public class SimEntityTypes {
@@ -18,18 +19,21 @@ public class SimEntityTypes {
             REGISTRATE.entity("honey_glue", HoneyGlueEntity::create, MobCategory.MISC)
                     .transform((builder) -> applyLoaderSpecificTransform(builder,
                             new EntityLoaderData(10, Integer.MAX_VALUE, 0.1f, 0.1f, 0,false, true, false)))
+                    .properties(EntityType.Builder::noLootTable)
                     .register();
 
     public static final EntityEntry<LaunchedPlungerEntity> PLUNGER =
             REGISTRATE.entity("launched_plunger", LaunchedPlungerEntity::create, MobCategory.MISC)
                     .transform((builder) -> applyLoaderSpecificTransform(builder,
                             new EntityLoaderData(10, 5, 0.5f, 0.5f, 0.25f,true, true, false)))
+                    .properties(EntityType.Builder::noLootTable)
                     .register();
 
     public static final EntityEntry<DiagramEntity> CONTRAPTION_DIAGRAM =
             REGISTRATE.entity("contraption_diagram", DiagramEntity::create, MobCategory.MISC)
                     .transform((builder) -> applyLoaderSpecificTransform(builder,
                             new EntityLoaderData(10, Integer.MAX_VALUE, 0.1f, 0.1f, 0.0f, false, true, true)))
+                    .properties(EntityType.Builder::noLootTable)
                     .register();
 
     public static <T extends Entity, P> EntityBuilder<T, P> applyLoaderSpecificTransform(final EntityBuilder<T, P> builder, final EntityLoaderData data) {

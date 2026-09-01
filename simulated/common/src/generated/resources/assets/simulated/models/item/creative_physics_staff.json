@@ -1,3 +1,6 @@
 {
-  "parent": "simulated:item/creative_physics_staff/item"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "simulated:item/creative_physics_staff"
+  }
 }

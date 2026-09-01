@@ -6,6 +6,7 @@ import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import dev.ryanhcode.offroad.Offroad;
 import dev.ryanhcode.offroad.content.entities.BoreheadContraptionEntity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
 public class OffroadEntityTypes {
@@ -22,6 +23,7 @@ public class OffroadEntityTypes {
                             .sized(1, 1)
                             .eyeHeight(0)
                             .fireImmune()))
+                    .properties(EntityType.Builder::noLootTable)
                     .register();
 
     public static void init() {

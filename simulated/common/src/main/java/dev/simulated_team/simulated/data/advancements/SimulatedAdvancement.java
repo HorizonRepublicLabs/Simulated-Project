@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 // i pretty much yoinked everything from Create's advancement/trigger stuff
@@ -48,6 +49,7 @@ public class SimulatedAdvancement {
     private final String modid;
     private String title;
     private String description;
+    private Builder display;
 
     public SimulatedAdvancement(final String id, final UnaryOperator<Builder> b, final Identifier background, final String modid, final BiFunction<String,String, SimpleSimulatedTrigger> triggerHandler) {
         this.builder = Advancement.Builder.advancement();
@@ -64,9 +66,10 @@ public class SimulatedAdvancement {
             this.builder.addCriterion("0", this.builtinTrigger.createCriterion(this.builtinTrigger.instance()));
         }
 
-        this.builder.display(ItemStackTemplate.fromStack(t.icon), Component.translatable(this.titleKey()),
-                Component.translatable(this.descriptionKey()).withStyle(s -> s.withColor(SimColors.ADVANCABLE_GOLD)),
-                id.equals("root") ? this.background : null, t.type.advancementType, t.type.toast, t.type.announce, t.type.hide);
+        // The icon stays a supplier: 26.2 binds an item's data components only
+        // after registration, so building the stack here would throw for anything
+        // that touches these advancements early, datagen included.
+        this.display = t;
 
         if(t.type == TaskType.SECRET)
             this.description += SECRET_SUFFIX;
@@ -126,6 +129,12 @@ public class SimulatedAdvancement {
     }
 
     public void save(final Consumer<AdvancementHolder> t) {
+        final Builder d = this.display;
+        this.builder.display(ItemStackTemplate.fromStack(d.icon.get()), Component.translatable(this.titleKey()),
+                Component.translatable(this.descriptionKey()).withStyle(s -> s.withColor(SimColors.ADVANCABLE_GOLD)),
+                this.id.equals("root") ? this.background : null, d.type.advancementType, d.type.toast,
+                d.type.announce, d.type.hide);
+
         if (this.parent != null)
             this.builder.parent(this.parent.datagenResult);
 
@@ -172,7 +181,8 @@ public class SimulatedAdvancement {
         private TaskType type = TaskType.NORMAL;
         private boolean externalTrigger;
         private int keyIndex;
-        private ItemStack icon;
+        private Supplier<ItemStack> icon;
+        private ItemLike iconItem;
 
         public Builder special(final TaskType type) {
             this.type = type;
@@ -185,15 +195,20 @@ public class SimulatedAdvancement {
         }
 
         public Builder icon(final ItemProviderEntry<?, ?> item) {
-            return this.icon(item.asStack());
+            this.iconItem = item.asItem();
+            this.icon = item::asStack;
+            return this;
         }
 
         public Builder icon(final ItemLike item) {
-            return this.icon(new ItemStack(item));
+            this.iconItem = item;
+            this.icon = () -> new ItemStack(item);
+            return this;
         }
 
-        public Builder icon(final ItemStack stack) {
+        public Builder icon(final Supplier<ItemStack> stack) {
             this.icon = stack;
+            this.iconItem = () -> stack.get().getItem();
             return this;
         }
 
@@ -212,19 +227,18 @@ public class SimulatedAdvancement {
         }
 
         public Builder whenIconCollected() {
-            return this.externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(this.icon.getItem()));
+            return this.externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(this.iconItem));
         }
 
         public Builder whenIconPlaced() {
-            if(this.icon.getItem() instanceof final BlockItem blockItem) {
+            if(this.iconItem.asItem() instanceof final BlockItem blockItem) {
                 return this.externalTrigger(ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(blockItem.getBlock()));
             }
             return this.whenIconCollected();
         }
 
         public Builder whenItemCollected(final ItemProviderEntry<?, ?> item) {
-            return this.whenItemCollected(item.asStack()
-                    .getItem());
+            return this.whenItemCollected(item.asItem());
         }
 
         public Builder whenItemCollected(final ItemLike itemProvider) {

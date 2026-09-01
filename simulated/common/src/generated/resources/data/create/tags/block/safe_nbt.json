@@ -15,7 +15,6 @@
     "simulated:modulating_linked_receiver",
     "simulated:redstone_accumulator",
     "simulated:redstone_inductor",
-    "simulated:spring",
-    "#simulated:nameplate_blocks"
+    "simulated:spring"
   ]
 }

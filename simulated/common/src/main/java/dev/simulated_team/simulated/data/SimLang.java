@@ -99,8 +99,8 @@ public class SimLang {
         lang.forEach(consumer);
 
         // Ponder scenes belong to the client render layer, which is not part of
-        // the 26.2 port yet, so no ponder plugin contributes lang here.
-        PonderIndex.getLangAccess().provideLang(Simulated.MOD_ID, consumer);
+        // the 26.2 port yet, so no ponder plugin contributes lang here. Asking
+        // ponder for it anyway builds item stacks, which datagen cannot do.
     }
 
     private static Map<String, String> getLangMap(final String lang) {

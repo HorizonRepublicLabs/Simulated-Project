@@ -1,7 +1,6 @@
 {
-  "parent": "simulated:block/portable_engine/block",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "0": "simulated:block/portable_engine/light_blue",
-    "particle": "simulated:block/portable_engine/light_blue"
+    "all": "simulated:block/light_blue_portable_engine"
   }
 }

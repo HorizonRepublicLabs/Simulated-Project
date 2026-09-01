@@ -1,8 +1,6 @@
 {
-  "parent": "simulated:block/symmetric_sail/block",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "0": "create:block/sail/canvas_light_blue",
-    "1": "simulated:block/symmetric_sail/side_light_blue",
-    "particle": "create:block/sail/canvas_light_blue"
+    "all": "simulated:block/light_blue_symmetric_sail"
   }
 }
