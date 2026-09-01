@@ -13,8 +13,8 @@ import net.neoforged.neoforge.common.NeoForge;
 @Mod(Aeronautics.MOD_ID)
 public class AeronauticsNeoForge {
     public AeronauticsNeoForge(final IEventBus modBus, final ModContainer modContainer) {
-        NeoForge.EVENT_BUS.register(AeroNeoForgeCommonEvents.class);
-        modBus.register(AeroNeoForgeCommonEvents.ModBusEvents.class);
+        // Both classes carry @EventBusSubscriber, which registers them already;
+        // doing it again here fired every listener twice.
 
         // Particle registration belongs to the staged-out particle layer.
         Aeronautics.getRegistrate().registerEventListeners(modBus);

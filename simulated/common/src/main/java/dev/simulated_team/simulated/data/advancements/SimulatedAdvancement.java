@@ -129,8 +129,10 @@ public class SimulatedAdvancement {
     }
 
     public void save(final Consumer<AdvancementHolder> t) {
+        // 26.2 builds an advancement icon straight from the item, so the icon
+        // never needs a stack and never needs bound components.
         final Builder d = this.display;
-        this.builder.display(ItemStackTemplate.fromStack(d.icon.get()), Component.translatable(this.titleKey()),
+        this.builder.display(new ItemStackTemplate(d.iconItem.get().asItem()), Component.translatable(this.titleKey()),
                 Component.translatable(this.descriptionKey()).withStyle(s -> s.withColor(SimColors.ADVANCABLE_GOLD)),
                 this.id.equals("root") ? this.background : null, d.type.advancementType, d.type.toast,
                 d.type.announce, d.type.hide);
@@ -181,8 +183,7 @@ public class SimulatedAdvancement {
         private TaskType type = TaskType.NORMAL;
         private boolean externalTrigger;
         private int keyIndex;
-        private Supplier<ItemStack> icon;
-        private ItemLike iconItem;
+        private Supplier<ItemLike> iconItem;
 
         public Builder special(final TaskType type) {
             this.type = type;
@@ -195,19 +196,16 @@ public class SimulatedAdvancement {
         }
 
         public Builder icon(final ItemProviderEntry<?, ?> item) {
-            this.iconItem = item.asItem();
-            this.icon = item::asStack;
+            this.iconItem = item::asItem;
             return this;
         }
 
         public Builder icon(final ItemLike item) {
-            this.iconItem = item;
-            this.icon = () -> new ItemStack(item);
+            this.iconItem = () -> item;
             return this;
         }
 
         public Builder icon(final Supplier<ItemStack> stack) {
-            this.icon = stack;
             this.iconItem = () -> stack.get().getItem();
             return this;
         }
@@ -227,11 +225,11 @@ public class SimulatedAdvancement {
         }
 
         public Builder whenIconCollected() {
-            return this.externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(this.iconItem));
+            return this.externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(this.iconItem.get()));
         }
 
         public Builder whenIconPlaced() {
-            if(this.iconItem.asItem() instanceof final BlockItem blockItem) {
+            if(this.iconItem.get().asItem() instanceof final BlockItem blockItem) {
                 return this.externalTrigger(ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(blockItem.getBlock()));
             }
             return this.whenIconCollected();

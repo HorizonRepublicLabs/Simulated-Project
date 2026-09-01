@@ -26,15 +26,15 @@ neoForge {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
             ideName = "Offroad NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
         }
-        data {
-            data()
+        // 26.2 splits datagen into a client and a server run, matching the
+        // GatherDataEvent split; the providers here attach to the client one.
+        clientData {
+            clientData()
             gameDirectory = project.file('runs/data')
             programArguments.addAll '--all',
                     '--mod', 'offroad',
                     '--output', generatedResources.absolutePath,
-                    '--existing', commonResources.absolutePath,
-                    '--existing-mod', 'create',
-                    '--existing-mod', 'simulated'
+                    '--existing', commonResources.absolutePath
         }
     }
     

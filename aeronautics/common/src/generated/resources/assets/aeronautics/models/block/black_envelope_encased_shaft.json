@@ -1,6 +1,6 @@
 {
-  "parent": "aeronautics:block/envelope_encased_shaft/block",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "0": "aeronautics:block/envelope_block/envelope_black"
+    "all": "aeronautics:block/black_envelope_encased_shaft"
   }
 }

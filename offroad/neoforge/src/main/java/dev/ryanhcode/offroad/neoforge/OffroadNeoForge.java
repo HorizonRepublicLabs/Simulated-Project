@@ -32,7 +32,7 @@ public class OffroadNeoForge {
     }
 
     private void modBusRegistry(final IEventBus modBus) {
-        modBus.register(NeoForgeOffroadConfigService.class);
+        // NeoForgeOffroadConfigService carries @EventBusSubscriber already.
 
         modBus.addListener(OffroadNeoForge::init);
         // GatherDataEvent is abstract in 26.2; listeners attach to a concrete subclass.

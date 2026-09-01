@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "aeronautics:block/envelope_block/envelope_white"
+    "all": "aeronautics:block/white_envelope"
   }
 }

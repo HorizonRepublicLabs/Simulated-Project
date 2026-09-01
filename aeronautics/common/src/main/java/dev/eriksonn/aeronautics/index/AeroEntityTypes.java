@@ -35,6 +35,7 @@ public class AeroEntityTypes {
                             .sized(1, 1)
                             .eyeHeight(0)
                             .fireImmune()))
+                    .properties(EntityType.Builder::noLootTable)
                     .register();
 
 	public static void init() {}

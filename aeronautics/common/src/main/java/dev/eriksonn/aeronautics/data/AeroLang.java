@@ -98,7 +98,8 @@ public class AeroLang {
 
 
 		// The ponder plugin belongs to the staged-out scene layer.
-		PonderIndex.getLangAccess().provideLang(Aeronautics.MOD_ID, consumer);
+		// Asking ponder for lang builds item stacks, which datagen cannot do,
+		// and it contributes nothing while the scenes are staged out.
 	}
 
 	private static Map<String, String> getLangMap(final String lang) {

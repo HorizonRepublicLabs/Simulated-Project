@@ -1,3 +1,6 @@
 {
-  "parent": "offroad:item/monstrous_tire/item"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "offroad:item/monstrous_tire"
+  }
 }

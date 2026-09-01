@@ -37,9 +37,10 @@ public class OffroadDatagen {
         event.register(Registries.SOUND_EVENT, OffroadSoundEventsNeoForge::register);
 
         if (event.getRegistry() == BuiltInRegistries.TRIGGER_TYPES) {
-            // OffroadAdvancements builds its icons from registered items, and 26.2
-            // binds item components only after registration finishes, so it is left
-            // to open itself once the registries are bound.
+            // The advancement classes collect their triggers as they initialise, so
+            // they have to open before the triggers are flushed. Their icons are
+            // built from plain items now, so nothing here needs components.
+            OffroadAdvancements.init();
             OffroadAdvancementTriggers.register();
         }
     }
