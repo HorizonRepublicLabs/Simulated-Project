@@ -1,13 +1,10 @@
 package dev.ryanhcode.offroad;
 
-import dev.ryanhcode.offroad.content.ponder.OffroadPonderPlugin;
 import dev.ryanhcode.offroad.index.OffroadPartialModels;
-import net.createmod.ponder.api.client.PonderIndex;
 
 public class OffroadClient {
 	public static void init() {
-		PonderIndex.addPlugin(new OffroadPonderPlugin());
-
+		// The ponder plugin belongs to the staged-out ponder layer.
 		OffroadPartialModels.init();
 	}
 }

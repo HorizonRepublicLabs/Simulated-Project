@@ -8,7 +8,7 @@ import dev.ryanhcode.offroad.handlers.client.MultiMiningClientHandler;
 import dev.ryanhcode.offroad.mixin_interface.level_renderer.MultiMiningDestructionExtension;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.BlockDestructionProgress;
 import org.spongepowered.asm.mixin.Final;
@@ -19,8 +19,10 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.Map;
 import java.util.SortedSet;
 
-@Mixin(LevelRenderer.class)
-public abstract class LevelRenderMixin implements MultiMiningDestructionExtension {
+/// 26.2 moved the block destruction bookkeeping off the level renderer and onto
+/// the client level, keeping the same fields, so the mixin follows it there.
+@Mixin(ClientLevel.class)
+public abstract class ClientLevelMixin implements MultiMiningDestructionExtension {
 
     @Shadow
     @Final
@@ -31,10 +33,10 @@ public abstract class LevelRenderMixin implements MultiMiningDestructionExtensio
     private Long2ObjectMap<SortedSet<BlockDestructionProgress>> destructionProgress;
 
     @Shadow
-    private int ticks;
+    protected abstract void removeProgress(BlockDestructionProgress progress);
 
     @Shadow
-    protected abstract void removeProgress(BlockDestructionProgress progress);
+    public abstract long getGameTime();
 
     /**
      * we need to manually handle this as our multimining progress does not have a tree set associated with it. It's just a holder for other progresses...
@@ -89,7 +91,7 @@ public abstract class LevelRenderMixin implements MultiMiningDestructionExtensio
             });
 
             // update our timer to make sure we keep voided appropriately
-            mmProgress.updateTick(this.ticks);
+            mmProgress.updateTick(this.getGameTime());
         }
     }
 

@@ -18,10 +18,10 @@ import java.util.concurrent.CompletableFuture;
 
 public class OffroadDatagen {
 
+    /// 26.2 fires the datagen event per mod, so the owning mod no longer has to
+    /// be picked out of the event.
     public static void gatherDataHighPriority(final GatherDataEvent event) {
-        if (event.getMods().contains(Offroad.MOD_ID)) {
-            OffroadTags.addGenerators();
-        }
+        OffroadTags.addGenerators();
     }
 
     public static void gatherData(final GatherDataEvent event) {
@@ -29,7 +29,7 @@ public class OffroadDatagen {
         final PackOutput output = generator.getPackOutput();
         final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        generator.addProvider(event.includeServer(), new OffroadAdvancements(output, lookupProvider));
+        generator.addProvider(true, new OffroadAdvancements(output, lookupProvider));
         event.addProvider(OffroadSoundEvents.REGISTRY.getProvider(output));
     }
 

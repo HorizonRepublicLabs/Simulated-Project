@@ -49,7 +49,7 @@ public class WheelMountBlock extends HorizontalKineticBlock implements IBE<Wheel
 
     @Override
     protected void affectNeighborsAfterRemoval(final BlockState state, final ServerLevel level, final BlockPos pos, final boolean isMoving) {
-        if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
+        if (state.hasBlockEntity()) {
             final WheelMountBlockEntity be = (WheelMountBlockEntity) level.getBlockEntity(pos);
 
             if (be != null && !be.getHeldItem().isEmpty()) {

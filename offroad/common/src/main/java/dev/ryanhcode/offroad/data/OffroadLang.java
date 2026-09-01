@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import dev.ryanhcode.offroad.Offroad;
-import dev.ryanhcode.offroad.content.ponder.OffroadPonderPlugin;
 import dev.ryanhcode.offroad.index.OffroadAdvancements;
 import dev.ryanhcode.offroad.index.OffroadSoundEvents;
 import net.createmod.catnip.api.lang.Lang;
@@ -95,8 +94,7 @@ public class OffroadLang {
         OffroadAdvancements.provideLang(consumer);
         OffroadSoundEvents.REGISTRY.provideLang(consumer);
 
-        PonderIndex.addPlugin(new OffroadPonderPlugin());
-        PonderIndex.getLangAccess().provideLang(Offroad.MOD_ID, consumer);
+        // The ponder plugin and its lang belong to the staged-out ponder layer.
     }
 
     private static Map<String, String> getLangMap(final String lang) {

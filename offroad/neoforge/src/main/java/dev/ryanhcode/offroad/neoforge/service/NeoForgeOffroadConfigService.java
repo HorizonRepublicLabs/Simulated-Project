@@ -11,6 +11,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
+import net.createmod.catnip.impl.neoforge.config.NeoForgeConfigSpecBuilder;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -18,7 +19,8 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+/// 26.2 dropped the bus attribute; mod bus events are routed by their type.
+@EventBusSubscriber
 public class NeoForgeOffroadConfigService implements OffroadConfig {
 
 	public static final Map<ModConfig.Type, ConfigBase> CONFIGS = new EnumMap<>(ModConfig.Type.class);
@@ -39,7 +41,7 @@ public class NeoForgeOffroadConfigService implements OffroadConfig {
 	private static <T extends ConfigBase> T register(final Supplier<T> factory, final ModConfig.Type side) {
 		final Pair<T, ModConfigSpec> specPair = (new ModConfigSpec.Builder()).configure((builder) -> {
 			final T config = factory.get();
-			config.registerAll(builder);
+			config.registerAll(new NeoForgeConfigSpecBuilder(builder));
 			return config;
 		});
 
@@ -54,7 +56,7 @@ public class NeoForgeOffroadConfigService implements OffroadConfig {
 		client = register(OffroadClientConfig::new, ModConfig.Type.CLIENT);
 
 		for (final Map.Entry<ModConfig.Type, ConfigBase> typeConfigBaseEntry : CONFIGS.entrySet()) {
-			container.registerConfig(typeConfigBaseEntry.getKey(), typeConfigBaseEntry.getValue().specification);
+			container.registerConfig(typeConfigBaseEntry.getKey(), (ModConfigSpec) typeConfigBaseEntry.getValue().specification);
 		}
 
 		CStress stress = server.kinetics.stressValues;

@@ -159,15 +159,8 @@ public class RockCuttingWheelActor implements MovementBehaviour {
 
     @Override
     public void renderInContraption(final MovementContext context, final VirtualRenderWorld renderWorld, final ContraptionMatrices matrices, final SuperRenderTypeBuffer buffer) {
-        if (renderWorld.supportsVisualization()) {
-            return;
-        }
-
-        if (context.temporaryData == null) {
-            context.temporaryData = LerpedFloat.angular();
-        }
-
-        RockCuttingWheelRenderer.renderInContraption(context, renderWorld, matrices, buffer);
+        // The wheel is drawn by the client render layer, which is not part of
+        // the 26.2 port yet.
     }
 
     @Override

@@ -41,11 +41,9 @@ public class OffroadNeoForge {
         modBus.addListener((ModifyDefaultComponentsEvent event) -> OffroadCommonEvents.modifyDefaultComponents(event::modify));
         NeoForge.EVENT_BUS.addListener((LevelTickEvent.Post event) -> OffroadCommonEvents.tickLevelEvent(event.getLevel()));
 
-        modBus.addListener((final GatherDataEvent event) -> {
-            if (event.getMods().contains(Offroad.MOD_ID)) {
-                OffroadTags.addGenerators();
-            }
-        });
+        // 26.2 fires the datagen event per mod, so the owning mod no longer has
+        // to be picked out of the event.
+        modBus.addListener((final GatherDataEvent event) -> OffroadTags.addGenerators());
 
         Offroad.getRegistrate().registerEventListeners(modBus);
     }

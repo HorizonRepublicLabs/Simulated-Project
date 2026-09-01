@@ -51,3 +51,23 @@ neoForge {
 sourceSets.main.resources {
     srcDir generatedResources.absolutePath
 }
+
+/// common exports its whole source directory, so the loader repeats the
+/// staged-out list in both the source set and its own compile task.
+sourceSets.main.java {
+    exclude 'dev/ryanhcode/offroad/content/ponder/**'
+    exclude 'dev/ryanhcode/offroad/index/OffroadPonderScenes.java'
+    exclude 'dev/ryanhcode/offroad/content/blocks/borehead_bearing/BoreheadBearingRenderer.java'
+    exclude 'dev/ryanhcode/offroad/content/blocks/rock_cutting_wheel/RockCuttingWheelRenderer.java'
+    exclude 'dev/ryanhcode/offroad/content/blocks/wheel_mount/WheelMountRenderer.java'
+    exclude 'dev/ryanhcode/offroad/neoforge/OffroadNeoForgeClient.java'
+}
+
+tasks.named('compileJava', JavaCompile) {
+    exclude 'dev/ryanhcode/offroad/content/ponder/**'
+    exclude 'dev/ryanhcode/offroad/index/OffroadPonderScenes.java'
+    exclude 'dev/ryanhcode/offroad/content/blocks/borehead_bearing/BoreheadBearingRenderer.java'
+    exclude 'dev/ryanhcode/offroad/content/blocks/rock_cutting_wheel/RockCuttingWheelRenderer.java'
+    exclude 'dev/ryanhcode/offroad/content/blocks/wheel_mount/WheelMountRenderer.java'
+    exclude 'dev/ryanhcode/offroad/neoforge/OffroadNeoForgeClient.java'
+}
