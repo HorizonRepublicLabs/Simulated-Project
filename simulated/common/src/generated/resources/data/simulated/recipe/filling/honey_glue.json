@@ -3,8 +3,9 @@
   "ingredients": [
     "#c:plates/iron",
     {
+      "type": "neoforge:simple",
       "amount": 500,
-      "fluid_tag": "c:honey"
+      "ingredient": "#c:honey"
     }
   ],
   "results": [

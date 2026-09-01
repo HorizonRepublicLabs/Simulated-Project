@@ -82,7 +82,7 @@ public class ThrottleLeverClientGripHandler {
 
         stack.pushPose();
         stack.translate(leverPos.getX() - eyePos.x, leverPos.getY() - eyePos.y, leverPos.getZ() - eyePos.z);
-        ThrottleLeverRenderer.transformHandleExternal(lever, partialTicks, stack);
+        ThrottleLeverGeometry.transformHandle(lever, partialTicks, stack);
 
         final Matrix4f pose = stack.last().pose();
         pose.invert();

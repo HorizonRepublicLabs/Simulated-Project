@@ -9,8 +9,9 @@
     "create:zinc_nugget",
     "create:zinc_nugget",
     {
+      "type": "neoforge:simple",
       "amount": 500,
-      "fluid_tag": "c:water"
+      "ingredient": "#c:water"
     }
   ],
   "results": [

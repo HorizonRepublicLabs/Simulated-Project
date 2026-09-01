@@ -6,27 +6,16 @@ import dev.simulated_team.simulated.client.BlockPropertiesTooltip;
 import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.LinkedTypewriterInteractionHandler;
 import dev.simulated_team.simulated.content.blocks.rope.strand.client.ZiplineClientManager;
 import dev.simulated_team.simulated.content.blocks.throttle_lever.ThrottleLeverClientGripHandler;
-import dev.simulated_team.simulated.content.end_sea.EndSeaRenderer;
-import dev.simulated_team.simulated.content.items.rope.RopeItem.ClientRopeItemHandler;
-import dev.simulated_team.simulated.content.physics_staff.PhysicsStaffRenderHandler;
 import dev.simulated_team.simulated.index.SimClickInteractions;
 import dev.simulated_team.simulated.index.SimKeys;
-import dev.simulated_team.simulated.service.SimConfigService;
 import dev.simulated_team.simulated.util.SimDistUtil;
 import dev.simulated_team.simulated.util.click_interactions.InteractCallback;
 import dev.simulated_team.simulated.util.click_interactions.InteractCallback.Result;
 import dev.simulated_team.simulated.util.hold_interaction.HoldInteractionManager;
 import dev.simulated_team.simulated.util.hold_interaction.HoldTipManager;
-import foundry.veil.api.client.render.MatrixStack;
-import foundry.veil.api.event.VeilRenderLevelStageEvent;
-import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -37,7 +26,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4fc;
 
 import java.util.List;
 
@@ -103,10 +91,6 @@ public class SimulatedCommonClientEvents {
         return Result.empty();
     }
 
-    public static void onRenderLevelStage(final VeilRenderLevelStageEvent.Stage stage, final LevelRenderer levelRenderer, final MultiBufferSource.BufferSource bufferSource, final MatrixStack matrixStack, final Matrix4fc matrix4fc, final Matrix4fc matrix4fc1, final int i, final DeltaTracker deltaTracker, final Camera camera, final Frustum frustum) {
-        PhysicsStaffRenderHandler.renderSelectionBox(stage, levelRenderer, bufferSource, matrixStack, matrix4fc, matrix4fc1, i, deltaTracker, camera, frustum);
-    }
-
     public static void onAfterKeyPress(final int key, final int scanCode, final int action, final int modifiers) {
         LinkedTypewriterInteractionHandler.onKeyPress(key, scanCode, action, modifiers);
     }
@@ -136,11 +120,8 @@ public class SimulatedCommonClientEvents {
      *
      * @param graphics Minecraft's abstract GUIGraphics class
      */
-    public static void renderOverlays(final GuiGraphics graphics, final float pt) {
-        final int width = graphics.guiWidth();
-        final int height = graphics.guiHeight();
-
-        HoldInteractionManager.renderOverlay(graphics, width, height);
+    public static void renderOverlays(final GuiGraphicsExtractor graphics, final float pt) {
+        HoldInteractionManager.renderOverlay(graphics.guiWidth(), graphics.guiHeight());
     }
 
     /**
@@ -164,8 +145,6 @@ public class SimulatedCommonClientEvents {
      * Called at the end of a ticking event for the given level
      */
     public static void postClientTick(final Minecraft instance) {
-        SimulatedClient.PHYSICS_STAFF_CLIENT_HANDLER.tick();
-
 	    if (instance.player == null || instance.level == null) {
 		    return;
 	    }
@@ -174,11 +153,10 @@ public class SimulatedCommonClientEvents {
 	    final LocalPlayer player = (LocalPlayer) SimDistUtil.getClientPlayer();
 
 	    SimulatedClient.MERGING_GLUE_ITEM_HANDLER.clientTick(level, player);
-	    ClientRopeItemHandler.tick();
         ZiplineClientManager.tick();
         LinkedTypewriterInteractionHandler.tick();
 
-        if (instance.screen != null) {
+        if (instance.gui.screen() != null) {
             HoldInteractionManager.stop();
         }
 
@@ -188,9 +166,6 @@ public class SimulatedCommonClientEvents {
 
         HoldInteractionManager.tick(level, player);
         HoldTipManager.tick();
-        EndSeaRenderer.tick();
-
-        SimulatedClient.PLUNGER_LAUNCHER_RENDER_HANDLER.tick();
     }
 
     /**
@@ -211,7 +186,9 @@ public class SimulatedCommonClientEvents {
      * @param player null when used for creative search filtering
      */
     public static void appendTooltip(final ItemStack stack, final TooltipFlag iTooltipFlag, final @Nullable Player player, final List<Component> itemTooltip) {
-        final BlockPropertiesTooltip.Condition propertiesCondition = SimConfigService.INSTANCE.client().itemConfig.displayProperties.get();
+        // The client config went with the staged-out client layer, so the
+        // tooltip follows the value that config defaults to until it returns.
+        final BlockPropertiesTooltip.Condition propertiesCondition = BlockPropertiesTooltip.Condition.GOGGLES;
         if (BlockPropertiesTooltip.shouldShowTooltip(propertiesCondition, iTooltipFlag, player)) {
             BlockPropertiesTooltip.appendTooltip(stack, iTooltipFlag, player, itemTooltip);
         }

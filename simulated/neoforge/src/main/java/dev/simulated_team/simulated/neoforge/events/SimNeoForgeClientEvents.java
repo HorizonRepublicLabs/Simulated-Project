@@ -1,21 +1,24 @@
 package dev.simulated_team.simulated.neoforge.events;
 
 import dev.simulated_team.simulated.Simulated;
-import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.LinkedTypewriterItemBindHandler;
 import dev.simulated_team.simulated.events.SimulatedCommonClientEvents;
 import dev.simulated_team.simulated.index.SimClickInteractions;
+import dev.simulated_team.simulated.util.SimDistUtil;
+import dev.simulated_team.simulated.util.click_interactions.InteractCallback;
 import dev.simulated_team.simulated.index.SimItems;
 import dev.simulated_team.simulated.index.SimKeys;
 import dev.simulated_team.simulated.neoforge.service.SimpleResourceManagerRegistryService;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+
+import java.util.List;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import net.neoforged.neoforge.common.util.TriState;
+import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
@@ -47,6 +50,37 @@ public class SimNeoForgeClientEvents {
 		SimulatedCommonClientEvents.onAfterMouseInput(event.getButton(), event.getModifiers(), event.getAction());
 	}
 
+	/// 26.2 renamed MouseHandler#onPress and reshaped its arguments, so the click
+	/// and scroll hooks come off NeoForge's cancellable input events instead of a
+	/// mixin aimed at bytecode that moved.
+	@SubscribeEvent
+	public static void preMouseButtonInput(final InputEvent.MouseButton.Pre event) {
+		if (!simulated$playerCanInteract()) {
+			return;
+		}
+
+		if (SimulatedCommonClientEvents.onBeforeMouseInput(
+				InteractCallback.Input.mouse(event.getButton()), event.getModifiers(), event.getAction()).cancelled()) {
+			event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public static void mouseScroll(final InputEvent.MouseScrollingEvent event) {
+		if (!simulated$playerCanInteract()) {
+			return;
+		}
+
+		if (SimulatedCommonClientEvents.onMouseScroll(event.getScrollDeltaX(), event.getScrollDeltaY()).cancelled()) {
+			event.setCanceled(true);
+		}
+	}
+
+	private static boolean simulated$playerCanInteract() {
+		final Player player = SimDistUtil.getClientPlayer();
+		return player != null && !player.isSpectator();
+	}
+
 	@SubscribeEvent
 	public static void playerInteractRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
 		if (event.getEntity().isLocalPlayer()) {
@@ -74,7 +108,7 @@ public class SimNeoForgeClientEvents {
 		SimulatedCommonClientEvents.appendTooltip(event.getItemStack(), event.getFlags(), event.getEntity(), event.getToolTip());
 	}
 
-	@EventBusSubscriber(modid = Simulated.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+	@EventBusSubscriber(modid = Simulated.MOD_ID, value = Dist.CLIENT)
 	public static class ModBusEvents {
 
 		@SubscribeEvent
@@ -82,15 +116,16 @@ public class SimNeoForgeClientEvents {
 			SimKeys.registerTo(event::register);
 		}
 
-		@SubscribeEvent
-		public static void registerGuiLayers(final RegisterGuiLayersEvent event) {
-			event.registerAbove(VanillaGuiLayers.HOTBAR, Simulated.path("linked_typewriter_binding"), LinkedTypewriterItemBindHandler.OVERLAY);
-		}
 
+		/// 26.2 replaced the flat registration with a sorted graph keyed by
+		/// identifier. The registry the listeners arrive through carries no name
+		/// of its own, so each gets one from its position in that list.
 		@SubscribeEvent
-		public static void addReloadListener(final RegisterClientReloadListenersEvent event) {
-			for (final PreparableReloadListener listener : SimpleResourceManagerRegistryService.LISTENERS) {
-				event.registerReloadListener(listener);
+		public static void addReloadListener(final AddClientReloadListenersEvent event) {
+			final List<PreparableReloadListener> listeners = SimpleResourceManagerRegistryService.LISTENERS;
+
+			for (int i = 0; i < listeners.size(); i++) {
+				event.addListener(Simulated.path("reload_listener_" + i), listeners.get(i));
 			}
 		}
 	}

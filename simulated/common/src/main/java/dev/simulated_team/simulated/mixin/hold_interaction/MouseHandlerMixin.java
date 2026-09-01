@@ -10,40 +10,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/// Only the look-around hook is left here. 26.2 renamed onPress to onButton and
+/// reshaped its arguments, and both the button and the scroll paths have
+/// cancellable NeoForge events covering them, so those two moved to
+/// SimNeoForgeClientEvents rather than being retargeted at moving bytecode.
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
 
+    /// The vertical delta already carries the inverted-mouse sign in 26.2; the
+    /// separate multiplier the 1.21 code read out of a local is gone.
     @Inject(method = "turnPlayer", cancellable = true,
             at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
     private void simulated$turnPlayer(final double d, final CallbackInfo ci,
-                                      @Local(ordinal = 4) final double j, @Local(ordinal = 5) final double k,
-                                      @Local(ordinal = 0) final int l) {
+                                      @Local(ordinal = 4) final double xo, @Local(ordinal = 5) final double yo) {
         if (SimDistUtil.getClientPlayer() != null && !SimDistUtil.getClientPlayer().isSpectator()) {
-            final InteractCallback.Result status = SimulatedCommonClientEvents.onMouseMove(j, k * l);
-            if (status.cancelled()) {
-                ci.cancel();
-            }
-        }
-    }
-
-    @Inject(method = "onPress",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getOverlay()Lnet/minecraft/client/gui/screens/Overlay;", ordinal = 0),
-            cancellable = true)
-    private void simulated$preOnPress(final long windowPointer, final int button, final int action, final int modifiers, final CallbackInfo ci, @Local(ordinal = 1, argsOnly = true) final int i, @Local(argsOnly = true, ordinal = 0) final long l) {
-        if (SimDistUtil.getClientPlayer() != null && !SimDistUtil.getClientPlayer().isSpectator()) {
-            final InteractCallback.Result status = SimulatedCommonClientEvents.onBeforeMouseInput(InteractCallback.Input.mouse(button), modifiers, action);
-            if (status.cancelled()) {
-                ci.cancel();
-            }
-        }
-    }
-
-    @Inject(method = "onScroll",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getOverlay()Lnet/minecraft/client/gui/screens/Overlay;", ordinal = 0),
-            cancellable = true)
-    private void simulated$preOnScroll(final long l, final double d, final double e, final CallbackInfo ci, @Local(ordinal = 3) final double deltaX, @Local(ordinal = 4) final double deltaY) {
-        if (SimDistUtil.getClientPlayer() != null && !SimDistUtil.getClientPlayer().isSpectator()) {
-            final InteractCallback.Result status = SimulatedCommonClientEvents.onMouseScroll(deltaX, deltaY);
+            final InteractCallback.Result status = SimulatedCommonClientEvents.onMouseMove(xo, yo);
             if (status.cancelled()) {
                 ci.cancel();
             }
