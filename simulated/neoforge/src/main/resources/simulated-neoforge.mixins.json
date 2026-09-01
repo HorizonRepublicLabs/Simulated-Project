@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "dev.simulated_team.simulated.neoforge.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "minVersion": "0.8",
   "client": [
     "tooltip_flag.ClientTooltipFlagMixin"
