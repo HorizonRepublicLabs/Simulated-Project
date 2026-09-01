@@ -13,10 +13,8 @@
     "linked_typewriter.PonderTooltipHandlerMixin",
     "quiet_use.MultiPlayerGameModeMixin",
     "rope.ClientSubLevelContainerMixin",
-    "rope.LevelRendererMixin",
     "sounds.SoundEngineMixin",
     "sounds.SoundManagerMixin",
-    "tooltip_flag.SessionSearchTreesMixin",
     "world_presets.WorldTabMixin"
   ],
   "mixins": [
