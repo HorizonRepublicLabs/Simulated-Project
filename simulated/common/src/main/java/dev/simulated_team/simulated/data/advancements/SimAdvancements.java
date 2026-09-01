@@ -250,6 +250,10 @@ public class SimAdvancements implements DataProvider {
         this.registries = registries;
     }
 
+    /// Opening this class collects every advancement's trigger; call it before
+    /// the triggers are flushed into the registry.
+    public static void init() {}
+
     public static void provideLang(final BiConsumer<String, String> consumer) {
         for (final SimulatedAdvancement advancement : SIM_ADVANCEMENTS) {
             advancement.provideLang(consumer);

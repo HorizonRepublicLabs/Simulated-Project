@@ -19,7 +19,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public enum SimNeoForgeRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
-    // The portable engine dyeing recipe went with the staged-out datagen.
+    // The portable engine dyeing recipe went with the staged-out datagen: its
+    // CustomRecipe has not been ported to 26.2, which dropped the category
+    // constructor, the HolderLookup on assemble, canCraftInDimensions and
+    // SimpleCraftingRecipeSerializer. Its recipe json is removed to match.
     ;
 
     public static final Codec<SimNeoForgeRecipeTypes> CODEC = StringRepresentable.fromEnum(SimNeoForgeRecipeTypes::values);

@@ -154,8 +154,10 @@ public class SimNeoForgeCommonEvents {
 			SimArmInteractions.init();
 
 			if (event.getRegistry() == BuiltInRegistries.TRIGGER_TYPES) {
-				// SimAdvancements initialises its icons from registered items, so it
-				// is left to open itself once the registries are bound.
+				// The advancement classes collect their triggers as they initialise,
+				// so they have to open before the triggers are flushed. Their icons
+				// are built from plain items now, so nothing here needs components.
+				SimAdvancements.init();
 				SimAdvancementTriggers.register();
 			}
 		}
