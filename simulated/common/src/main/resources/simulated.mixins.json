@@ -7,6 +7,7 @@
   "client": [
     "accessor.CreativeModeInventoryScreenAccessor",
     "accessor.KeyMappingsAccessor",
+    "auger_shaft.GirderBlockMixin",
     "conditional_display_target.DisplayLinkScreenMixin",
     "handle.ExtendoGripRenderHandlerMixin",
     "handle.LocalPlayerMixin",
@@ -21,6 +22,7 @@
     "rope.ClientSubLevelContainerMixin",
     "sounds.SoundEngineMixin",
     "sounds.SoundManagerMixin",
+    "tooltip_flag.SessionSearchTreesMixin",
     "world_presets.WorldTabMixin"
   ],
   "mixins": [
@@ -38,6 +40,7 @@
     "create_assembly.LinearActuatorBlockEntityMixin",
     "create_assembly.MechanicalBearingBlockEntityMixin",
     "diving_boots.AirCurrentMixin",
+    "dynamic_stress.KineticStatsMixin",
     "extendo_grip.ExtendoGripItemMixin",
     "extra_kinetics.EncasedCogwheelBlockMixin",
     "extra_kinetics.GeneratingKineticBlockEntityMixin",
@@ -51,11 +54,15 @@
     "flicker_tally_removal.RotationPropagatorMixin",
     "honey_glue.ArmorStandItemMixin",
     "linked_controller_binding.LinkedControllerItemMixin",
+    "nav_table_compat.NixieTubeBlockMixin",
+    "nav_table_compat.RedstoneLinkBlockMixin",
     "player.PlayerMixin",
     "sable_hooks.SableCommonEventsMixin",
     "schematicannon_fix.SchematicPrinterMixin",
     "tooltip_flag.TooltipFlagDefaultMixin",
-    "torsion_spring.MechanicalBearingBlockEntityMixin"
+    "torsion_spring.ComparatorBlockMixin",
+    "torsion_spring.MechanicalBearingBlockEntityMixin",
+    "world_presets.PrimaryLevelDataMixin"
   ],
   "injectors": {
     "defaultRequire": 1
