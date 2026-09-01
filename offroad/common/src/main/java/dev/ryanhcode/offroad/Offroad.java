@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Rarity;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,15 +47,28 @@ public class Offroad {
 	}
 
 	public static void setTooltips() {
-		getRegistrate().setTooltipModifierFactory(item -> {
-			final Rarity rarity = item.getDefaultInstance().getRarity();
-			FontHelper.Palette color = FontHelper.Palette.STANDARD_CREATE;
-			if (rarity == Rarity.EPIC)
-				color = new FontHelper.Palette(TooltipHelper.styleFromColor(SimColors.EPIC_OURPLE), TooltipHelper.styleFromColor(rarity.color()));
+		// Registrate calls this factory while the item registry is being filled, and
+		// 26.2 binds an item's data components only once registration finishes, so
+		// the rarity cannot be read here. The real modifier is built on first use,
+		// by which point the components are bound.
+		getRegistrate().setTooltipModifierFactory(item -> new TooltipModifier() {
+			private TooltipModifier delegate;
 
-			return new ItemDescription
-					.Modifier(item, color)
-					.andThen(TooltipModifier.mapNull(KineticStats.create(item)));
+			@Override
+			public void modify(final ItemTooltipEvent context) {
+				if (this.delegate == null) {
+					final Rarity rarity = item.getDefaultInstance().getRarity();
+					FontHelper.Palette color = FontHelper.Palette.STANDARD_CREATE;
+					if (rarity == Rarity.EPIC)
+						color = new FontHelper.Palette(TooltipHelper.styleFromColor(SimColors.EPIC_OURPLE), TooltipHelper.styleFromColor(rarity.color()));
+
+					this.delegate = new ItemDescription
+							.Modifier(item, color)
+							.andThen(TooltipModifier.mapNull(KineticStats.create(item)));
+				}
+
+				this.delegate.modify(context);
+			}
 		});
 	}
 
