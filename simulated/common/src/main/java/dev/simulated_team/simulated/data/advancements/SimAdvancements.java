@@ -32,7 +32,7 @@ public class SimAdvancements implements DataProvider {
 
 //         Root Advancements
     ROOT = create("root", b -> b
-            .icon(SimItems.CONTRAPTION_DIAGRAM)
+            .icon(SimItems.CONTRAPTION_DIAGRAM.asStack())
             .title("Create Simulated")
             .description("Physics Be Upon Ye")
             .awardedForFree()
@@ -49,20 +49,20 @@ public class SimAdvancements implements DataProvider {
     // -----------------
 
     OPPOSITES_ATTRACT = create("opposite_attract", b -> b
-            .icon(SimBlocks.REDSTONE_MAGNET)
+            .icon(SimBlocks.REDSTONE_MAGNET.asStack())
             .title("Opposites Attract")
             .description("Place and power a Redstone Magnet")
             .after(APPLIED_KINEMATICS)),
 
     A_CALCULATED_CONNECTION = create("a_calculated_connection", b -> b
-            .icon(SimBlocks.DOCKING_CONNECTOR)
+            .icon(SimBlocks.DOCKING_CONNECTOR.asStack())
             .title("A Calculated Connection")
             .description("Successfully align and connect two Docking Connectors")
             .after(OPPOSITES_ATTRACT)
             .special(TaskType.NOISY)),
 
     YOU_SPIN_ME_RIGHT_ROUND = create("you_spin_me_right_round", b -> b
-            .icon(SimBlocks.SWIVEL_BEARING)
+            .icon(SimBlocks.SWIVEL_BEARING.asStack())
             .title("You Spin Me Right Round")
             .description("Assemble a Simulated Contraption using a Swivel Bearing")
             .after(APPLIED_KINEMATICS)
@@ -70,13 +70,13 @@ public class SimAdvancements implements DataProvider {
     // -----------------
 
     LEARNING_THE_ROPES = create("learning_the_ropes", b -> b
-            .icon(SimItems.ROPE_COUPLING)
+            .icon(SimItems.ROPE_COUPLING.asStack())
             .title("Learning the Ropes")
             .after(APPLIED_KINEMATICS)
             .description("Connect a Rope Connector or Rope Spool with Rope")),
 
     STUCK_TOGETHER = create("stuck_together", b ->  b
-         .icon(SimItems.PLUNGER_LAUNCHER)
+         .icon(SimItems.PLUNGER_LAUNCHER.asStack())
          .title("Stuck Together")
          .after(LEARNING_THE_ROPES)
          .description("Craft a Plunger Launcher")
@@ -84,7 +84,7 @@ public class SimAdvancements implements DataProvider {
 
     // Essential Advancements
     NOT_GONNA_SUGARCOAT_IT = create("not_gonna_sugarcoat_it", b -> b
-            .icon(SimItems.HONEY_GLUE)
+            .icon(SimItems.HONEY_GLUE.asStack())
             .title("Not Gonna Sugarcoat It")
             .description("Use Honey Glue to connect a group of blocks for assembly")
             .after(APPLIED_KINEMATICS)),
@@ -97,7 +97,7 @@ public class SimAdvancements implements DataProvider {
             .after(NOT_GONNA_SUGARCOAT_IT)),
 
     MEASURE_ONCE_BUILD_TWICE = create("measure_once_build_twice", b -> b
-            .icon(SimItems.CONTRAPTION_DIAGRAM)
+            .icon(SimItems.CONTRAPTION_DIAGRAM.asStack())
             .title("Measure Once, Build Twice")
             .description("Inspect a Contraption Diagram")
             .after(NOT_GONNA_SUGARCOAT_IT)),
@@ -106,20 +106,20 @@ public class SimAdvancements implements DataProvider {
 
     // Control
     GET_A_GRIP = create("get_a_grip", b -> b
-            .icon(SimBlocks.IRON_HANDLE)
+            .icon(SimBlocks.IRON_HANDLE.asStack())
             .title("Get a Grip!")
             .description("Grab on to a Handle")
             .after(APPLIED_KINEMATICS)),
 
     GOT_A_GRIP = create("got_a_grip", b -> b
-            .icon(SimBlocks.IRON_HANDLE)
+            .icon(SimBlocks.IRON_HANDLE.asStack())
             .title("Got a Grip!")
             .description("Break a very long fall by grabbing on to a Handle")
             .special(TaskType.SECRET)
             .after(GET_A_GRIP)),
 
     UNPOWERED_STEERING = create("unpowered_steering", b -> b
-            .icon(SimBlocks.STEERING_WHEEL)
+            .icon(SimBlocks.STEERING_WHEEL.asStack())
             .title("Unpowered Steering")
             .description("Grab and spin a Steering Wheel")
             .after(GET_A_GRIP)),
@@ -138,27 +138,27 @@ public class SimAdvancements implements DataProvider {
             .after(STEAMLESS_ENGINE)),
 
     WHAT_GOES_DOWN = create("what_goes_down", b -> b
-            .icon(SimItems.SPRING)
+            .icon(SimItems.SPRING.asStack())
             .title("What Goes Down...")
             .description("Boing! Obtain a Spring item")
             .whenIconCollected()
             .after(GET_A_GRIP)),
 
     MUST_COME_UP = create("must_come_up", b -> b
-            .icon(SimItems.SPRING)
+            .icon(SimItems.SPRING.asStack())
             .title("...Must Come Up")
             .description("Watch a Spring item bounce a great distance")
             .after(WHAT_GOES_DOWN)
             .special(TaskType.SECRET)),
 
     REWIND_TIME = create("rewind_time", b -> b
-            .icon(SimBlocks.TORSION_SPRING)
+            .icon(SimBlocks.TORSION_SPRING.asStack())
             .title("Rewind Time")
             .description("Watch a Torsion Spring unwind to its original position")
             .after(WHAT_GOES_DOWN)),
 
     I_PAID_FOR_THE_WHOLE_TYPEWRITER = create("i_paid_for_the_whole_typewriter", b -> b
-            .icon(SimBlocks.LINKED_TYPEWRITER)
+            .icon(SimBlocks.LINKED_TYPEWRITER.asStack())
             .title("I Paid for the Whole Typewriter")
             .description("Bind 26 or more keys to frequencies on the Linked Typewriter")
             .after(GET_A_GRIP)
@@ -167,21 +167,21 @@ public class SimAdvancements implements DataProvider {
 
     // Redstone
     NO_PRESSURE = create("no_pressure", b -> b
-            .icon(SimBlocks.ALTITUDE_SENSOR)
+            .icon(SimBlocks.ALTITUDE_SENSOR.asStack())
             .title("No Pressure")
             .description("Obtain and place an Altitude Sensor")
             .after(APPLIED_KINEMATICS)
             .whenIconPlaced()),
 
     CAN_WE_GET_MUCH_HIGHER = create("can_we_get_much_higher", b -> b
-            .icon(SimBlocks.ALTITUDE_SENSOR)
+            .icon(SimBlocks.ALTITUDE_SENSOR.asStack())
             .title("Can We Get Much Higher?")
             .description("Observe an Altitude Sensor at 0% atmospheric pressure")
             .after(NO_PRESSURE)
             .special(TaskType.SECRET)),
 
     CONVOLUTED_CIRCUMVOLUTIONS = create("convoluted_circumvolutions", b -> b
-            .icon(SimItems.GYRO_MECHANISM)
+            .icon(SimItems.GYRO_MECHANISM.asStack())
             .title("Convoluted Circumvolutions")
             .description("Obtain a Gyroscopic Mechanism")
             .after(NO_PRESSURE)
@@ -189,14 +189,14 @@ public class SimAdvancements implements DataProvider {
             .whenIconCollected()),
 
     THE_DEFINITION_OF_UP = create("the_definition_of_up", b -> b
-            .icon(SimBlocks.GIMBAL_SENSOR)
+            .icon(SimBlocks.GIMBAL_SENSOR.asStack())
             .title("The Definition of \"Up\"")
             .description("Obtain and place a Gimbal Sensor to help you keep balance")
             .after(CONVOLUTED_CIRCUMVOLUTIONS)
             .whenIconPlaced()),
 
     THATAWAY = create("thataway", b -> b
-            .icon(SimBlocks.NAVIGATION_TABLE)
+            .icon(SimBlocks.NAVIGATION_TABLE.asStack())
             .title("Thataway!")
             .description("Obtain and place a Navigation Table to point you in the right direction")
             .whenIconPlaced()
@@ -204,34 +204,34 @@ public class SimAdvancements implements DataProvider {
             .after(NO_PRESSURE)),
 
     FAR_FROM_HOME = create("far_from_home", b -> b
-            .icon(SimBlocks.NAVIGATION_TABLE)
+            .icon(SimBlocks.NAVIGATION_TABLE.asStack())
             .title("Far From Home")
             .description("Set a Navigation Table's target to a location over 5000 blocks away")
             .special(TaskType.SECRET)
             .after(THATAWAY)),
 
     SPEED_IS_KEY = create("speed_is_key", b -> b
-            .icon(SimBlocks.VELOCITY_SENSOR)
+            .icon(SimBlocks.VELOCITY_SENSOR.asStack())
             .title("Speed is Key")
             .description("Obtain and place a Velocity Sensor to satiate your need for speed")
             .after(NO_PRESSURE)
             .whenIconPlaced()),
 
     BIG_BEAM = create("big_beam", b -> b
-            .icon(SimBlocks.LASER_POINTER)
+            .icon(SimBlocks.LASER_POINTER.asStack())
             .title("Big Beam")
             .description("Power a Laser Pointer. Please do not stare directly into the Laser Pointer")
             .after(NO_PRESSURE)),
 
     NEARSIGHTED = create("nearsighted", b -> b
-            .icon(SimBlocks.OPTICAL_SENSOR)
+            .icon(SimBlocks.OPTICAL_SENSOR.asStack())
             .title("Nearsighted")
             .description("Obtain and place an Optical Sensor to show you what's right there")
             .after(BIG_BEAM)
             .whenIconPlaced()),
 
     MY_EYE = create("my_eye", b -> b
-            .icon(SimBlocks.LASER_SENSOR)
+            .icon(SimBlocks.LASER_SENSOR.asStack())
             .title("My Eye!")
             .description("Shine a laser into a Laser Sensor and activate it")
             .after(BIG_BEAM)),

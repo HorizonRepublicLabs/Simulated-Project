@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.handle;
 
+import net.minecraft.world.item.Item;
+import net.minecraft.tags.TagKey;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.redstone.Orientation;
 import com.mojang.serialization.MapCodec;
@@ -163,14 +165,16 @@ public class HandleBlock extends AbstractDirectionalAxisBlock implements IBE<Han
 
 
     public enum Variant implements StringRepresentable {
-        IRON(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(Tags.Items.NUGGETS_IRON))),
-        COPPER(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(AllTags.commonItemTag("nuggets/copper")))),
+        IRON(Tags.Items.NUGGETS_IRON),
+        COPPER(AllTags.commonItemTag("nuggets/copper")),
         DYED(null);
 
-        @Nullable final Ingredient ingredient;
+        // 26.2 resolves an ingredient through a holder set, which only exists
+        // once tags are bound, so the tag is held and resolved on demand.
+        final @Nullable TagKey<Item> tag;
 
-        Variant(@Nullable final Ingredient ingredient) {
-            this.ingredient = ingredient;
+        Variant(final @Nullable TagKey<Item> tag) {
+            this.tag = tag;
         }
 
         @Override
@@ -179,7 +183,7 @@ public class HandleBlock extends AbstractDirectionalAxisBlock implements IBE<Han
         }
 
         public @Nullable Ingredient getIngredient() {
-            return this.ingredient;
+            return this.tag == null ? null : Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(this.tag));
         }
     }
 }

@@ -21,28 +21,28 @@ public class AeroAdvancements extends SimAdvancements {
 
 			// Root Advancements
 	ROOT = create("root", b -> b
-			.icon(AeroBlocks.WHITE_ENVELOPE_BLOCK)
+			.icon(AeroBlocks.WHITE_ENVELOPE_BLOCK.asStack())
 			.title("Create Aeronautics")
 			.description("Up Up and Away")
 			.awardedForFree()
 			.special(SimulatedAdvancement.TaskType.SILENT)),
 
 	HIGH_FASHION = create("high_fashion", b -> b
-			.icon(AeroItems.AVIATORS_GOGGLES)
+			.icon(AeroItems.AVIATORS_GOGGLES.asStack())
 			.title("High Fashion")
 			.description("Obtain a pair of Aviator's Goggles")
 			.after(ROOT)
 			.whenIconCollected()),
 
 	HEAD_IN_THE_CLOUDS = create("head_in_the_clouds", b -> b
-			.icon(AeroBlocks.HOT_AIR_BURNER)
+			.icon(AeroBlocks.HOT_AIR_BURNER.asStack())
 			.title("Head in the Clouds")
 			.description("Fill an airtight Envelope structure with hot air")
 			.special(SimulatedAdvancement.TaskType.NOISY)
 			.after(ROOT)),
 
 	SONG_OF_THE_SKY = create("song_of_the_sky", b -> b
-			.icon(AeroItems.MUSIC_DISC_CLOUD_SKIPPER)
+			.icon(AeroItems.MUSIC_DISC_CLOUD_SKIPPER.asStack())
 			.title("Song of the Sky")
 			.description("Toss a music disc into the clouds to create something new")
 			.special(SimulatedAdvancement.TaskType.NOISY)
@@ -50,20 +50,20 @@ public class AeroAdvancements extends SimAdvancements {
 			.whenIconCollected()),
 
 	FOR_EVERY_ACTION = create("for_every_action", b -> b
-			.icon(AeroBlocks.WOODEN_PROPELLER)
+			.icon(AeroBlocks.WOODEN_PROPELLER.asStack())
 			.title("For Every Action...")
 			.description("Place and power a Propeller to generate Thrust")
 			.after(HEAD_IN_THE_CLOUDS)),
 
     IN_THRUST_WE_TRUST = create("in_thrust_we_trust", b -> b
-            .icon(AeroBlocks.PROPELLER_BEARING)
+            .icon(AeroBlocks.PROPELLER_BEARING.asStack())
             .title("In Thrust We Trust")
             .description("Assemble a Propeller Bearing to generate more Thrust")
             .special(SimulatedAdvancement.TaskType.NOISY)
             .after(FOR_EVERY_ACTION)),
 
 	HEAVIER_ARTILLERY = create("heavier_artillery", b -> b
-			.icon(AeroBlocks.MOUNTED_POTATO_CANNON)
+			.icon(AeroBlocks.MOUNTED_POTATO_CANNON.asStack())
 			.title("Heavier Artillery")
 			.description("Fire a vegetable from a Mounted Potato Cannon")
 			.after(ROOT)),
@@ -76,14 +76,14 @@ public class AeroAdvancements extends SimAdvancements {
 			.after(HEAVIER_ARTILLERY)),
 
     UNIDENTIFIED_FLOATING_OBJECT = create("unidentified_floating_object", b -> b
-            .icon(AeroBlocks.LEVITITE)
+            .icon(AeroBlocks.LEVITITE.asStack())
             .title("Unidentified Floating Object")
             .description("Crystallize Levitite Blend into Levitite")
             .special(SimulatedAdvancement.TaskType.NOISY)
             .after(HEAD_IN_THE_CLOUDS)),
 
     NOW_AVAILABLE_IN_PINK = create("now_available_in_pink", b -> b
-            .icon(AeroBlocks.PEARLESCENT_LEVITITE)
+            .icon(AeroBlocks.PEARLESCENT_LEVITITE.asStack())
             .title("Now Available in Pink!")
             .description("Crystallize Levitite Blend into Pearlescent Levitite")
             .special(SimulatedAdvancement.TaskType.SECRET)

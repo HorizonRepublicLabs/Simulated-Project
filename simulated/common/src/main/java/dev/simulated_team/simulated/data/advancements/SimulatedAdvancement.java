@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.data.advancements;
 
+import net.minecraft.world.item.Items;
 import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.world.item.ItemStackTemplate;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;

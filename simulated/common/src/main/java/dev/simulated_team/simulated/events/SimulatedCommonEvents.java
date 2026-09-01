@@ -83,7 +83,8 @@ public class SimulatedCommonEvents {
             final ServerLevel level = (ServerLevel) player.level();
 
             if (player instanceof final ServerPlayer serverPlayer) {
-                final Identifier worldPreset = ((PrimaryLevelDataExtension) level.getServer().getWorldData()).getPreset();
+                if (!(level.getServer().getWorldData() instanceof final PrimaryLevelDataExtension levelData)) return;
+                final Identifier worldPreset = levelData.getPreset();
 
                 if (entry.getValue().id().equals(worldPreset)) {
                     entry.getValue().onPlayerJoin(level, serverPlayer);
@@ -97,7 +98,8 @@ public class SimulatedCommonEvents {
     public static void onChunkLoad(final LevelAccessor level, final ChunkAccess chunk, final boolean newChunk) {
         for (final Map.Entry<Identifier, SimulatedWorldPreset> entry : SimWorldPresets.PRESETS.entrySet()) {
             if(level instanceof final ServerLevel serverLevel) {
-                final Identifier worldPreset = ((PrimaryLevelDataExtension) serverLevel.getServer().getWorldData()).getPreset();
+                if (!(serverLevel.getServer().getWorldData() instanceof final PrimaryLevelDataExtension levelData)) return;
+                final Identifier worldPreset = levelData.getPreset();
 
                 if(entry.getValue().id().equals(worldPreset)) {
                     entry.getValue().onChunkLoad(serverLevel, chunk, newChunk);

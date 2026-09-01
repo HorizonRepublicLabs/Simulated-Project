@@ -61,10 +61,9 @@ public final class Simulated {
 
     public static void setTooltips() {
         getRegistrate().setTooltipModifierFactory(item -> {
-            final Rarity rarity = item.getDefaultInstance().getRarity();
-            FontHelper.Palette color = FontHelper.Palette.STANDARD_CREATE;
-            if (rarity == Rarity.EPIC)
-                color = new FontHelper.Palette(TooltipHelper.styleFromColor(SimColors.EPIC_OURPLE), TooltipHelper.styleFromColor(rarity.color()));
+            // 26.2 binds item components after registration, so the rarity is
+            // not readable while the modifier factory runs.
+            final FontHelper.Palette color = FontHelper.Palette.STANDARD_CREATE;
 
             return new ItemDescription
                     .Modifier(item, color)

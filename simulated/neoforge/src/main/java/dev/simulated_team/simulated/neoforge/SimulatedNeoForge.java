@@ -32,8 +32,6 @@ public final class SimulatedNeoForge {
         tabRegister.register("main_tab", () -> TAB);
         tabRegister.register(modEventBus);
 
-        NeoForge.EVENT_BUS.register(SimNeoForgeCommonEvents.class);
-        modEventBus.register(SimNeoForgeCommonEvents.ModBusEvents.class);
 
         SimNeoForgeRecipeTypes.register(modEventBus);
 
