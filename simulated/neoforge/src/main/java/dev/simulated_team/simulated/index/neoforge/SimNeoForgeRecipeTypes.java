@@ -3,6 +3,7 @@ package dev.simulated_team.simulated.index.neoforge;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import dev.simulated_team.simulated.Simulated;
+import dev.simulated_team.simulated.neoforge.content.portable_engine.PortableEngineDyeingRecipe;
 import net.createmod.catnip.api.lang.Lang;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -19,11 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public enum SimNeoForgeRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
-    // The portable engine dyeing recipe went with the staged-out datagen: its
-    // CustomRecipe has not been ported to 26.2, which dropped the category
-    // constructor, the HolderLookup on assemble, canCraftInDimensions and
-    // SimpleCraftingRecipeSerializer. Its recipe json is removed to match.
-    ;
+    PORTABLE_ENGINE_DYEING(() -> PortableEngineDyeingRecipe.SERIALIZER, () -> RecipeType.CRAFTING, false);
 
     public static final Codec<SimNeoForgeRecipeTypes> CODEC = StringRepresentable.fromEnum(SimNeoForgeRecipeTypes::values);
     public final Identifier id;
