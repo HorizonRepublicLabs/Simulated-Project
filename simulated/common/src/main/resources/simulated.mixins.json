@@ -25,6 +25,7 @@
   ],
   "mixins": [
     "aabb.AABBMixin",
+    "accessor.BlockBehaviourAccessor",
     "accessor.ContraptionAccessor",
     "accessor.ControlledContraptionEntityAccessor",
     "accessor.CreateBlockEntityBuilderAccessor",
