@@ -1,12 +1,22 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
-    "create:andesite_casing",
-    "create:cogwheel",
-    "minecraft:redstone_torch",
-    "create:shaft"
+    {
+      "item": "create:andesite_casing"
+    },
+    {
+      "item": "create:cogwheel"
+    },
+    {
+      "item": "minecraft:redstone_torch"
+    },
+    {
+      "item": "create:shaft"
+    }
   ],
   "result": {
+    "count": 1,
     "id": "simulated:directional_gearshift"
   }
 }

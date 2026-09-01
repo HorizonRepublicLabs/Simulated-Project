@@ -1,9 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
-    "A": "create:shaft",
-    "C": "create:andesite_casing",
-    "S": "simulated:spring"
+    "A": {
+      "item": "create:shaft"
+    },
+    "C": {
+      "item": "create:andesite_casing"
+    },
+    "S": {
+      "item": "simulated:spring"
+    }
   },
   "pattern": [
     "A",
@@ -11,6 +18,7 @@
     "C"
   ],
   "result": {
+    "count": 1,
     "id": "simulated:torsion_spring"
   }
 }

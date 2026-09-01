@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "offroad:item/small_tire"
-  }
+  "parent": "offroad:item/small_tire/item"
 }

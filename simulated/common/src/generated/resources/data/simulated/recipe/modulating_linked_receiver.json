@@ -1,9 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
-    "A": "create:transmitter",
-    "B": "#c:plates/gold",
-    "C": "create:brass_casing"
+    "A": {
+      "item": "create:transmitter"
+    },
+    "B": {
+      "tag": "c:plates/gold"
+    },
+    "C": {
+      "item": "create:brass_casing"
+    }
   },
   "pattern": [
     "A",
@@ -11,6 +18,7 @@
     "C"
   ],
   "result": {
+    "count": 1,
     "id": "simulated:modulating_linked_receiver"
   }
 }

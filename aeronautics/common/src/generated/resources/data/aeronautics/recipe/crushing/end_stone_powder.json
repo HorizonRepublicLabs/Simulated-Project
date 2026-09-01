@@ -1,7 +1,9 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    "minecraft:end_stone"
+    {
+      "item": "minecraft:end_stone"
+    }
   ],
   "processing_time": 250,
   "results": [

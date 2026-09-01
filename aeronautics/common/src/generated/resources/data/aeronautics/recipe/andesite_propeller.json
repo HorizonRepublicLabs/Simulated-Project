@@ -1,9 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
-    "C": "#minecraft:wooden_slabs",
-    "P": "create:propeller",
-    "S": "create:shaft"
+    "C": {
+      "tag": "minecraft:wooden_slabs"
+    },
+    "P": {
+      "item": "create:propeller"
+    },
+    "S": {
+      "item": "create:shaft"
+    }
   },
   "pattern": [
     "P",
@@ -11,6 +18,7 @@
     "S"
   ],
   "result": {
+    "count": 1,
     "id": "aeronautics:andesite_propeller"
   }
 }

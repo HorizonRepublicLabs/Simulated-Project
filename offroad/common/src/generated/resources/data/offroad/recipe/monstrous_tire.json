@@ -1,8 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
-    "K": "minecraft:dried_kelp_block",
-    "S": "create:shaft"
+    "K": {
+      "item": "minecraft:dried_kelp_block"
+    },
+    "S": {
+      "item": "create:shaft"
+    }
   },
   "pattern": [
     " K ",
@@ -10,6 +15,7 @@
     " K "
   ],
   "result": {
+    "count": 1,
     "id": "offroad:monstrous_tire"
   }
 }

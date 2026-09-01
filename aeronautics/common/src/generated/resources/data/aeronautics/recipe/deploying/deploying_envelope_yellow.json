@@ -1,8 +1,12 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    "minecraft:yellow_wool",
-    "minecraft:stick"
+    {
+      "item": "minecraft:yellow_wool"
+    },
+    {
+      "item": "minecraft:stick"
+    }
   ],
   "results": [
     {

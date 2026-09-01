@@ -13,6 +13,7 @@
       "translate": "advancement.aeronautics.heavier_artillery.desc"
     },
     "icon": {
+      "count": 1,
       "id": "aeronautics:mounted_potato_cannon"
     },
     "title": {

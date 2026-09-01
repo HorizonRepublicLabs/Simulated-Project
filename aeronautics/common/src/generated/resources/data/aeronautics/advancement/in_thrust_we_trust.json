@@ -12,6 +12,7 @@
       "translate": "advancement.aeronautics.in_thrust_we_trust.desc"
     },
     "icon": {
+      "count": 1,
       "id": "aeronautics:propeller_bearing"
     },
     "title": {

@@ -1,8 +1,12 @@
 {
   "type": "create:deploying",
   "ingredients": [
-    "minecraft:white_wool",
-    "minecraft:stick"
+    {
+      "item": "minecraft:white_wool"
+    },
+    {
+      "item": "minecraft:stick"
+    }
   ],
   "results": [
     {

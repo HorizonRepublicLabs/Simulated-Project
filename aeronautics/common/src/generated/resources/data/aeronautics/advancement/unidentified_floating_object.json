@@ -12,6 +12,7 @@
       "translate": "advancement.aeronautics.unidentified_floating_object.desc"
     },
     "icon": {
+      "count": 1,
       "id": "aeronautics:levitite"
     },
     "title": {

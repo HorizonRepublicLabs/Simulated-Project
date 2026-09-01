@@ -1,9 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
-    "A": "create:andesite_casing",
-    "P": "minecraft:paper",
-    "S": "#c:plates/iron"
+    "A": {
+      "item": "create:andesite_casing"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "S": {
+      "tag": "c:plates/iron"
+    }
   },
   "pattern": [
     "P",
@@ -11,6 +18,7 @@
     "A"
   ],
   "result": {
+    "count": 1,
     "id": "simulated:altitude_sensor"
   }
 }

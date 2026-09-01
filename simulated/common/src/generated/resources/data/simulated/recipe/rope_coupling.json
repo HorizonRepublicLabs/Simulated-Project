@@ -1,8 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
-    "N": "#c:nuggets/iron",
-    "S": "#c:strings"
+    "N": {
+      "tag": "c:nuggets/iron"
+    },
+    "S": {
+      "tag": "c:strings"
+    }
   },
   "pattern": [
     " S ",
@@ -10,6 +15,7 @@
     " S "
   ],
   "result": {
+    "count": 1,
     "id": "simulated:rope_coupling"
   }
 }

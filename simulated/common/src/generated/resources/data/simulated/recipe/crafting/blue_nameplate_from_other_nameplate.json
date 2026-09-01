@@ -3,10 +3,15 @@
   "category": "building",
   "group": "simualted:nameplate_dyeing",
   "ingredients": [
-    "#c:dyes/blue",
-    "#simulated:nameplate_items"
+    {
+      "tag": "c:dyes/blue"
+    },
+    {
+      "tag": "simulated:nameplate_items"
+    }
   ],
   "result": {
+    "count": 1,
     "id": "simulated:blue_nameplate"
   }
 }

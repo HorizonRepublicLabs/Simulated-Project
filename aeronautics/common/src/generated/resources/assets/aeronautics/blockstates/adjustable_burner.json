@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
-      "model": "aeronautics:block/adjustable_burner"
+    "powered=false,variant=fire": {
+      "model": "aeronautics:block/adjustable_burner/block_fire"
+    },
+    "powered=false,variant=soulful": {
+      "model": "aeronautics:block/adjustable_burner/block_soulful"
+    },
+    "powered=true,variant=fire": {
+      "model": "aeronautics:block/adjustable_burner/block_fire"
+    },
+    "powered=true,variant=soulful": {
+      "model": "aeronautics:block/adjustable_burner/block_soulful"
     }
   }
 }

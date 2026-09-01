@@ -18,6 +18,7 @@
       "translate": "advancement.aeronautics.song_of_the_sky.desc"
     },
     "icon": {
+      "count": 1,
       "id": "aeronautics:music_disc_cloud_skipper"
     },
     "title": {

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "simulated:block/paired_docking_connector"
+      "model": "simulated:block/docking_connector/block"
     }
   }
 }

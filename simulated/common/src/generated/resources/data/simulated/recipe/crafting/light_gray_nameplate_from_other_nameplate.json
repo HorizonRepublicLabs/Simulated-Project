@@ -3,10 +3,15 @@
   "category": "building",
   "group": "simualted:nameplate_dyeing",
   "ingredients": [
-    "#c:dyes/light_gray",
-    "#simulated:nameplate_items"
+    {
+      "tag": "c:dyes/light_gray"
+    },
+    {
+      "tag": "simulated:nameplate_items"
+    }
   ],
   "result": {
+    "count": 1,
     "id": "simulated:light_gray_nameplate"
   }
 }

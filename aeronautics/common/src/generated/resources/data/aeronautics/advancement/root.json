@@ -12,6 +12,7 @@
       "translate": "advancement.aeronautics.root.desc"
     },
     "icon": {
+      "count": 1,
       "id": "aeronautics:white_envelope"
     },
     "show_toast": false,

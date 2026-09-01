@@ -1,9 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
-    "B": "minecraft:blast_furnace",
-    "E": "simulated:engine_assembly",
-    "G": "#c:plates/iron"
+    "B": {
+      "item": "minecraft:blast_furnace"
+    },
+    "E": {
+      "item": "simulated:engine_assembly"
+    },
+    "G": {
+      "tag": "c:plates/iron"
+    }
   },
   "pattern": [
     "G",
@@ -11,6 +18,7 @@
     "B"
   ],
   "result": {
+    "count": 1,
     "id": "simulated:red_portable_engine"
   }
 }

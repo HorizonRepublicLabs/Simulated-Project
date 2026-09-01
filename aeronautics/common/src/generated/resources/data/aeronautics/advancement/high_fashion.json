@@ -19,6 +19,7 @@
       "translate": "advancement.aeronautics.high_fashion.desc"
     },
     "icon": {
+      "count": 1,
       "id": "aeronautics:aviators_goggles"
     },
     "title": {

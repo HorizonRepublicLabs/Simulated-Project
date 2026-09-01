@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "simulated:item/plunger_launcher"
-  }
+  "parent": "simulated:item/plunger_launcher/item"
 }

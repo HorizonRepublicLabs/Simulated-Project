@@ -1,7 +1,9 @@
 {
   "type": "create:splashing",
   "ingredients": [
-    "#aeronautics:shaftless_envelope"
+    {
+      "tag": "aeronautics:shaftless_envelope"
+    }
   ],
   "results": [
     {
