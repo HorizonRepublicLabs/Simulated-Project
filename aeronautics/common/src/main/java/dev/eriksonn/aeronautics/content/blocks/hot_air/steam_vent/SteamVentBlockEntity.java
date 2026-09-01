@@ -370,7 +370,7 @@ public class SteamVentBlockEntity extends SmartBlockEntity implements BlockEntit
                     final Vec3 hit = target.getLocation();
                     final Vec3 localHit = hit.subtract(Vec3.atCenterOf(this.be.getBlockPos()));
                     if (localHit.y < 0.4) {
-                        this.direction = Direction.getNearest(localHit.x, 0, localHit.z);
+                        this.direction = Direction.getApproximateNearest(localHit.x, 0, localHit.z);
                     }
                 }
             }

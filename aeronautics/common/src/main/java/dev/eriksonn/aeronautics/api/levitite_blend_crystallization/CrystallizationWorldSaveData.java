@@ -5,14 +5,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 public class CrystallizationWorldSaveData extends SavedData {
 	public static final String ID = "aeronautics_levitite_data";
 	
 	Level level;
 	
-	@Override
 	public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
 		ListTag list = new ListTag();
 		LevititeCrystallizerManager.saveData(list, level);
@@ -30,10 +32,17 @@ public class CrystallizationWorldSaveData extends SavedData {
 		return data;
 	}
 
+	/// 26.2 describes saved data with a codec backed type rather than a factory.
 	public static CrystallizationWorldSaveData get(ServerLevel level) {
-		CrystallizationWorldSaveData data = level.getChunkSource().getDataStorage().computeIfAbsent(
-				new SavedData.Factory<>(CrystallizationWorldSaveData::new, (nbt, lookup) -> load(level, nbt, lookup), null),
-				CrystallizationWorldSaveData.ID);
+		CrystallizationWorldSaveData data = level.getDataStorage().computeIfAbsent(new SavedDataType<>(
+				Identifier.withDefaultNamespace(ID),
+				CrystallizationWorldSaveData::new,
+				CompoundTag.CODEC.xmap(
+						tag -> load(level, tag, level.registryAccess()),
+						d -> d.save(new CompoundTag(), level.registryAccess())
+				),
+				DataFixTypes.LEVEL
+		));
 
 		data.level = level;
 		return data;

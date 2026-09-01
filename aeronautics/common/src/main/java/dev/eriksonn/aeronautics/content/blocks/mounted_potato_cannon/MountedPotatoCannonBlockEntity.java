@@ -24,6 +24,7 @@ import net.createmod.catnip.api.nbt.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -180,7 +181,7 @@ public class MountedPotatoCannonBlockEntity extends KineticBlockEntity implement
 							final float sprayChange = 360.0f / (float) type.split();
 
 							for (int i = 0; i < type.split(); i++) {
-								final PotatoProjectileEntity shootyBoomBoom = AllEntityTypes.POTATO_PROJECTILE.create(this.getLevel());
+								final PotatoProjectileEntity shootyBoomBoom = AllEntityTypes.POTATO_PROJECTILE.create(this.getLevel(), EntitySpawnReason.TRIGGERED);
 								if (shootyBoomBoom != null) {
 									shootyBoomBoom.setItem(ammo.stack());
 									((PotatoProjectileEntityExtension) shootyBoomBoom).aeronautics$setDamageMultiplier(2);

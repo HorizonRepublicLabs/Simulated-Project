@@ -1,7 +1,5 @@
 package dev.eriksonn.aeronautics.content.blocks.hot_air.gust;
 
-import dev.eriksonn.aeronautics.content.particle.AirPoofParticleData;
-import dev.eriksonn.aeronautics.content.particle.GustParticleData;
 import dev.eriksonn.aeronautics.index.AeroEntityTypes;
 import dev.eriksonn.aeronautics.index.AeroSoundEvents;
 import dev.ryanhcode.sable.Sable;
@@ -16,11 +14,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
@@ -85,50 +87,16 @@ public class GustEntity extends Entity implements IEntityWithComplexSpawn {
             final Vec3 soundPos = this.position();
             level.playLocalSound(soundPos.x, soundPos.y, soundPos.z, AeroSoundEvents.GUST.event(), SoundSource.BLOCKS, 0.65f, 0.35f, false);
 
-            final int poofParticleCount = 30;
-
-            for (int i = 0; i < 3; i++) {
-                // 10% chance no gustuous action
-                if (level.getRandom().nextFloat() < 0.1) {
-                    continue;
-                }
-
-                final Quaternionf particleOrientation = new Quaternionf(this.orientation);
-                particleOrientation.rotateY((float) (Math.PI * 2 / 3 * i   ));
-                particleOrientation.rotateZ((float) Math.toRadians(-10.0));
-
-                final float randomRot = (float) Math.toRadians(12f);
-                particleOrientation.rotateX(this.random.nextFloat() * randomRot - randomRot / 2);
-                particleOrientation.rotateZ(this.random.nextFloat() * randomRot - randomRot / 2);
-                particleOrientation.rotateY(this.random.nextFloat() * randomRot - randomRot / 2);
-
-                final Vector3d particlePos = JOMLConversion.toJOML(this.position());
-
-                particlePos.add(particleOrientation.transform(new Vector3d(0.5, 0.5, 0.0)));
-
-                level.addParticle(new GustParticleData(particleOrientation), particlePos.x, particlePos.y, particlePos.z, 0.0f, 0.0f, 0.0f);
-            }
-
-            for (int i = 0; i < poofParticleCount; i++) {
-                final Vector3d outDir = this.orientation.transform(new Vector3d(0.0, 1.0, 0.0));
-                final float velocity = 0.07f + this.random.nextFloat() * 0.1f;
-
-                final double vx = outDir.x * velocity + this.random.nextGaussian() * 0.01;
-                final double vy = outDir.y * velocity + this.random.nextGaussian() * 0.01;
-                final double vz = outDir.z * velocity + this.random.nextGaussian() * 0.01;
-
-                final float positionalRandomness = 0.35f * 2f;
-                final Vec3 particlePos = this.position().subtract(outDir.x, outDir.y, outDir.z).add(
-                        positionalRandomness * (this.random.nextFloat() - 0.5),
-                        positionalRandomness * (this.random.nextFloat() - 0.5),
-                        positionalRandomness * (this.random.nextFloat() - 0.5)
-                );
-
-                level.addParticle(AirPoofParticleData.INSTANCE, particlePos.x, particlePos.y, particlePos.z, vx, vy, vz);
-            }
+            // The gust and air poof particles belong to the staged-out particle layer.
 
             this.spawnedInitialBurst = true;
         }
+    }
+
+    /// 26.2 makes Entity#hurtServer abstract; a gust is not damageable.
+    @Override
+    public boolean hurtServer(final @NotNull ServerLevel level, final @NotNull DamageSource source, final float amount) {
+        return false;
     }
 
     @Override
@@ -136,9 +104,10 @@ public class GustEntity extends Entity implements IEntityWithComplexSpawn {
         return PushReaction.IGNORE;
     }
 
+    /// 26.2 sealed the no argument makeBoundingBox and passes the position in.
     @Override
-    protected @NotNull AABB makeBoundingBox() {
-        final AABB boundingBox = this.getDimensions(this.getPose()).makeBoundingBox(this.position());
+    protected @NotNull AABB makeBoundingBox(final @NotNull Vec3 pos) {
+        final AABB boundingBox = this.getDimensions(this.getPose()).makeBoundingBox(pos);
         return boundingBox.move(0, -boundingBox.getYsize() / 2.0, 0);
     }
 
@@ -147,14 +116,17 @@ public class GustEntity extends Entity implements IEntityWithComplexSpawn {
 
     }
 
+    // 26.2 persists entities through ValueInput / ValueOutput. The 1.21 code had
+    // the read and write bodies the wrong way round, so they are also swapped back.
     @Override
-    protected void readAdditionalSaveData(final CompoundTag compoundTag) {
-        compoundTag.put("GustOrientation", SableNBTUtils.writeQuaternion(this.orientation));
+    protected void readAdditionalSaveData(final @NotNull ValueInput input) {
+        input.read("GustOrientation", CompoundTag.CODEC)
+                .ifPresent(tag -> this.orientation.set(SableNBTUtils.readQuaternion(tag)));
     }
 
     @Override
-    protected void addAdditionalSaveData(final @NotNull CompoundTag compoundTag) {
-        this.orientation.set(SableNBTUtils.readQuaternion(compoundTag));
+    protected void addAdditionalSaveData(final @NotNull ValueOutput output) {
+        output.store("GustOrientation", CompoundTag.CODEC, SableNBTUtils.writeQuaternion(this.orientation));
     }
 
     @Override

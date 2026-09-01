@@ -89,7 +89,7 @@ public class EnvelopeEncasedShaftBlock extends EncasedShaftBlock implements Enve
     }
 
     @Override
-    public void fallOn(final Level pLevel, final BlockState pState, final BlockPos pPos, final Entity pEntity, final float pFallDistance) {
+    public void fallOn(final Level pLevel, final BlockState pState, final BlockPos pPos, final Entity pEntity, final double pFallDistance) {
         if (pEntity.isSuppressingBounce()) {
             super.fallOn(pLevel, pState, pPos, pEntity, pFallDistance);
         } else {
@@ -98,26 +98,12 @@ public class EnvelopeEncasedShaftBlock extends EncasedShaftBlock implements Enve
     }
 
     @Override
-    public void updateEntityAfterFallOn(final BlockGetter pLevel, final Entity pEntity) {
-        if (pEntity.isSuppressingBounce()) {
-            super.updateEntityAfterFallOn(pLevel, pEntity);
-        } else {
-            this.bounceUp(pEntity);
-        }
-    }
-
-    @Override
-    public ItemStack getCloneItemStack(final BlockState state, final HitResult target, final LevelReader level, final BlockPos pos, final Player player) {
+    public ItemStack getCloneItemStack(final LevelReader level, final BlockPos pos, final BlockState state, final boolean includeData, final Player player) {
         return this.getCasing().asItem().getDefaultInstance();
     }
 
-    public void bounceUp(final Entity pEntity) {
-        final Vec3 vec3 = pEntity.getDeltaMovement();
-        if (vec3.y < 0.0D) {
-            final double d0 = pEntity instanceof LivingEntity ? 0.5D : 0.25D;
-            pEntity.setDeltaMovement(vec3.x, -vec3.y * d0, vec3.z);
-        }
-    }
+    // 26.2 bounces entities from BlockBehaviour.Properties#bounceRestitution; the
+    // 0.5 restitution set there replaces this hand rolled bounce.
 
     @Override
     public Block getCasing() {

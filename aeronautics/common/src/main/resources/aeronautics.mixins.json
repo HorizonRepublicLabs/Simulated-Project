@@ -8,11 +8,9 @@
   "mixins": [
     "balloon.SimAssemblyHelperMixin",
     "balloon.SubLevelAssemblyHelperMixin",
+    "flammable_blocks.FireBlockInvoker",
     "flywheel_block_entity.FlywheelBlockEntityMixin",
     "item_converter.ItemEntityMixin",
-    "levitite.BlockMixin",
-    "levitite.ItemEntityMixin",
-    "levitite.WaterWheelBlockEntityMixin",
     "ponder.DisplayWorldSectionInstructionMixin",
     "ponder.TickingInstructionAccessor",
     "ponder.TickingInstructionMixin",
@@ -26,17 +24,9 @@
     "steam_vent.BoilerDataMixin"
   ],
   "client": [
-    "levitite.ChunkRenderTypeSetAccessor",
     "balloon.LevelChunkMixin",
     "custom_situational_music.MinecraftMixin",
-    "custom_situational_music.MusicManagerAccessor",
-    "levitite.PonderUIMixin",
-    "levitite.TerrainParticleMixin",
-    "levitite.VanillaChunkedSubLevelRenderDataMixin",
-    "render.iris.WorldRenderingPhaseMixin",
-    "render.sodium.DefaultMaterialsMixin",
-    "render.sodium.SodiumWorldRendererMixin",
-    "render.vanilla.LevelRendererMixin"
+    "custom_situational_music.MusicManagerAccessor"
   ],
   "server": [],
   "injectors": {

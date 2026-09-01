@@ -404,7 +404,7 @@ public class PropellerBearingBlockEntity extends MechanicalBearingBlockEntity im
     public float getSailPower(final StructureTemplate.StructureBlockInfo info) {
         BlockState state = info.state();
         if (AllBlocks.COPYCAT_PANEL.has(state)) {
-            final BlockState newState = NbtUtils.readBlockState(this.blockHolderGetter(), info.nbt().getCompound("Material"));
+            final BlockState newState = NbtUtils.readBlockState(this.blockHolderGetter(), info.nbt().getCompoundOrEmpty("Material"));
             if (!newState.isAir()) {
                 state = newState;
             }
@@ -441,11 +441,11 @@ public class PropellerBearingBlockEntity extends MechanicalBearingBlockEntity im
                     final int radius = currentPos.getX() * currentPos.getX() + currentPos.getY() * currentPos.getY() + currentPos.getZ() * currentPos.getZ();
                     if (layerHashMap.containsKey(offset)) {
                         final Pair<Integer, Integer> tuple = layerHashMap.get(offset);
-                        if (radius < tuple.getA()) {
-                            tuple.setA(radius);
+                        if (radius < tuple.getFirst()) {
+                            tuple.setFirst(radius);
                         }
-                        if (radius > tuple.getB()) {
-                            tuple.setB(radius);
+                        if (radius > tuple.getSecond()) {
+                            tuple.setSecond(radius);
                         }
                     } else {
                         layerHashMap.put(offset, Pair.of(radius, radius));
@@ -455,8 +455,8 @@ public class PropellerBearingBlockEntity extends MechanicalBearingBlockEntity im
 
             for (final Map.Entry<Integer, Pair<Integer, Integer>> entry : layerHashMap.entrySet()) {
                 final Pair<Integer, Integer> tuple = entry.getValue();
-                final double inner = Math.max(Math.sqrt(tuple.getA()) - 0.5, 0);
-                final double outer = Math.sqrt(tuple.getB()) + 0.5;
+                final double inner = Math.max(Math.sqrt(tuple.getFirst()) - 0.5, 0);
+                final double outer = Math.sqrt(tuple.getSecond()) + 0.5;
                 this.behavior.addPropellerLayer(new PropellerActorBehaviour.PropellerLayer(entry.getKey() + 1, inner, outer));
             }
         }

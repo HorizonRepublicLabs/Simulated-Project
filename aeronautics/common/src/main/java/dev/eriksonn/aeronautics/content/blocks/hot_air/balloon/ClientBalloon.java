@@ -1,7 +1,6 @@
 package dev.eriksonn.aeronautics.content.blocks.hot_air.balloon;
 
 import dev.eriksonn.aeronautics.content.blocks.hot_air.BlockEntityLiftingGasProvider;
-import dev.eriksonn.aeronautics.content.blocks.hot_air.balloon.effect.HeatedCulledRenderRegion;
 import dev.eriksonn.aeronautics.content.blocks.hot_air.balloon.graph.BalloonLayerGraph;
 import dev.ryanhcode.sable.util.LevelAccelerator;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -12,9 +11,6 @@ import org.jetbrains.annotations.ApiStatus;
 import javax.annotation.Nullable;
 
 public class ClientBalloon extends Balloon {
-
-    @Nullable
-    private HeatedCulledRenderRegion renderRegion = null;
 
     private boolean leaking;
 
@@ -65,24 +61,12 @@ public class ClientBalloon extends Balloon {
         this.rebuildRenderRegion();
     }
 
+    /// The heated render region belongs to the staged-out 26.2 render layer.
     public void rebuildRenderRegion() {
         this.freeRenderer();
-
-        if (this.capacity > 0) {
-            this.renderRegion = new HeatedCulledRenderRegion(this.accelerator, this);
-        }
     }
 
     private void freeRenderer() {
-        if (this.renderRegion != null) {
-            this.renderRegion.free();
-        }
-        this.renderRegion = null;
-    }
-
-    @Nullable
-    public HeatedCulledRenderRegion getRenderRegion() {
-        return this.renderRegion;
     }
 
     @Override

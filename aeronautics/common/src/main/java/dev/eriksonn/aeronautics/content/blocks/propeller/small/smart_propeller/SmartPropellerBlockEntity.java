@@ -5,7 +5,6 @@ import dev.ryanhcode.sable.Sable;
 import dev.simulated_team.simulated.util.SimMathUtils;
 import dev.eriksonn.aeronautics.config.AeroConfig;
 import dev.eriksonn.aeronautics.content.blocks.propeller.small.BasePropellerBlockEntity;
-import dev.eriksonn.aeronautics.content.particle.PropellerAirParticleData;
 import dev.ryanhcode.sable.api.SubLevelHelper;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
@@ -118,9 +117,7 @@ public class SmartPropellerBlockEntity extends BasePropellerBlockEntity {
             speedVector = SimMathUtils.rotateQuatReverse(speedVector, rot);
 
             particlePos = particlePos.add(VecHelper.getCenterOf(this.getBlockPos()));
-            this.level.addParticle(new PropellerAirParticleData(true, false),
-                    particlePos.x, particlePos.y, particlePos.z,
-                    speedVector.x(), speedVector.y(), speedVector.z());
+            // The air particle belongs to the staged-out particle layer.
         }
     }
 

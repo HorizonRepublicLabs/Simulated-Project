@@ -1,32 +1,33 @@
 package dev.eriksonn.aeronautics.index;
 
+import com.google.common.collect.Maps;
 import dev.eriksonn.aeronautics.Aeronautics;
-import foundry.veil.platform.registry.RegistrationProvider;
-import foundry.veil.platform.registry.RegistryObject;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
 
-import java.util.List;
+import java.util.Map;
 
+/// 26.2 makes ArmorMaterial a plain record instead of a registry entry, and the
+/// armor texture now comes from an equipment asset rather than a layer list.
 public class AeroArmorMaterials {
-	private static final RegistrationProvider<ArmorMaterial> REGISTRY = RegistrationProvider.get(Registries.ARMOR_MATERIAL, Aeronautics.MOD_ID);
 
-	public static final RegistryObject<ArmorMaterial> AVIATORS_GOGGLES = REGISTRY.register("aviators_goggles", () -> new ArmorMaterial(
-			new Object2ObjectOpenHashMap<>() {{
-				this.put(ArmorItem.Type.HELMET, 1);
-			}},
-			15,
-			SoundEvents.ARMOR_EQUIP_LEATHER,
-			() -> Ingredient.of(Items.LEATHER),
-			List.of(new ArmorMaterial.Layer(Aeronautics.path("aviators_goggles"))),
-			0.0f,
-			0.0f
-	));
+	public static final ResourceKey<EquipmentAsset> AVIATORS_GOGGLES_ASSET =
+			ResourceKey.create(EquipmentAssets.ROOT_ID, Aeronautics.path("aviators_goggles"));
+
+	public static final ArmorMaterial AVIATORS_GOGGLES = new ArmorMaterial(
+			5, defense(0, 0, 0, 1, 0), 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F,
+			ItemTags.REPAIRS_LEATHER_ARMOR, AVIATORS_GOGGLES_ASSET);
+
+	private static Map<ArmorType, Integer> defense(final int boots, final int legs, final int chest,
+	                                               final int helmet, final int body) {
+		return Maps.newEnumMap(Map.of(ArmorType.BOOTS, boots, ArmorType.LEGGINGS, legs,
+				ArmorType.CHESTPLATE, chest, ArmorType.HELMET, helmet, ArmorType.BODY, body));
+	}
 
 	public static void init() {}
 }

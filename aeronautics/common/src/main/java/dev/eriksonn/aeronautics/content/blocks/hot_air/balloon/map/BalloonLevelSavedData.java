@@ -12,7 +12,10 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -35,16 +38,22 @@ public class BalloonLevelSavedData extends SavedData {
         return sd;
     }
 
+    /// 26.2 describes saved data with a codec backed type rather than a factory.
     public static BalloonLevelSavedData get(final ServerLevel level) {
-        final BalloonLevelSavedData data = level.getChunkSource().getDataStorage().computeIfAbsent(
-                new Factory<>(BalloonLevelSavedData::new, (nbt, lookup) -> create(level, nbt, lookup), null),
-                BalloonLevelSavedData.ID);
+        final BalloonLevelSavedData data = level.getDataStorage().computeIfAbsent(new SavedDataType<>(
+                Identifier.withDefaultNamespace(ID),
+                BalloonLevelSavedData::new,
+                CompoundTag.CODEC.xmap(
+                        tag -> create(level, tag, level.registryAccess()),
+                        d -> d.save(new CompoundTag(), level.registryAccess())
+                ),
+                DataFixTypes.LEVEL
+        ));
         data.level = level;
 
         return data;
     }
 
-    @Override
     public @NotNull CompoundTag save(final CompoundTag tag, final HolderLookup.@NotNull Provider provider) {
         final BalloonMap map = BalloonMap.MAP.get(this.level);
         final ObjectArrayList<SavedBalloon> list = new ObjectArrayList<>(map.getUnloadedBalloons());

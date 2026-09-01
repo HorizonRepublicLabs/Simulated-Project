@@ -12,6 +12,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
+import net.createmod.catnip.impl.neoforge.config.NeoForgeConfigSpecBuilder;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -37,9 +38,11 @@ public class NeoForgeAeroConfigService implements AeroConfig {
 	}
 
 	private static <T extends ConfigBase> T register(final Supplier<T> factory, final ModConfig.Type side) {
+		// catnip's config api is platform-neutral now, so the NeoForge builder
+		// is wrapped on the way in and the built spec kept opaque.
 		final Pair<T, ModConfigSpec> specPair = (new ModConfigSpec.Builder()).configure((builder) -> {
 			final T config = factory.get();
-			config.registerAll(builder);
+			config.registerAll(new NeoForgeConfigSpecBuilder(builder));
 			return config;
 		});
 
@@ -54,7 +57,7 @@ public class NeoForgeAeroConfigService implements AeroConfig {
 		client = register(AeroClient::new, ModConfig.Type.CLIENT);
 
 		for (final Map.Entry<ModConfig.Type, ConfigBase> typeConfigBaseEntry : CONFIGS.entrySet()) {
-			container.registerConfig(typeConfigBaseEntry.getKey(), typeConfigBaseEntry.getValue().specification);
+			container.registerConfig(typeConfigBaseEntry.getKey(), (ModConfigSpec) typeConfigBaseEntry.getValue().specification);
 		}
 
 		CStress stress = server.kinetics.stressValues;

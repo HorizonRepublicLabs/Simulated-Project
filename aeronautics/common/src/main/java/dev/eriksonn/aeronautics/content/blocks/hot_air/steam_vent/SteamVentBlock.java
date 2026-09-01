@@ -12,6 +12,7 @@ import dev.eriksonn.aeronautics.index.AeroTags;
 import net.createmod.catnip.api.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
@@ -95,12 +96,10 @@ public class SteamVentBlock extends Block implements IBE<SteamVentBlockEntity>, 
         });
     }
 
+    /// 26.2 removes the block entity itself and hands the block the neighbour
+    /// pass after the removal, so only the neighbour work is left here.
     @Override
-    public void onRemove(final BlockState pState, final @NotNull Level level, final @NotNull BlockPos pos, final @NotNull BlockState newState, final boolean pIsMoving) {
-        this.withBlockEntityDo(level, pos, x -> x.rawSignalStrength = 0);
-        if (pState.hasBlockEntity() && (!pState.is(newState.getBlock()) || !newState.hasBlockEntity()))
-            level.removeBlockEntity(pos);
-
+    protected void affectNeighborsAfterRemoval(final BlockState pState, final @NotNull ServerLevel level, final @NotNull BlockPos pos, final boolean pIsMoving) {
         for (Direction dir : Iterate.directions) {
             if (level.getBlockEntity(pos.relative(dir)) instanceof SteamVentBlockEntity vent) {
                 vent.signalSync();

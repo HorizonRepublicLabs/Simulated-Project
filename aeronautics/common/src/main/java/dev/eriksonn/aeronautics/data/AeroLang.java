@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import dev.eriksonn.aeronautics.Aeronautics;
-import dev.eriksonn.aeronautics.content.ponder.AeroPonderPlugin;
 import dev.eriksonn.aeronautics.index.AeroAdvancements;
 import dev.eriksonn.aeronautics.index.AeroSoundEvents;
 import net.createmod.catnip.api.lang.Lang;
@@ -98,7 +97,7 @@ public class AeroLang {
 		AeroSoundEvents.REGISTRY.provideLang(consumer);
 
 
-		PonderIndex.addPlugin(new AeroPonderPlugin());
+		// The ponder plugin belongs to the staged-out scene layer.
 		PonderIndex.getLangAccess().provideLang(Aeronautics.MOD_ID, consumer);
 	}
 

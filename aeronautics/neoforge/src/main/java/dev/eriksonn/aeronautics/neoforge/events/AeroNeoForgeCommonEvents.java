@@ -5,6 +5,7 @@ import com.simibubi.create.compat.jei.category.MysteriousItemConversionCategory;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import dev.simulated_team.simulated.service.SimPlatformService;
 import dev.eriksonn.aeronautics.Aeronautics;
+import com.simibubi.create.foundation.item.ItemHelper;
 import dev.eriksonn.aeronautics.data.AeroAdvancementTriggers;
 import dev.eriksonn.aeronautics.events.AeronauticsCommonEvents;
 import dev.eriksonn.aeronautics.index.*;
@@ -14,9 +15,11 @@ import dev.eriksonn.aeronautics.neoforge.service.NeoForgeAeroConfigService;
 import net.createmod.catnip.api.config.ConfigBase;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -38,12 +41,12 @@ public class AeroNeoForgeCommonEvents {
 
 	@SubscribeEvent
 	public static void serverStop(ServerStoppedEvent event) {
-		AeronauticsCommonEvents.onServerStopped(event.level().getServer());
+		AeronauticsCommonEvents.onServerStopped(event.getServer());
 	}
 
 	@SubscribeEvent
 	public static void postServerTick(ServerTickEvent.Post event) {
-		final MinecraftServer server = event.level().getServer();
+		final MinecraftServer server = event.getServer();
 		for (final ServerLevel level : server.getAllLevels()) {
 			AeronauticsCommonEvents.onServerTickEnd(level);
 		}
@@ -77,17 +80,18 @@ public class AeroNeoForgeCommonEvents {
 
 			Identifier recipeId = Aeronautics.path("conversion_music_disc_cloud_skipper");
 			ConversionRecipe recipe = new StandardProcessingRecipe.Builder<>(ConversionRecipe::new, recipeId)
-					.withItemIngredients(Ingredient.of(AeroTags.ItemTags.CONVERTS_TO_CLOUD_SKIPPER))
+					.withItemIngredients(ItemHelper.ingredientOf(AeroTags.ItemTags.CONVERTS_TO_CLOUD_SKIPPER))
 					.withSingleItemOutput(AeroItems.MUSIC_DISC_CLOUD_SKIPPER.asStack())
 					.build();
-			MysteriousItemConversionCategory.RECIPES.add(new RecipeHolder<>(recipeId, recipe));
+			MysteriousItemConversionCategory.RECIPES.add(
+					new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, recipeId), recipe));
 		}
 
 		@SubscribeEvent(priority = EventPriority.HIGH)
+		/// 26.2 fires the datagen event per mod, so the owning mod no longer
+		/// has to be picked out of the event.
 		public static void gatherDataHighPriority(GatherDataEvent event) {
-			if(event.getMods().contains(Aeronautics.MOD_ID)) {
-				AeroTags.addGenerators();
-			}
+			AeroTags.addGenerators();
 		}
 
 		@SubscribeEvent
@@ -96,8 +100,8 @@ public class AeroNeoForgeCommonEvents {
 			final PackOutput output = generator.getPackOutput();
 			final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-			generator.addProvider(event.includeServer(), new AeroAdvancements(output, lookupProvider));
-			generator.addProvider(event.includeServer(), AeroProcessingRecipeGen.registerAll(output, lookupProvider));
+			generator.addProvider(true, new AeroAdvancements(output, lookupProvider));
+			generator.addProvider(true, AeroProcessingRecipeGen.registerAll(output, lookupProvider));
 			event.addProvider(AeroSoundEvents.REGISTRY.getProvider(output));
 		}
 

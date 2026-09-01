@@ -4,7 +4,6 @@ package dev.eriksonn.aeronautics.neoforge;
 import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.neoforge.events.AeroNeoForgeCommonEvents;
 import dev.eriksonn.aeronautics.neoforge.index.AeroFluidsNeoForge;
-import dev.eriksonn.aeronautics.neoforge.index.AeroParticleTypesNeoForge;
 import dev.eriksonn.aeronautics.neoforge.service.NeoForgeAeroConfigService;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -17,7 +16,7 @@ public class AeronauticsNeoForge {
         NeoForge.EVENT_BUS.register(AeroNeoForgeCommonEvents.class);
         modBus.register(AeroNeoForgeCommonEvents.ModBusEvents.class);
 
-        AeroParticleTypesNeoForge.registerEventListeners(modBus);
+        // Particle registration belongs to the staged-out particle layer.
         Aeronautics.getRegistrate().registerEventListeners(modBus);
 
         Aeronautics.init();

@@ -51,7 +51,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FireBlock;
+import dev.eriksonn.aeronautics.mixin.flammable_blocks.FireBlockInvoker;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,7 +59,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.common.Tags;
 
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
@@ -165,6 +164,7 @@ public class AeroBlocks {
                 .transform(CreativeTabItemTransforms.VisibilityType.INVISIBLE.applyBlock())
                 .item()
                 .tag(AeroTags.ItemTags.ENVELOPE)
+                .build()
                 .register();
     });
 
@@ -204,7 +204,7 @@ public class AeroBlocks {
                             .pattern("G")
                             .pattern("C")
                             .define('G', AeroTags.ItemTags.GOLD_SHEET)
-                            .define('C', Blocks.COPPER_BLOCK)
+                            .define('C', Blocks.COPPER_BLOCK.weathering().unaffected())
                             .unlockedBy("has_ingredient", p.has(CommonMetal.COPPER.ingots))
                             .save(p))
                     .register();
@@ -362,8 +362,8 @@ public class AeroBlocks {
                     .register();
 
     private static <B extends Block, R> NonNullUnaryOperator<BlockBuilder<B, R>> flammable(final int encouragement, final int flamability) {
-        return builder -> builder.onRegisterAfter(Registries.BLOCK, block -> ((FireBlock) Blocks.FIRE)
-                .setFlammable(block, encouragement, flamability));
+        return builder -> builder.onRegisterAfter(Registries.BLOCK, block -> ((FireBlockInvoker) Blocks.FIRE)
+                .aeronautics$setFlammable(block, encouragement, flamability));
     }
 
     public static void init() {

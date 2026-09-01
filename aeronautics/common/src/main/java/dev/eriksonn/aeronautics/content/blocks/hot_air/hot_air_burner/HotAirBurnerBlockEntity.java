@@ -13,7 +13,6 @@ import dev.eriksonn.aeronautics.content.blocks.hot_air.balloon.Balloon;
 import dev.eriksonn.aeronautics.content.blocks.hot_air.balloon.ServerBalloon;
 import dev.eriksonn.aeronautics.content.blocks.hot_air.lifting_gas.LiftingGasType;
 import dev.eriksonn.aeronautics.content.blocks.hot_air.BlockEntityLiftingGasProvider;
-import dev.eriksonn.aeronautics.content.particle.HotAirEmberParticleData;
 import dev.eriksonn.aeronautics.data.AeroLang;
 import dev.eriksonn.aeronautics.index.AeroLiftingGasTypes;
 import dev.eriksonn.aeronautics.util.AeroSoundDistUtil;
@@ -186,13 +185,7 @@ public class HotAirBurnerBlockEntity extends SmartBlockEntity
         }
 
         if (random.nextFloat() < 0.5f * this.intensity.getValue()) {
-            this.level.addParticle(new HotAirEmberParticleData(this.getBlockState().getValue(HotAirBurnerBlock.VARIANT) == HotAirBurnerBlock.Variant.SOUL_FIRE),
-                    pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.5f,
-                    pos.getY() + 0.5 + 0.1,
-                    pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.5f,
-                    this.intensity.getValue(),
-                    this.intensity.getValue(),
-                    this.intensity.getValue());
+            // The ember particle belongs to the staged-out particle layer.
         }
 
         if (this.canOutputGas()) {

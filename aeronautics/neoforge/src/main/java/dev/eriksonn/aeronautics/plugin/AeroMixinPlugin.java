@@ -1,7 +1,5 @@
 package dev.eriksonn.aeronautics.plugin;
 
-import foundry.veil.api.compat.IrisCompat;
-import foundry.veil.api.compat.SodiumCompat;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -9,14 +7,13 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
+/// The sodium and iris gates are gone with the staged-out render layer: Veil no
+/// longer ships its compat probes and none of the mixin.render packages are
+/// built, so every remaining mixin applies unconditionally.
 public class AeroMixinPlugin implements IMixinConfigPlugin {
-    private boolean sodiumPresent;
-    private boolean irisPresent;
 
     @Override
     public void onLoad(final String mixinPackage) {
-        this.sodiumPresent = SodiumCompat.isLoaded();
-        this.irisPresent = IrisCompat.isLoaded();
     }
 
     @Override
@@ -26,18 +23,6 @@ public class AeroMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(final String targetClassName, final String mixinClassName) {
-        if (mixinClassName.startsWith("dev.eriksonn.aeronautics.mixin.render.vanilla")) {
-            return !this.sodiumPresent;
-        }
-
-        if (mixinClassName.startsWith("dev.eriksonn.aeronautics.mixin.render.sodium")) {
-            return this.sodiumPresent;
-        }
-
-        if (mixinClassName.startsWith("dev.eriksonn.aeronautics.mixin.render.iris")) {
-            return this.irisPresent;
-        }
-
         return true;
     }
 

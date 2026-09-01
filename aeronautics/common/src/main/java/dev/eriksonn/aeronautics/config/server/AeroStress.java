@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.createmod.catnip.api.config.ConfigSpecBuilder;
 
 public class AeroStress extends CStress {
 
@@ -16,14 +16,18 @@ public class AeroStress extends CStress {
 	private static final Object2DoubleMap<Identifier> DEFAULT_CAPACITIES = new Object2DoubleOpenHashMap<>();
 
 	@Override
-	public void registerAll(ModConfigSpec.Builder builder) {
+	/// catnip's config api is platform-neutral now: values are defined with a
+	/// range and popped by count.
+	public void registerAll(ConfigSpecBuilder builder) {
 		builder.comment(".", Comments.su, Comments.impact).push("impact");
-		DEFAULT_IMPACTS.forEach((id, value) -> this.impacts.put(id, builder.define(id.getPath(), value)));
-		builder.pop();
+		DEFAULT_IMPACTS.forEach((id, value) -> this.impacts.put(id,
+				builder.defineInRange(id.getPath(), (double) value, 0, Double.MAX_VALUE)));
+		builder.pop(1);
 
 		builder.comment(".", Comments.su, Comments.capacity).push("capacity");
-		DEFAULT_CAPACITIES.forEach((id, value) -> this.capacities.put(id, builder.define(id.getPath(), value)));
-		builder.pop();
+		DEFAULT_CAPACITIES.forEach((id, value) -> this.capacities.put(id,
+				builder.defineInRange(id.getPath(), (double) value, 0, Double.MAX_VALUE)));
+		builder.pop(1);
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> setNoImpact() {

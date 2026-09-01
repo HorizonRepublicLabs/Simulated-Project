@@ -130,7 +130,7 @@ public class EnvelopeBlock extends CasingBlock implements Envelope, SpecialBlock
     }
 
     @Override
-    protected int getLightBlock(final BlockState state, final BlockGetter level, final BlockPos pos) {
+    protected int getLightDampening(final BlockState state) {
         return 1;
     }
 
@@ -149,8 +149,10 @@ public class EnvelopeBlock extends CasingBlock implements Envelope, SpecialBlock
         return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
-    @Override
-    protected ItemStack getCloneItemStack(final LevelReader levelReader, final BlockPos blockPos, final BlockState blockState, final boolean includeData) {
+    /// No @Override: the hook lives on NeoForge's IBlockExtension, which plain
+    /// Block only implements once the loader patches are applied, so the common
+    /// source set cannot see it on the supertype.
+    public ItemStack getCloneItemStack(final LevelReader levelReader, final BlockPos blockPos, final BlockState blockState, final boolean includeData, final Player player) {
         return AeroBlocks.DYED_ENVELOPE_BLOCKS.get(this.color).asStack();
     }
 
@@ -159,7 +161,7 @@ public class EnvelopeBlock extends CasingBlock implements Envelope, SpecialBlock
     }
 
     @Override
-    public void fallOn(final Level pLevel, final BlockState pState, final BlockPos pPos, final Entity pEntity, final float pFallDistance) {
+    public void fallOn(final Level pLevel, final BlockState pState, final BlockPos pPos, final Entity pEntity, final double pFallDistance) {
         if (pEntity.isSuppressingBounce()) {
             super.fallOn(pLevel, pState, pPos, pEntity, pFallDistance);
         } else {
@@ -168,22 +170,9 @@ public class EnvelopeBlock extends CasingBlock implements Envelope, SpecialBlock
 
     }
 
-    @Override
-    public void updateEntityAfterFallOn(final BlockGetter pLevel, final Entity pEntity) {
-        if (pEntity.isSuppressingBounce()) {
-            super.updateEntityAfterFallOn(pLevel, pEntity);
-        } else {
-            this.bounceUp(pEntity);
-        }
-    }
-
-    private void bounceUp(final Entity entity) {
-        final Vec3 vec3 = entity.getDeltaMovement();
-        if (vec3.y < 0.0) {
-            final double scale = 0.65 * (entity instanceof LivingEntity ? 1.0 : 0.8);
-            entity.setDeltaMovement(vec3.x, -vec3.y * scale, vec3.z);
-        }
-    }
+    // 26.2 bounces entities from BlockBehaviour.Properties#bounceRestitution, which
+    // applies the same 0.65 restitution and the same 0.8 factor for non-living
+    // entities that the old updateEntityAfterFallOn override did by hand.
 
     @Override
     public ItemRequirement getRequiredItems(BlockState state, @Nullable BlockEntity blockEntity) {

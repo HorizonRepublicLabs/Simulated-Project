@@ -25,7 +25,10 @@ public class LevititeBlendTicker {
 	public LevititeBlendTicker(final CompoundTag toDeserialize, final Level level) {
 		this.level = level;
 		this.pos = BlockPos.CODEC.parse(NbtOps.INSTANCE, toDeserialize.get("pos")).getOrThrow();
-		this.context = AeroRegistries.LEVITITE_CRYSTAL_PROPAGATION_CONTEXT.asVanillaRegistry().get(Identifier.parse(toDeserialize.getStringOr("context", "")));
+		this.context = AeroRegistries.LEVITITE_CRYSTAL_PROPAGATION_CONTEXT.asVanillaRegistry()
+				.get(Identifier.parse(toDeserialize.getStringOr("context", "")))
+				.map(net.minecraft.core.Holder::value)
+				.orElse(null);
 
 		this.deserialize(toDeserialize);
 	}

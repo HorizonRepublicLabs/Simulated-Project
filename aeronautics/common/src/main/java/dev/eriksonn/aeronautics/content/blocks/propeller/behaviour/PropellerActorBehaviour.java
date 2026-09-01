@@ -7,8 +7,6 @@ import com.simibubi.create.content.kinetics.fan.AirCurrent;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import dev.eriksonn.aeronautics.content.particle.PropellerAirParticle;
-import dev.eriksonn.aeronautics.content.particle.PropellerAirParticleData;
 import dev.eriksonn.aeronautics.data.AeroLang;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.block.propeller.BlockEntityPropeller;
@@ -53,6 +51,11 @@ public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHa
     private static final Vector3d globalThrust = new Vector3d();
     private static final Vector3d relativeDiff = new Vector3d();
     private static final Vector3d normal = new Vector3d();
+    /// Airflow constants that used to live on the staged-out air particle.
+    /// They feed the thrust maths, not just the visual.
+    private static final double AIRFLOW_FRICTION_SCALE = 0.2;
+    private static final int AIRFLOW_LIFETIME = 20;
+
     private static final Vector3d particleVelocity = new Vector3d();
 
     protected final BlockEntityPropeller propeller;
@@ -178,7 +181,7 @@ public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHa
                     double layerDistance = entityDistance - layer.offset;
                     layerDistance *= thrustFlowMult;
                     if (layerDistance > 0 && radialDistanceSq < layer.outerRadiusSquared()) {
-                        final double distanceScale = layerDistance * PropellerAirParticle.frictionScale;
+                        final double distanceScale = layerDistance * AIRFLOW_FRICTION_SCALE;
                         double innerRadiusScale = 0;
                         if (layer.innerRadius > 0 && radialDistanceSq < layer.innerRadiusSquared()) {
                             innerRadiusScale = (layer.innerRadiusSquared() - radialDistanceSq) / (layer.innerRadius * layer.outerRadius);
@@ -207,7 +210,7 @@ public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHa
                         final float modifier = entity.isShiftKeyDown() ? 0.125f : 1;
                         // 0.55 is the acceleration required to keep living entities aloft,
                         // and this scaling causes those entities to float at the edge of the particle range at asymptotically high airflows
-                        final double forceScale = PropellerAirParticle.frictionScale * PropellerAirParticle.lifeTime * 0.55;
+                        final double forceScale = AIRFLOW_FRICTION_SCALE * AIRFLOW_LIFETIME * 0.55;
                         final double acceleration = forceScale * this.getAirflowTickSpeed() * modifier * layerForceScale * Math.min(this.getAirPressure(), 1);
 
                         final Vec3 previousMotion = entity.getDeltaMovement();
@@ -224,7 +227,7 @@ public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHa
     }
 
     public double getParticleRange() {
-        return Math.signum(this.getAirflowTickSpeed()) * Math.log(Math.abs(this.getAirflowTickSpeed()) * PropellerAirParticle.frictionScale * PropellerAirParticle.lifeTime + 1) / PropellerAirParticle.frictionScale;
+        return Math.signum(this.getAirflowTickSpeed()) * Math.log(Math.abs(this.getAirflowTickSpeed()) * AIRFLOW_FRICTION_SCALE * AIRFLOW_LIFETIME + 1) / AIRFLOW_FRICTION_SCALE;
     }
 
     /**
@@ -262,11 +265,9 @@ public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHa
             STORED_MUT_POS.add(origin);
             final double positionNudge = speed * random.nextFloat();
             STORED_MUT_POS.fma(positionNudge, this.thrustDirection);
-            this.thrustDirection.mul(speed * Math.exp(-PropellerAirParticle.frictionScale * positionNudge), mutSpeed);
+            this.thrustDirection.mul(speed * Math.exp(-AIRFLOW_FRICTION_SCALE * positionNudge), mutSpeed);
 
-            this.getWorld().addParticle(new PropellerAirParticleData(true, false),
-                    STORED_MUT_POS.x, STORED_MUT_POS.y, STORED_MUT_POS.z,
-                    mutSpeed.x, mutSpeed.y, mutSpeed.z);
+            // The air particle belongs to the staged-out particle layer.
         }
 
         particleCount = particleCount / 4 + 1;
@@ -349,7 +350,7 @@ public class PropellerActorBehaviour extends BlockEntityBehaviour implements IHa
         if (this.particleSmoothing > 0)
             count = Math.log(count / this.particleSmoothing + 1) * this.particleSmoothing;
 
-        return Math.min((int) (count + this.getWorld().random.nextFloat()), this.maxParticleAmount);
+        return Math.min((int) (count + this.getWorld().getRandom().nextFloat()), this.maxParticleAmount);
     }
 
     public void setThrustDirection(final Vector3dc thrustDirection) {

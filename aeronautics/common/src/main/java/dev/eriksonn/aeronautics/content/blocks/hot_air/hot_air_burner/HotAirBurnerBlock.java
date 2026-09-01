@@ -24,6 +24,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -58,7 +59,8 @@ public class HotAirBurnerBlock extends Block implements IBE<HotAirBurnerBlockEnt
         return state.getValue(POWERED) ? 15 : 0;
     }
 
-    public void entityInside(final BlockState state, final Level level, final BlockPos pos, final Entity entity) {
+    protected void entityInside(final BlockState state, final Level level, final BlockPos pos, final Entity entity,
+                                final InsideBlockEffectApplier effectApplier, final boolean isPrecise) {
         final BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof final HotAirBurnerBlockEntity be) {
             if (!entity.fireImmune() && state.getValue(POWERED) && entity instanceof LivingEntity) {
@@ -80,7 +82,7 @@ public class HotAirBurnerBlock extends Block implements IBE<HotAirBurnerBlockEnt
                 }
             }
 
-            super.entityInside(state, level, pos, entity);
+            super.entityInside(state, level, pos, entity, effectApplier, isPrecise);
         }
     }
 

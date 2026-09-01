@@ -1,7 +1,6 @@
 package dev.eriksonn.aeronautics.mixin.custom_situational_music;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.eriksonn.aeronautics.api.CustomSituationalMusic;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -20,14 +19,12 @@ public class MinecraftMixin {
 
 	@Shadow @Nullable public ClientLevel level;
 
-	@WrapOperation(method = "getSituationalMusic", at = @At(value = "FIELD", target = "Lnet/minecraft/sounds/Musics;GAME:Lnet/minecraft/sounds/Music;", opcode = 178))
-	private Music aeronautics$getSituationalMusic(Operation<Music> original) {
-		Music music = original.call();
+	/// 26.2 pulls the ambient track from an environment attribute instead of
+	/// reading Musics.GAME, so there is no field read left to wrap and the
+	/// custom track is applied to the resolved music instead.
+	@ModifyReturnValue(method = "getSituationalMusic", at = @At("RETURN"))
+	private Music aeronautics$getSituationalMusic(Music music) {
 		Music customMusic = CustomSituationalMusic.getSituationalMusic(this.level, this.player);
-
-		if(customMusic != null) {
-			music = customMusic;
-		}
-		return music;
+		return customMusic != null ? customMusic : music;
 	}
 }
