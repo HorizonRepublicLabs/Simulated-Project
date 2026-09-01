@@ -13,11 +13,13 @@ import dev.ryanhcode.offroad.index.OffroadDataComponents;
 import dev.ryanhcode.offroad.index.OffroadPartialModels;
 import dev.simulated_team.simulated.util.SimColors;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
+import com.simibubi.create.foundation.render.CreateItemRenderer;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import com.simibubi.create.foundation.render.CreateRenderTypes;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -35,27 +37,27 @@ public class WheelMountRenderer extends KineticBlockEntityRenderer<WheelMountBlo
     }
 
     @Override
-    protected void renderSafe(final WheelMountBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final WheelMountBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         final BlockState state = this.getRenderedBlockState(be);
         final RenderType type = this.getRenderType(be, state);
         renderRotatingBuffer(be, this.getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
 
         FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
-        final VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.cutoutMovingBlock());
 
         final Direction direction = be.getBlockState()
                 .getValue(BlockStateProperties.HORIZONTAL_FACING)
                 .getOpposite();
         final BlockState blockState = be.getBlockState();
 
-        final SuperByteBuffer diodeLeft = CachedBuffers.partial(OffroadPartialModels.DIODE_LEFT, blockState);
-        final SuperByteBuffer diodeRight = CachedBuffers.partial(OffroadPartialModels.DIODE_RIGHT, blockState);
-        final SuperByteBuffer teleOuter = CachedBuffers.partial(OffroadPartialModels.TELE_OUTER, blockState);
-        final SuperByteBuffer teleInner = CachedBuffers.partial(OffroadPartialModels.TELE_INNER, blockState);
-        final SuperByteBuffer teleMount = CachedBuffers.partial(OffroadPartialModels.TELE_MOUNT, blockState);
-        final SuperByteBuffer springTop = CachedBuffers.partial(OffroadPartialModels.SPRING_UPPER, blockState);
-        final SuperByteBuffer springBottom = CachedBuffers.partial(OffroadPartialModels.SPRING_LOWER, blockState);
-        final SuperByteBuffer springMiddle = CachedBuffers.partial(OffroadPartialModels.SPRING_MIDDLE, blockState);
+        final SuperByteBuffer diodeLeft = CreateCachedBuffers.partial(OffroadPartialModels.DIODE_LEFT, blockState);
+        final SuperByteBuffer diodeRight = CreateCachedBuffers.partial(OffroadPartialModels.DIODE_RIGHT, blockState);
+        final SuperByteBuffer teleOuter = CreateCachedBuffers.partial(OffroadPartialModels.TELE_OUTER, blockState);
+        final SuperByteBuffer teleInner = CreateCachedBuffers.partial(OffroadPartialModels.TELE_INNER, blockState);
+        final SuperByteBuffer teleMount = CreateCachedBuffers.partial(OffroadPartialModels.TELE_MOUNT, blockState);
+        final SuperByteBuffer springTop = CreateCachedBuffers.partial(OffroadPartialModels.SPRING_UPPER, blockState);
+        final SuperByteBuffer springBottom = CreateCachedBuffers.partial(OffroadPartialModels.SPRING_LOWER, blockState);
+        final SuperByteBuffer springMiddle = CreateCachedBuffers.partial(OffroadPartialModels.SPRING_MIDDLE, blockState);
 
         final double wheelPivotOffsetHor = 10.0 / 16.0;
         final double springWheelPivotOffsetHor = 12.0 / 16.0;
@@ -124,23 +126,13 @@ public class WheelMountRenderer extends KineticBlockEntityRenderer<WheelMountBlo
             if (tireLike.model().isPresent()) {
                 final Identifier model = tireLike.model().get();
                 ms.translate(tireLike.offset().x, tireLike.offset().y, tireLike.offset().z);
-                final SuperByteBuffer wheel = CachedBuffers.partial(PartialModel.of(model), state);
+                final SuperByteBuffer wheel = CreateCachedBuffers.partial(PartialModel.of(model), state);
                 wheel.light(light)
                         .translate(-0.5f, 0.0f, -0.5f)
                         .renderInto(ms, vb);
             } else {
                 ms.translate(tireLike.offset().x, tireLike.offset().y, tireLike.offset().z);
-                Minecraft.getInstance().getItemRenderer()
-                        .renderStatic(
-                                itemStack,
-                                ItemDisplayContext.NONE,
-                                light,
-                                overlay,
-                                ms,
-                                buffer,
-                                be.getLevel(),
-                                0
-                        );
+                CreateItemRenderer.render(itemStack, ItemDisplayContext.NONE, ms, buffer, light, overlay);
             }
         }
 
@@ -185,7 +177,7 @@ public class WheelMountRenderer extends KineticBlockEntityRenderer<WheelMountBlo
 
     @Override
     protected SuperByteBuffer getRotatedModel(final WheelMountBlockEntity te, final BlockState state) {
-        return CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, te.getBlockState(), te.getBlockState()
+        return CreateCachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, te.getBlockState(), te.getBlockState()
                 .getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite());
     }
 }

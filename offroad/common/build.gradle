@@ -46,7 +46,4 @@ artifacts {
 sourceSets.main.java {
     exclude 'dev/ryanhcode/offroad/content/ponder/**'
     exclude 'dev/ryanhcode/offroad/index/OffroadPonderScenes.java'
-    exclude 'dev/ryanhcode/offroad/content/blocks/borehead_bearing/BoreheadBearingRenderer.java'
-    exclude 'dev/ryanhcode/offroad/content/blocks/rock_cutting_wheel/RockCuttingWheelRenderer.java'
-    exclude 'dev/ryanhcode/offroad/content/blocks/wheel_mount/WheelMountRenderer.java'
 }

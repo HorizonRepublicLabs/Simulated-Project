@@ -9,11 +9,12 @@ import dev.simulated_team.simulated.content.blocks.util.AbstractDirectionalAxisB
 import dev.ryanhcode.offroad.index.OffroadPartialModels;
 import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.createmod.catnip.api.animation.LerpedFloat;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import com.simibubi.create.foundation.render.CreateRenderTypes;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,22 +43,22 @@ public class RockCuttingWheelRenderer extends SafeBlockEntityRenderer<RockCuttin
     public static void renderInContraption(final MovementContext context, final VirtualRenderWorld renderWorld, final ContraptionMatrices matrices, final SuperRenderTypeBuffer buffer) {
         final BlockState state = context.state;
         final Direction facing = state.getValue(FACING);
-        final SuperByteBuffer wheel = CachedBuffers.partial(OffroadPartialModels.ROCK_CUTTING_WHEEL_WHEEL, state);
+        final SuperByteBuffer wheel = CreateCachedBuffers.partial(OffroadPartialModels.ROCK_CUTTING_WHEEL_WHEEL, state);
 
         wheel.transform(matrices.getModel());
 
         transformBuffer(facing, state.getValue(AbstractDirectionalAxisBlock.AXIS_ALONG_FIRST_COORDINATE), wheel);
-        wheel.rotateYCenteredDegrees(((LerpedFloat) context.temporaryData).getValue(AnimationTickHolder.getPartialTicks(context.world)));
+        wheel.rotateYCenteredDegrees(((LerpedFloat) context.temporaryData).getValue(AnimationTickHolder.getPartialTicks()));
 
-        wheel.light(LevelRenderer.getLightColor(renderWorld, context.localPos))
-                .useLevelLight(context.world, matrices.getWorld())
-                .renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
+        wheel.light(BlockEntityRenderHelper.lightColorAt(renderWorld, context.localPos))
+                .useLevelLight(renderWorld)
+                .renderInto(matrices.getViewProjection(), buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
     }
 
     @Override
-    protected void renderSafe(final RockCuttingWheelBlockEntity blockEntity, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final RockCuttingWheelBlockEntity blockEntity, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         final BlockState state = blockEntity.getBlockState();
-        final SuperByteBuffer wheel = CachedBuffers.partial(OffroadPartialModels.ROCK_CUTTING_WHEEL_WHEEL, state);
+        final SuperByteBuffer wheel = CreateCachedBuffers.partial(OffroadPartialModels.ROCK_CUTTING_WHEEL_WHEEL, state);
 
         ms.pushPose();
 
@@ -66,7 +67,7 @@ public class RockCuttingWheelRenderer extends SafeBlockEntityRenderer<RockCuttin
             wheel.rotateYCenteredDegrees(blockEntity.getAnimatedSpeed(partialTicks));
         }
 
-        wheel.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
+        wheel.light(light).renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
         ms.popPose();
     }
 }

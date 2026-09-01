@@ -7,9 +7,11 @@ import dev.ryanhcode.offroad.Offroad;
 import dev.ryanhcode.offroad.content.blocks.borehead_bearing.BoreheadBearingBlockEntity;
 import dev.ryanhcode.offroad.content.blocks.borehead_bearing.BoreheadBearingVisual;
 import dev.ryanhcode.offroad.content.blocks.rock_cutting_wheel.RockCuttingWheelBlockEntity;
+import dev.ryanhcode.offroad.content.blocks.borehead_bearing.BoreheadBearingRenderer;
+import dev.ryanhcode.offroad.content.blocks.rock_cutting_wheel.RockCuttingWheelRenderer;
 import dev.ryanhcode.offroad.content.blocks.wheel_mount.WheelMountBlockEntity;
+import dev.ryanhcode.offroad.content.blocks.wheel_mount.WheelMountRenderer;
 
-/// The block entity renderers belong to the staged-out client render layer.
 public class OffroadBlockEntityTypes {
     private static final SimulatedRegistrate REGISTRATE = Offroad.getRegistrate();
 
@@ -17,6 +19,7 @@ public class OffroadBlockEntityTypes {
             .blockEntity("wheel_mount", WheelMountBlockEntity::new)
             .onRegister(SimInventoryService.INSTANCE.registerInventory((be, dir) -> be.getInventory()))
             .validBlocks(OffroadBlocks.WHEEL_MOUNT)
+            .renderer(() -> WheelMountRenderer::new)
             .register();
 
     public static final BlockEntityEntry<BoreheadBearingBlockEntity> BOREHEAD_BEARING = REGISTRATE
@@ -24,11 +27,13 @@ public class OffroadBlockEntityTypes {
             .visual(() -> BoreheadBearingVisual::new)
             .validBlock(OffroadBlocks.BOREHEAD_BEARING_BLOCK)
             .onRegister(SimInventoryService.INSTANCE.registerInventory((be, dir) -> be.getContraptionWrappedInventory()))
+            .renderer(() -> BoreheadBearingRenderer::new)
             .register();
 
     public static final BlockEntityEntry<RockCuttingWheelBlockEntity> ROCKCUTTING_WHEEL_BLOCK_ENTITY = REGISTRATE
             .blockEntity("rockcutting_wheel", RockCuttingWheelBlockEntity::new)
             .validBlock(OffroadBlocks.ROCK_CUTTER_BLOCK)
+            .renderer(() -> RockCuttingWheelRenderer::new)
             .register();
 
     public static void init() {
