@@ -21,9 +21,16 @@ public class MinecraftMixin {
 
 	/// 26.2 pulls the ambient track from an environment attribute instead of
 	/// reading Musics.GAME, so there is no field read left to wrap and the
-	/// custom track is applied to the resolved music instead.
+	/// custom track is applied to the resolved music instead. That widens where
+	/// this runs: the old field read only happened in world, while the return
+	/// value is also produced on the menu screen, where there is no level or
+	/// player to test a condition against.
 	@ModifyReturnValue(method = "getSituationalMusic", at = @At("RETURN"))
 	private Music aeronautics$getSituationalMusic(Music music) {
+		if (this.level == null || this.player == null) {
+			return music;
+		}
+
 		Music customMusic = CustomSituationalMusic.getSituationalMusic(this.level, this.player);
 		return customMusic != null ? customMusic : music;
 	}
