@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "simulated:block/white_nameplate"
+    "model": "simulated:item/white_nameplate"
   }
 }

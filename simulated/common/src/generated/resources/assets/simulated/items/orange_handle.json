@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "simulated:block/orange_handle"
+    "model": "simulated:item/orange_handle"
   }
 }

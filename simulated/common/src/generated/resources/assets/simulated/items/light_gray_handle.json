@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "simulated:block/light_gray_handle"
+    "model": "simulated:item/light_gray_handle"
   }
 }

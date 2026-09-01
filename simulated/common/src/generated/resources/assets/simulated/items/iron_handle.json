@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "simulated:block/iron_handle"
+    "model": "simulated:item/iron_handle"
   }
 }

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "simulated:block/lime_handle"
+    "model": "simulated:item/lime_handle"
   }
 }

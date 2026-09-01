@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "simulated:block/purple_handle"
+    "model": "simulated:item/purple_handle"
   }
 }
