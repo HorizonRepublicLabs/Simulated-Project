@@ -17,6 +17,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import dev.simulated_team.simulated.neoforge.tab.SimulatedTabContents;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 @Mod(Simulated.MOD_ID)
@@ -24,6 +25,10 @@ public final class SimulatedNeoForge {
     public static final CreativeModeTab TAB = CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + Simulated.MOD_ID + ".group"))
             .icon(() -> new ItemStack(SimBlocks.PHYSICS_ASSEMBLER.get()))
+            // The section aware population lives in SimulatedCreativeTab, which is
+            // staged out with the client render layer, so the tab is filled through
+            // the plain vanilla path meanwhile.
+            .displayItems((parameters, output) -> SimulatedTabContents.fill(output))
             .build();
 
     public SimulatedNeoForge(final IEventBus modEventBus, final ModContainer modContainer) {
