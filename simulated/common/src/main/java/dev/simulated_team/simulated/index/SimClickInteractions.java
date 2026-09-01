@@ -14,13 +14,16 @@ import java.util.Set;
 
 public class SimClickInteractions {
 
+    /// Declared before every register call below: static fields initialise in
+    /// source order, so the handlers listed first would otherwise add themselves
+    /// to a set that is still null.
+    public static Set<InteractCallback> CLICK_INTERACTION_ENTRIES = new ObjectOpenHashSet<>();
+
     public static PhysicsAssemblerGUIHandler PHYSICS_ASSEMBLER_MANAGER = register(new PhysicsAssemblerGUIHandler());
 
     public static SteeringWheelHandler STEERING_WHEEL_MANAGER = register(new SteeringWheelHandler());
 
     public static ThrottleLeverHandler THROTTLE_LEVER_MANAGER = register(new ThrottleLeverHandler());
-
-    public static Set<InteractCallback> CLICK_INTERACTION_ENTRIES = new ObjectOpenHashSet<>();
 
     public static SpringItemHandler SPRING_INTERACTION = register(new SpringItemHandler());
     public static ZiplineClientManager ZIPLINE_INTERACTION = register(new ZiplineClientManager());
