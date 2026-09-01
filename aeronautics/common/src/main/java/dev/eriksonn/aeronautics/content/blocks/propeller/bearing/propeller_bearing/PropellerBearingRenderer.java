@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.content.blocks.propeller.bearing.propeller_bearing;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.bearing.BearingBlock;
@@ -8,10 +9,10 @@ import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.eriksonn.aeronautics.index.AeroPartialModels;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +26,7 @@ public class PropellerBearingRenderer extends KineticBlockEntityRenderer<Propell
     }
 
     @Override
-    protected void renderSafe(PropellerBearingBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+    protected void renderSafe(PropellerBearingBlockEntity be, float partialTicks, PoseStack ms, SuperRenderTypeBuffer buffer,
 							  int light, int overlay) {
 
         if (VisualizationManager.supportsVisualization(be.getLevel())) return;
@@ -35,7 +36,7 @@ public class PropellerBearingRenderer extends KineticBlockEntityRenderer<Propell
         final Direction facing = be.getBlockState()
                 .getValue(BlockStateProperties.FACING);
         PartialModel top = AeroPartialModels.BEARING_PLATE;
-        SuperByteBuffer superBuffer = CachedBuffers.partial(top, be.getBlockState());
+        SuperByteBuffer superBuffer = CreateCachedBuffers.partial(top, be.getBlockState());
 
         float interpolatedAngle = be.getInterpolatedAngle(partialTicks - 1);
         kineticRotationTransform(superBuffer, be, facing.getAxis(), (float) (interpolatedAngle / 180 * Math.PI), light);
@@ -45,12 +46,12 @@ public class PropellerBearingRenderer extends KineticBlockEntityRenderer<Propell
             superBuffer.rotateCentered(
                     AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())),Direction.UP);
         superBuffer.rotateCentered(AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)),Direction.EAST);
-        superBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+        superBuffer.renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
     }
 
     @Override
     protected SuperByteBuffer getRotatedModel(PropellerBearingBlockEntity te, BlockState state) {
-        return CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, state, state
+        return CreateCachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, state, state
                 .getValue(BearingBlock.FACING)
                 .getOpposite());
     }

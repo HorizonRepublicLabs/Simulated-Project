@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.content.blocks.propeller.bearing.gyroscopic_propeller_bearing;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.bearing.BearingBlock;
@@ -9,10 +10,10 @@ import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.eriksonn.aeronautics.index.AeroPartialModels;
 import net.createmod.catnip.api.math.AngleHelper;
 import net.createmod.catnip.api.math.VecHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +28,7 @@ public class GyroscopicPropellerBearingRenderer extends KineticBlockEntityRender
     }
 
     @Override
-    protected void renderSafe(final GyroscopicPropellerBearingBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final GyroscopicPropellerBearingBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
         super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
@@ -42,7 +43,7 @@ public class GyroscopicPropellerBearingRenderer extends KineticBlockEntityRender
         final Vec3 contraptionNormal = new Vec3(Q.x(), Q.y(), Q.z());
 
         final PartialModel top = AeroPartialModels.BEARING_PLATE_METAL;
-        final SuperByteBuffer superBuffer = CachedBuffers.partial(top, be.getBlockState());
+        final SuperByteBuffer superBuffer = CreateCachedBuffers.partial(top, be.getBlockState());
 
         superBuffer.translate(normal.scale(4 / 16f));
         superBuffer.rotateCentered(tiltQuat);
@@ -58,13 +59,13 @@ public class GyroscopicPropellerBearingRenderer extends KineticBlockEntityRender
         }
 
         superBuffer.rotateCentered(AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)), Direction.EAST);
-        superBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+        superBuffer.renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
 
 
         for (int i = 0; i < 4; i++) {
 
-            final SuperByteBuffer headBuffer = CachedBuffers.partial(AeroPartialModels.GYRO_BEARING_PISTON_HEAD, be.getBlockState());
-            final SuperByteBuffer poleBuffer = CachedBuffers.partial(AeroPartialModels.GYRO_BEARING_PISTON_POLE, be.getBlockState());
+            final SuperByteBuffer headBuffer = CreateCachedBuffers.partial(AeroPartialModels.GYRO_BEARING_PISTON_HEAD, be.getBlockState());
+            final SuperByteBuffer poleBuffer = CreateCachedBuffers.partial(AeroPartialModels.GYRO_BEARING_PISTON_POLE, be.getBlockState());
             final Vec3 originalPos = VecHelper.rotate(new Vec3(5.9 / 16.0, 0, 0), -90 * i, Direction.Axis.Y);
             Vec3 translatedPos = originalPos;
 
@@ -108,15 +109,15 @@ public class GyroscopicPropellerBearingRenderer extends KineticBlockEntityRender
             headBuffer.rotate(AngleHelper.rad(-90 * j), Direction.UP);
             poleBuffer.rotate(AngleHelper.rad(-90 * j), Direction.UP);
 
-            headBuffer.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
-            poleBuffer.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
+            headBuffer.light(light).renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
+            poleBuffer.light(light).renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
 
         }
     }
 
     @Override
     protected SuperByteBuffer getRotatedModel(final GyroscopicPropellerBearingBlockEntity be, final BlockState state) {
-        return CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, state, state
+        return CreateCachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, state, state
                 .getValue(BearingBlock.FACING)
                 .getOpposite());
     }

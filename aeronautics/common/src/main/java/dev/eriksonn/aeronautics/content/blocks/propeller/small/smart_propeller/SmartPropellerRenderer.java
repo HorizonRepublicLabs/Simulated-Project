@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.content.blocks.propeller.small.smart_propeller;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -7,10 +8,10 @@ import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.eriksonn.aeronautics.content.blocks.propeller.small.SimplePropellerRenderer;
 import dev.eriksonn.aeronautics.index.AeroPartialModels;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,18 +26,18 @@ public class SmartPropellerRenderer extends SimplePropellerRenderer<SmartPropell
     }
 
     @Override
-    public void renderSafe(final SmartPropellerBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    public void renderSafe(final SmartPropellerBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         final BlockState state = this.getRenderedBlockState(be);
         final RenderType type = this.getRenderType(be, state);
         renderRotatingBuffer(be, this.getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
 
         final Direction.Axis horizontal = state.getValue(BlockStateProperties.HORIZONTAL_AXIS);
 
-        final VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.solidMovingBlock());
 
-        final SuperByteBuffer propeller = CachedBuffers.partialFacing(this.getCurrentModel(be), state, Direction.UP)
+        final SuperByteBuffer propeller = CreateCachedBuffers.partialFacing(this.getCurrentModel(be), state, Direction.UP)
                 .light(light);
-        final SuperByteBuffer hinge = CachedBuffers.partialFacing(AeroPartialModels.SMART_PROPELLER_HINGE, state, Direction.UP)
+        final SuperByteBuffer hinge = CreateCachedBuffers.partialFacing(AeroPartialModels.SMART_PROPELLER_HINGE, state, Direction.UP)
                 .light(light);
 
         final float hingeAngle = be.getLerpedHingeAngle(partialTicks);
@@ -70,6 +71,6 @@ public class SmartPropellerRenderer extends SimplePropellerRenderer<SmartPropell
 
     @Override
     protected SuperByteBuffer getRotatedModel(final SmartPropellerBlockEntity be, final BlockState state) {
-        return CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, state, Direction.DOWN);
+        return CreateCachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, state, Direction.DOWN);
     }
 }

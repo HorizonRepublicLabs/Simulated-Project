@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.content.blocks.hot_air.hot_air_burner;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -11,12 +12,12 @@ import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.simulated_team.simulated.util.SimColors;
 import foundry.veil.api.client.render.VeilRenderSystem;
 import foundry.veil.api.client.render.shader.program.ShaderProgram;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.ponder.api.client.level.PonderLevel;
 import net.minecraft.client.Minecraft;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -32,10 +33,10 @@ public class HotAirBurnerRenderer extends SmartBlockEntityRenderer<HotAirBurnerB
     }
 
     @Override
-    protected void renderSafe(final HotAirBurnerBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final HotAirBurnerBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         final float signalStrength = Math.max(0, be.getSignalStrength() / 15F);
-        final SuperByteBuffer indicator = CachedBuffers.partial(AeroPartialModels.HOT_AIR_BURNER_INDICATOR, be.getBlockState());
-        final VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
+        final SuperByteBuffer indicator = CreateCachedBuffers.partial(AeroPartialModels.HOT_AIR_BURNER_INDICATOR, be.getBlockState());
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.cutoutMovingBlock());
         indicator.light(light)
                 .color(SimColors.redstone(signalStrength))
                 .renderInto(ms, vb);
