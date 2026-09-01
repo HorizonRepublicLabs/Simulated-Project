@@ -88,14 +88,15 @@ public class AeroNeoForgeCommonEvents {
 		}
 
 		@SubscribeEvent(priority = EventPriority.HIGH)
-		/// 26.2 fires the datagen event per mod, so the owning mod no longer
+		/// GatherDataEvent is abstract in 26.2; listeners attach to a concrete
+		/// subclass. 26.2 fires the datagen event per mod, so the owning mod no longer
 		/// has to be picked out of the event.
-		public static void gatherDataHighPriority(GatherDataEvent event) {
+		public static void gatherDataHighPriority(GatherDataEvent.Client event) {
 			AeroTags.addGenerators();
 		}
 
 		@SubscribeEvent
-		public static void gatherData(GatherDataEvent event) {
+		public static void gatherData(GatherDataEvent.Client event) {
 			final DataGenerator generator = event.getGenerator();
 			final PackOutput output = generator.getPackOutput();
 			final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();

@@ -20,11 +20,11 @@ public class OffroadDatagen {
 
     /// 26.2 fires the datagen event per mod, so the owning mod no longer has to
     /// be picked out of the event.
-    public static void gatherDataHighPriority(final GatherDataEvent event) {
+    public static void gatherDataHighPriority(final GatherDataEvent.Client event) {
         OffroadTags.addGenerators();
     }
 
-    public static void gatherData(final GatherDataEvent event) {
+    public static void gatherData(final GatherDataEvent.Client event) {
         final DataGenerator generator = event.getGenerator();
         final PackOutput output = generator.getPackOutput();
         final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();

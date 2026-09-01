@@ -35,8 +35,9 @@ public abstract class ClientLevelMixin implements MultiMiningDestructionExtensio
     @Shadow
     protected abstract void removeProgress(BlockDestructionProgress progress);
 
-    @Shadow
-    public abstract long getGameTime();
+    /// getGameTime is declared on Level, not on ClientLevel, and @Shadow only
+    /// resolves members the target class declares itself, so it is reached
+    /// through a cast instead.
 
     /**
      * we need to manually handle this as our multimining progress does not have a tree set associated with it. It's just a holder for other progresses...
@@ -91,7 +92,7 @@ public abstract class ClientLevelMixin implements MultiMiningDestructionExtensio
             });
 
             // update our timer to make sure we keep voided appropriately
-            mmProgress.updateTick(this.getGameTime());
+            mmProgress.updateTick(((ClientLevel) (Object) this).getGameTime());
         }
     }
 

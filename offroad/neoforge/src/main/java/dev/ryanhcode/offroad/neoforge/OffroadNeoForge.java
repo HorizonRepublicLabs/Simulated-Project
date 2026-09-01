@@ -35,15 +35,12 @@ public class OffroadNeoForge {
         modBus.register(NeoForgeOffroadConfigService.class);
 
         modBus.addListener(OffroadNeoForge::init);
-        modBus.addListener(EventPriority.HIGHEST, OffroadDatagen::gatherDataHighPriority);
-        modBus.addListener(EventPriority.LOWEST, OffroadDatagen::gatherData);
+        // GatherDataEvent is abstract in 26.2; listeners attach to a concrete subclass.
+        modBus.addListener(EventPriority.HIGHEST, (GatherDataEvent.Client event) -> OffroadDatagen.gatherDataHighPriority(event));
+        modBus.addListener(EventPriority.LOWEST, (GatherDataEvent.Client event) -> OffroadDatagen.gatherData(event));
         modBus.addListener(OffroadDatagen::registerEvent);
         modBus.addListener((ModifyDefaultComponentsEvent event) -> OffroadCommonEvents.modifyDefaultComponents(event::modify));
         NeoForge.EVENT_BUS.addListener((LevelTickEvent.Post event) -> OffroadCommonEvents.tickLevelEvent(event.getLevel()));
-
-        // 26.2 fires the datagen event per mod, so the owning mod no longer has
-        // to be picked out of the event.
-        modBus.addListener((final GatherDataEvent event) -> OffroadTags.addGenerators());
 
         Offroad.getRegistrate().registerEventListeners(modBus);
     }
