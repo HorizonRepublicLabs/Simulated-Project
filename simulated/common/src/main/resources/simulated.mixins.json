@@ -7,7 +7,6 @@
   "client": [
     "accessor.CreativeModeInventoryScreenAccessor",
     "accessor.KeyMappingsAccessor",
-    "accessor.LevelRendererAccessor",
     "conditional_display_target.DisplayLinkScreenMixin",
     "hold_interaction.KeyMappingInvoker",
     "linked_typewriter.PonderTooltipHandlerMixin",

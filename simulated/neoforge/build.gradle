@@ -131,6 +131,8 @@ sourceSets.main.java {
     exclude 'dev/simulated_team/simulated/content/particle/**'
     exclude 'dev/simulated_team/simulated/index/SimParticleTypes.java'
     exclude 'dev/simulated_team/simulated/mixin/throttle_lever/**'
+
+    exclude 'dev/simulated_team/simulated/mixin/accessor/LevelRendererAccessor.java'
     exclude 'dev/simulated_team/simulated/content/blocks/throttle_lever/ThrottleLeverClientGripHandler.java'
     exclude 'dev/simulated_team/simulated/**/*Visual.java'
     exclude 'dev/simulated_team/simulated/content/blocks/redstone/linked_typewriter/screen/**'
@@ -262,6 +264,8 @@ tasks.named('compileJava', JavaCompile) {
     exclude 'dev/simulated_team/simulated/mixin/search_alias/**'
     exclude 'dev/simulated_team/simulated/mixin/silence_jei/**'
     exclude 'dev/simulated_team/simulated/mixin/throttle_lever/**'
+
+    exclude 'dev/simulated_team/simulated/mixin/accessor/LevelRendererAccessor.java'
     exclude 'dev/simulated_team/simulated/mixin/world_presets/CreateWorldScreenMixin.java'
     exclude 'dev/simulated_team/simulated/mixin_interface/SpriteContentsExtension.java'
     exclude 'dev/simulated_team/simulated/mixin_interface/diagram/**'
