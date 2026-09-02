@@ -25,8 +25,6 @@ public class PhysicsAssemblerRenderer extends SmartBlockEntityRenderer<PhysicsAs
     @Override
     protected void renderSafe(final PhysicsAssemblerBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         final BlockState blockState = be.getBlockState();
-        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.solidMovingBlock());
-
         // Render handle
         final SuperByteBuffer handle = CreateCachedBuffers.partial(SimPartialModels.ASSEMBLER_LEVER, blockState);
         final float angle = getRenderAngle(be, partialTicks);
@@ -34,7 +32,7 @@ public class PhysicsAssemblerRenderer extends SmartBlockEntityRenderer<PhysicsAs
                 .rotate(angle, Direction.EAST)
                 .translate(-1 / 2f, -7 / 16f, -1 / 2f);
         handle.light(light)
-                .renderInto(ms, vb);
+                .renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
     }
 
     public static float getRenderAngle(final PhysicsAssemblerBlockEntity be, final float partialTicks) {
