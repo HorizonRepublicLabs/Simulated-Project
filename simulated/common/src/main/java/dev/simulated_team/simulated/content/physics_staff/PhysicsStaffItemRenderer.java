@@ -19,7 +19,7 @@ import net.irisshaders.iris.Iris;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.util.Mth;
@@ -59,7 +59,7 @@ public class PhysicsStaffItemRenderer extends CustomRenderedItemModelRenderer {
 
     @Override
     protected void render(final ItemStack stack, final CustomRenderedItemModel model, final PartialItemModelRenderer renderer, final ItemDisplayContext context, final PoseStack ms,
-                          final MultiBufferSource buffer, final int light, final int overlay) {
+                          final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         float openAmount = 0;
         float cubeScale = 0;
         final PhysicsStaffClientHandler clientHandler = SimulatedClient.PHYSICS_STAFF_CLIENT_HANDLER;
@@ -115,8 +115,8 @@ public class PhysicsStaffItemRenderer extends CustomRenderedItemModelRenderer {
 
         renderer.render(model.getOriginalModel(), Sheets.cutoutBlockSheet(), light);
 
-        renderer.render(SimPartialModels.PHYSICS_STAFF_CORE.get(), SimRenderTypes.itemGlowingSolid(shadersActive), LightTexture.FULL_BRIGHT);
-        renderer.render(SimPartialModels.PHYSICS_STAFF_CORE_GLOW.get(), SimRenderTypes.itemGlowingTranslucent(shadersActive), LightTexture.FULL_BRIGHT);
+        renderer.render(SimPartialModels.PHYSICS_STAFF_CORE.get(), SimRenderTypes.itemGlowingSolid(shadersActive), LightCoordsUtil.FULL_BRIGHT);
+        renderer.render(SimPartialModels.PHYSICS_STAFF_CORE_GLOW.get(), SimRenderTypes.itemGlowingTranslucent(shadersActive), LightCoordsUtil.FULL_BRIGHT);
         final float worldTime = AnimationTickHolder.getRenderTime() / 20;
 
         ms.pushPose();
@@ -151,7 +151,7 @@ public class PhysicsStaffItemRenderer extends CustomRenderedItemModelRenderer {
         cubeScale = Mth.clamp(cubeScale, 0, 1);
         cubeScale *= 0.8f;
         ms.scale(cubeScale, cubeScale, cubeScale);
-        renderer.render(SimPartialModels.PHYSICS_STAFF_INNER_CUBE.get(), SimRenderTypes.itemGlowingSolid(shadersActive), LightTexture.FULL_BRIGHT);
+        renderer.render(SimPartialModels.PHYSICS_STAFF_INNER_CUBE.get(), SimRenderTypes.itemGlowingSolid(shadersActive), LightCoordsUtil.FULL_BRIGHT);
 
         if (context.firstPerson()) {
             final Vector3f focusPoint = new Vector3f();
@@ -162,7 +162,7 @@ public class PhysicsStaffItemRenderer extends CustomRenderedItemModelRenderer {
         }
 
         ms.scale(1.2f, 1.2f, 1.2f);
-        renderer.render(SimPartialModels.PHYSICS_STAFF_OUTER_CUBE.get(), SimRenderTypes.itemGlowingTranslucent(shadersActive), LightTexture.FULL_BRIGHT);
+        renderer.render(SimPartialModels.PHYSICS_STAFF_OUTER_CUBE.get(), SimRenderTypes.itemGlowingTranslucent(shadersActive), LightCoordsUtil.FULL_BRIGHT);
 
         // Iris doesn't allow individual render types to be ended, so all batches must be ended for the translucent parts to draw correctly
         if (Veil.IRIS && !shadersActive) {

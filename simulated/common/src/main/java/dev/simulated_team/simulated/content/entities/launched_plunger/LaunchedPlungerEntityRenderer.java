@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.entities.launched_plunger;
 
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -17,7 +19,7 @@ import dev.simulated_team.simulated.index.SimRenderTypes;
 import dev.simulated_team.simulated.util.CatmulRomSpline;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.createmod.catnip.api.client.animation.AnimationTickHolder;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -25,7 +27,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -95,7 +97,7 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
     }
 
     @Override
-    public void render(final LaunchedPlungerEntity entity, final float f, final float pt, final PoseStack poseStack, final MultiBufferSource multiBufferSource, final int light) {
+    public void render(final LaunchedPlungerEntity entity, final float f, final float pt, final PoseStack poseStack, final SuperRenderTypeBuffer multiBufferSource, final int light) {
         super.render(entity, f, pt, poseStack, multiBufferSource, light);
 
         // render to sublevel and invert rotate rope to be accurate
@@ -244,10 +246,10 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
         stack.scale(1.75f, 1.75f, 1.75f);
         stack.translate(0, 0, 2.5f / 16f);
 
-        final VertexConsumer vb = multiBufferSource.getBuffer(RenderType.solid());
-        final SuperByteBuffer body = CachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_BODY, Blocks.AIR.defaultBlockState());
-        final SuperByteBuffer spool = CachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_SPOOL, Blocks.AIR.defaultBlockState());
-        final SuperByteBuffer joint = CachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_JOINT, Blocks.AIR.defaultBlockState());
+        final VertexConsumer vb = multiBufferSource.getBuffer(CreateRenderTypes.solidMovingBlock());
+        final SuperByteBuffer body = CreateCachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_BODY, Blocks.AIR.defaultBlockState());
+        final SuperByteBuffer spool = CreateCachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_SPOOL, Blocks.AIR.defaultBlockState());
+        final SuperByteBuffer joint = CreateCachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_JOINT, Blocks.AIR.defaultBlockState());
 
         stack.rotateZDegrees(90f);
         body.light(light).renderInto(poseStack, vb);
@@ -277,7 +279,7 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
         poseStack.popPose();
     }
 
-    public static void renderRope(final List<Vec3> positions, final MultiBufferSource multiBufferSource, final BlockAndTintGetter level, final PoseStack poseStack) {
+    public static void renderRope(final List<Vec3> positions, final SuperRenderTypeBuffer multiBufferSource, final BlockAndTintGetter level, final PoseStack poseStack) {
         final Vec3 first = positions.getFirst();
         final Vector3d origin = new Vector3d();
         final Vec3 cameraPosition = Minecraft.getInstance().gameRenderer.mainCamera().position();
@@ -319,8 +321,8 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
                 NEXT_ORIENTATION.set(ORIENTATION);
             }
 
-            final int lightStart = LevelRenderer.getLightColor(level, LIGHT_POS.set(x + cameraPosition.x, y + cameraPosition.y, z + cameraPosition.z));
-            final int lightEnd = LevelRenderer.getLightColor(level, LIGHT_POS.set(nextX + cameraPosition.x, nextY + cameraPosition.y, nextZ + cameraPosition.z));
+            final int lightStart = BlockEntityRenderHelper.lightColorAt(level, LIGHT_POS.set(x + cameraPosition.x, y + cameraPosition.y, z + cameraPosition.z));
+            final int lightEnd = BlockEntityRenderHelper.lightColorAt(level, LIGHT_POS.set(nextX + cameraPosition.x, nextY + cameraPosition.y, nextZ + cameraPosition.z));
 
             final double length = Math.sqrt((nextX - x) * (nextX - x) + (nextY - y) * (nextY - y) + (nextZ - z) * (nextZ - z));
             nextV = v + (float) (length * (17 / 16f));

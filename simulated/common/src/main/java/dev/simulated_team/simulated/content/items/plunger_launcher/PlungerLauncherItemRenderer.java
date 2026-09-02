@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.items.plunger_launcher;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.equipment.zapper.ShootableGadgetRenderHandler;
@@ -14,13 +15,13 @@ import dev.simulated_team.simulated.index.SimItems;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import dev.simulated_team.simulated.mixin_interface.PlayerLaunchedPlungerExtension;
 import net.createmod.catnip.api.math.VecHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
@@ -39,7 +40,7 @@ public class PlungerLauncherItemRenderer extends CustomRenderedItemModelRenderer
     public static final Matrix4f itemProjMat = new Matrix4f();
 
     @Override
-    protected void render(final ItemStack stack, final CustomRenderedItemModel model, final PartialItemModelRenderer renderer, final ItemDisplayContext transformType, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void render(final ItemStack stack, final CustomRenderedItemModel model, final PartialItemModelRenderer renderer, final ItemDisplayContext transformType, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         ms.scale(0.8f, 0.8f, 0.8f);
         ms.translate(0, 0, 0.15f);
         renderer.render(model.getOriginalModel(), light);
@@ -71,11 +72,11 @@ public class PlungerLauncherItemRenderer extends CustomRenderedItemModelRenderer
         }
     }
 
-    private void renderPlunger(final PoseStack ms, final MultiBufferSource buffer, final int light, final boolean first) {
+    private void renderPlunger(final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final boolean first) {
         ms.pushPose();
-        final SuperByteBuffer body = CachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_BODY, Blocks.AIR.defaultBlockState());
-        final SuperByteBuffer spool = CachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_SPOOL, Blocks.AIR.defaultBlockState());
-        final SuperByteBuffer joint = CachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_JOINT, Blocks.AIR.defaultBlockState());
+        final SuperByteBuffer body = CreateCachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_BODY, Blocks.AIR.defaultBlockState());
+        final SuperByteBuffer spool = CreateCachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_SPOOL, Blocks.AIR.defaultBlockState());
+        final SuperByteBuffer joint = CreateCachedBuffers.partial(SimPartialModels.LAUNCHED_PLUNGER_JOINT, Blocks.AIR.defaultBlockState());
 
         ms.translate(2 / 16f * (first ? -1 : 1), -1 / 16f, -5 / 16f);
 
@@ -96,11 +97,11 @@ public class PlungerLauncherItemRenderer extends CustomRenderedItemModelRenderer
             }
         }
 
-        body.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
-        joint.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
+        body.light(light).renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
+        joint.light(light).renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
 
         ms.translate(0, 0, 3 / 16f);
-        spool.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
+        spool.light(light).renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
         ms.popPose();
     }
 

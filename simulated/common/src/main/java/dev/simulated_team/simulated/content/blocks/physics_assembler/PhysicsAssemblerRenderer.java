@@ -1,15 +1,16 @@
 package dev.simulated_team.simulated.content.blocks.physics_assembler;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.redstone.analogLever.AnalogLeverBlock;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,12 +23,12 @@ public class PhysicsAssemblerRenderer extends SmartBlockEntityRenderer<PhysicsAs
     }
 
     @Override
-    protected void renderSafe(final PhysicsAssemblerBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final PhysicsAssemblerBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         final BlockState blockState = be.getBlockState();
-        final VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.solidMovingBlock());
 
         // Render handle
-        final SuperByteBuffer handle = CachedBuffers.partial(SimPartialModels.ASSEMBLER_LEVER, blockState);
+        final SuperByteBuffer handle = CreateCachedBuffers.partial(SimPartialModels.ASSEMBLER_LEVER, blockState);
         final float angle = getRenderAngle(be, partialTicks);
         this.transform(handle, blockState).translate(1 / 2f, 7 / 16f, 1 / 2f)
                 .rotate(angle, Direction.EAST)

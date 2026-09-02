@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.rope.rope_winch;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -13,12 +14,12 @@ import dev.simulated_team.simulated.content.blocks.rope.strand.client.RopeStrand
 import dev.simulated_team.simulated.index.SimPartialModels;
 import dev.simulated_team.simulated.index.SimSpriteShifts;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SpriteShiftEntry;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
@@ -60,18 +61,18 @@ public class RopeWinchRenderer extends SafeBlockEntityRenderer<RopeWinchBlockEnt
         return true;
     }
 
-    protected void renderSafe(final RopeWinchBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final RopeWinchBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
         this.renderComponents(be, partialTicks, ms, buffer, light, overlay);
     }
 
-    protected void renderComponents(final RopeWinchBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderComponents(final RopeWinchBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         ms.pushPose();
-        final VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.solidMovingBlock());
 
         final BlockState state = be.getBlockState();
-        final SuperByteBuffer shaft = CachedBuffers.partial(SimPartialModels.ROPE_WINCH_SHAFT, state);
-        final SuperByteBuffer ropeCoil = CachedBuffers.partial(SimPartialModels.ROPE_WINCH_ROPE_COIL, state);
+        final SuperByteBuffer shaft = CreateCachedBuffers.partial(SimPartialModels.ROPE_WINCH_SHAFT, state);
+        final SuperByteBuffer ropeCoil = CreateCachedBuffers.partial(SimPartialModels.ROPE_WINCH_ROPE_COIL, state);
 
         final Direction.Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(be);
         final float angle = KineticBlockEntityRenderer.getAngleForBe(be, be.getBlockPos(), axis);

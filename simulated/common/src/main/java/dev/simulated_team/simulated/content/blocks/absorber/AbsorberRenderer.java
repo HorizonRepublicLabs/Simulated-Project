@@ -1,15 +1,16 @@
 package dev.simulated_team.simulated.content.blocks.absorber;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import dev.ryanhcode.sable.util.SableDistUtil;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -22,10 +23,10 @@ public class AbsorberRenderer extends SmartBlockEntityRenderer<AbsorberBlockEnti
         super(context);
     }
     @Override
-    protected void renderSafe(final AbsorberBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final AbsorberBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
         final Level level = SableDistUtil.getClientLevel();
-        final VertexConsumer vb = buffer.getBuffer(RenderType.cutout());
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.cutoutMovingBlock());
 
         final BlockState blockState = be.getBlockState();
 
@@ -58,15 +59,15 @@ public class AbsorberRenderer extends SmartBlockEntityRenderer<AbsorberBlockEnti
 
         float totalMovement = (1+(1-pos)*movementDistance)/16f;
 
-        final SuperByteBuffer sponge = CachedBuffers.partial(blockState.getValue(AbsorberBlock.WET) ? SimPartialModels.ABSORBER_SPONGE_WET :SimPartialModels.ABSORBER_SPONGE_DRY,blockState);
+        final SuperByteBuffer sponge = CreateCachedBuffers.partial(blockState.getValue(AbsorberBlock.WET) ? SimPartialModels.ABSORBER_SPONGE_WET :SimPartialModels.ABSORBER_SPONGE_DRY,blockState);
 
         sponge.translate(0,0.25,0);
         sponge.scale(1,1-pos*movementDistance/9,1);
         sponge.light(light).renderInto(ms,vb);
         final Matrix4f rotationMatrix = new Matrix4f();
-        this.apply(CachedBuffers.partial(SimPartialModels.ABSORBER_HAT,blockState),ms,light,vb,yRot,totalMovement,rotationMatrix);
+        this.apply(CreateCachedBuffers.partial(SimPartialModels.ABSORBER_HAT,blockState),ms,light,vb,yRot,totalMovement,rotationMatrix);
         totalMovement/=2;
-        this.apply(CachedBuffers.partial(SimPartialModels.ABSORBER_PIVOT,blockState),ms,light,vb,yRot,totalMovement,rotationMatrix);
+        this.apply(CreateCachedBuffers.partial(SimPartialModels.ABSORBER_PIVOT,blockState),ms,light,vb,yRot,totalMovement,rotationMatrix);
 
         float height = totalMovement+0.5f/16; //height from base to pivot
         final float length = 13.8f/32f; //distance from pivot to endpoint of arm
@@ -79,11 +80,11 @@ public class AbsorberRenderer extends SmartBlockEntityRenderer<AbsorberBlockEnti
         rotationMatrix.m11(width);
         rotationMatrix.m12(-height);
 
-        this.apply(CachedBuffers.partial(SimPartialModels.ABSORBER_ARM,blockState),ms,light,vb,yRot,totalMovement,rotationMatrix);
+        this.apply(CreateCachedBuffers.partial(SimPartialModels.ABSORBER_ARM,blockState),ms,light,vb,yRot,totalMovement,rotationMatrix);
         rotationMatrix.m21(-height);
         rotationMatrix.m12(height);
         rotationMatrix.m00(0.98f);
-        this.apply(CachedBuffers.partial(SimPartialModels.ABSORBER_ARM,blockState),ms,light,vb,yRot,totalMovement,rotationMatrix);
+        this.apply(CreateCachedBuffers.partial(SimPartialModels.ABSORBER_ARM,blockState),ms,light,vb,yRot,totalMovement,rotationMatrix);
     }
     void apply(final SuperByteBuffer buffer, final PoseStack ms, final int light, final VertexConsumer vb, final float yRot, final float offset, final Matrix4f rotationMatrix)
     {

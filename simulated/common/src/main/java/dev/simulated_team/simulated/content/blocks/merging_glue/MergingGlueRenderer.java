@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.merging_glue;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
@@ -13,7 +14,7 @@ import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.content.blocks.spring.SpringBlock;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -30,7 +31,7 @@ public class MergingGlueRenderer extends SmartBlockEntityRenderer<MergingGlueBlo
     }
 
     @Override
-    protected void renderSafe(final MergingGlueBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource bufferSource, final int light, final int overlay) {
+    protected void renderSafe(final MergingGlueBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer bufferSource, final int light, final int overlay) {
         if (!be.isController()) {
             return;
         }
@@ -54,7 +55,7 @@ public class MergingGlueRenderer extends SmartBlockEntityRenderer<MergingGlueBlo
         final Vector3dc normalA = JOMLConversion.atLowerCornerOf(facing.getUnitVec3i());
         final Vector3d normalB = JOMLConversion.atLowerCornerOf(otherFacing.getUnitVec3i());
 
-        final VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(Simulated.path("textures/block/merging_glue/strand.png")));
+        final VertexConsumer buffer = bufferSource.getBuffer(RenderTypes.entityCutout(Simulated.path("textures/block/merging_glue/strand.png")));
 
         final Pose3dc renderPose = subLevel != null ? ((ClientSubLevel) subLevel).renderPose() : null;
         final Pose3dc otherRenderPose = otherSubLevel != null ? ((ClientSubLevel) otherSubLevel).renderPose() : null;

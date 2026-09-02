@@ -3,7 +3,7 @@ package dev.simulated_team.simulated.content.entities.diagram;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.simulated_team.simulated.index.SimPartialModels;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.renderer.Sheets;
@@ -19,11 +19,11 @@ public class DiagramEntityRenderer extends EntityRenderer<DiagramEntity> {
 	}
 
 	@Override
-	public void render(final DiagramEntity entity, final float yaw, final float pt, final PoseStack ms, final MultiBufferSource buffer,
+	public void render(final DiagramEntity entity, final float yaw, final float pt, final PoseStack ms, final SuperRenderTypeBuffer buffer,
                        final int light) {
 		final PartialModel partialModel = entity.size == 3 ? SimPartialModels.CONTRAPTION_DIAGRAM_3x3
 			: entity.size == 2 ? SimPartialModels.CONTRAPTION_DIAGRAM_2x2 : SimPartialModels.CONTRAPTION_DIAGRAM_1x1;
-		final SuperByteBuffer sbb = CachedBuffers.partial(partialModel, Blocks.AIR.defaultBlockState());
+		final SuperByteBuffer sbb = CreateCachedBuffers.partial(partialModel, Blocks.AIR.defaultBlockState());
 		sbb.rotateYDegrees(-yaw)
 			.rotateXDegrees(90.0F + entity.getXRot())
 			.translate(-.5, -1 / 32f, -.5);

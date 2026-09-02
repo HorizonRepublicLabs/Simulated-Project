@@ -32,7 +32,7 @@ public class NameplateRenderer extends SafeBlockEntityRenderer<NameplateBlockEnt
     }
 
     @Override
-    public void renderSafe(final NameplateBlockEntity be, final float pPartialTick, final PoseStack ps, final MultiBufferSource pBuffer, int packedLight, final int pPackedOverlay) {
+    public void renderSafe(final NameplateBlockEntity be, final float pPartialTick, final PoseStack ps, final SuperRenderTypeBuffer pBuffer, int packedLight, final int pPackedOverlay) {
         final Font font = this.context.getFont();
 
         final BlockState state = be.getBlockState();

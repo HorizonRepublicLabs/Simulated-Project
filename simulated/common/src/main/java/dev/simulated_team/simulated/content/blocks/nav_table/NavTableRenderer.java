@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.nav_table;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
@@ -10,11 +11,11 @@ import dev.simulated_team.simulated.index.SimPartialModels;
 import dev.simulated_team.simulated.index.SimTags;
 import dev.simulated_team.simulated.util.SimColors;
 import dev.simulated_team.simulated.util.SimDirectionUtil;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
@@ -29,7 +30,7 @@ public class NavTableRenderer extends SmartBlockEntityRenderer<NavTableBlockEnti
     }
 
     @Override
-    protected void renderSafe(final NavTableBlockEntity navBE, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final NavTableBlockEntity navBE, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         super.renderSafe(navBE, partialTicks, ms, buffer, light, overlay);
 
         final ItemStack heldItem = navBE.getHeldItem();
@@ -52,7 +53,7 @@ public class NavTableRenderer extends SmartBlockEntityRenderer<NavTableBlockEnti
                 final Direction logicalDirection = Direction.getNearest(logicalDirectionF.x, logicalDirectionF.y, logicalDirectionF.z);
 
                 ms.pushPose();
-                final SuperByteBuffer indicator = CachedBuffers.partial(SimPartialModels.NAV_TABLE_INDICATOR, navState);
+                final SuperByteBuffer indicator = CreateCachedBuffers.partial(SimPartialModels.NAV_TABLE_INDICATOR, navState);
 
                 indicator.rotateToFace(direction);
                 indicator.translate(0, 0, 0.5);
@@ -60,7 +61,7 @@ public class NavTableRenderer extends SmartBlockEntityRenderer<NavTableBlockEnti
                 final int color = SimColors.redstone(signalStrength); // Analog indicators (mixes between colors smoothly)
                 indicator.light(light)
                         .color(color)
-                        .renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+                        .renderInto(ms, buffer.getBuffer(CreateRenderTypes.cutoutMovingBlock()));
 
                 ms.popPose();
             }
@@ -69,10 +70,10 @@ public class NavTableRenderer extends SmartBlockEntityRenderer<NavTableBlockEnti
             // Render Pointer
             ms.pushPose();
             ms.translate(0, 0.3, 0);
-            final SuperByteBuffer pointer = CachedBuffers.partial(SimPartialModels.NAV_TABLE_POINTER, navState);
+            final SuperByteBuffer pointer = CreateCachedBuffers.partial(SimPartialModels.NAV_TABLE_POINTER, navState);
 
             pointer.rotateY(arrowAngle);
-            pointer.light(light).renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+            pointer.light(light).renderInto(ms, buffer.getBuffer(CreateRenderTypes.cutoutMovingBlock()));
             ms.popPose();
         }
 

@@ -8,11 +8,11 @@ import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import foundry.veil.api.client.render.VeilRenderBridge;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -33,8 +33,8 @@ public class RedstoneAccumulatorRenderer extends SmartBlockEntityRenderer<Redsto
     }
 
     @Override
-    protected void renderSafe(final RedstoneAccumulatorBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
-        final SuperByteBuffer render = CachedBuffers.partial(SimPartialModels.REDSTONE_ACCUMULATOR_DIODE, be.getBlockState())
+    protected void renderSafe(final RedstoneAccumulatorBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
+        final SuperByteBuffer render = CreateCachedBuffers.partial(SimPartialModels.REDSTONE_ACCUMULATOR_DIODE, be.getBlockState())
                 .color(255, 255, 255, this.getLitAmount(be, partialTicks));
 
         final Direction facing = be.getBlockState().getValue(RedstoneAccumulatorBlock.FACING);

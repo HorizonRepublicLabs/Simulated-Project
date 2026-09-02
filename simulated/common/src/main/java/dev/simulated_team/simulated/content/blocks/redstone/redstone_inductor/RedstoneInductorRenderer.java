@@ -1,15 +1,16 @@
 package dev.simulated_team.simulated.content.blocks.redstone.redstone_inductor;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.ColoredOverlayBlockEntityRenderer;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import dev.simulated_team.simulated.util.SimColors;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -21,7 +22,7 @@ public class RedstoneInductorRenderer extends ColoredOverlayBlockEntityRenderer<
     }
 
     @Override
-    protected void renderSafe(final RedstoneInductorBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final RedstoneInductorBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         if (VisualizationManager.supportsVisualization(be.getLevel())) {
             return;
         }
@@ -30,7 +31,7 @@ public class RedstoneInductorRenderer extends ColoredOverlayBlockEntityRenderer<
         final Direction facing = be.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
         render.translate(0.5, 0, 0.5);
         render.rotateYDegrees(AngleHelper.horizontalAngle(facing)).pushPose();
-        render.renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+        render.renderInto(ms, buffer.getBuffer(CreateRenderTypes.cutoutMovingBlock()));
     }
 
     @Override
@@ -41,6 +42,6 @@ public class RedstoneInductorRenderer extends ColoredOverlayBlockEntityRenderer<
 
     @Override
     protected SuperByteBuffer getOverlayBuffer(final RedstoneInductorBlockEntity te) {
-        return CachedBuffers.partial(SimPartialModels.REDSTONE_INDUCTOR_INDICATOR, te.getBlockState());
+        return CreateCachedBuffers.partial(SimPartialModels.REDSTONE_INDUCTOR_INDICATOR, te.getBlockState());
     }
 }

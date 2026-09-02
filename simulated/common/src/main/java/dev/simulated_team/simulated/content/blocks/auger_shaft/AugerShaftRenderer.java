@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.auger_shaft;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -7,10 +8,10 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.simulated_team.simulated.index.SimPartialModels;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +23,7 @@ public class AugerShaftRenderer extends KineticBlockEntityRenderer<AugerShaftBlo
     }
 
     @Override
-    protected void renderSafe(final AugerShaftBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer,
+    protected void renderSafe(final AugerShaftBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer,
                               final int light, final int overlay) {
         final BlockState state = this.getRenderedBlockState(be);
 
@@ -33,10 +34,10 @@ public class AugerShaftRenderer extends KineticBlockEntityRenderer<AugerShaftBlo
 
         if (be.getBlockState().getBlock() instanceof AugerCogBlock) {
             final Direction facing = Direction.get(Direction.AxisDirection.POSITIVE, state.getValue(AugerShaftBlock.AXIS));
-            final VertexConsumer solid = buffer.getBuffer(RenderType.solid());
+            final VertexConsumer solid = buffer.getBuffer(CreateRenderTypes.solidMovingBlock());
 
             for (int i = 0; i < 2; i++) {
-                final SuperByteBuffer redstone = CachedBuffers.partialFacing(be.flowDirection == (i == 1 ? facing.getOpposite() : facing) && be.getSpeed() != 0 ? SimPartialModels.AUGER_REDSTONE_ON : SimPartialModels.AUGER_REDSTONE_OFF, state, facing);
+                final SuperByteBuffer redstone = CreateCachedBuffers.partialFacing(be.flowDirection == (i == 1 ? facing.getOpposite() : facing) && be.getSpeed() != 0 ? SimPartialModels.AUGER_REDSTONE_ON : SimPartialModels.AUGER_REDSTONE_OFF, state, facing);
 
                 TransformStack.of(redstone.getTransforms())
                         .center()
@@ -56,7 +57,7 @@ public class AugerShaftRenderer extends KineticBlockEntityRenderer<AugerShaftBlo
             return super.getRotatedModel(be, state);
         }
         final Direction facing = Direction.get(Direction.AxisDirection.POSITIVE, state.getValue(AugerShaftBlock.AXIS));
-        return CachedBuffers.partialDirectional(
+        return CreateCachedBuffers.partialDirectional(
                 SimPartialModels.AUGER_COG, state,
                 facing, () -> {
                     final PoseStack poseStack = new PoseStack();

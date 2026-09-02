@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.rope.rope_connector;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
@@ -8,10 +9,10 @@ import dev.simulated_team.simulated.content.blocks.rope.RopeStrandHolderBehavior
 import dev.simulated_team.simulated.content.blocks.rope.strand.client.RopeStrandRenderer;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +35,7 @@ public class RopeConnectorRenderer extends SafeBlockEntityRenderer<RopeConnector
     }
 
     @Override
-    protected void renderSafe(final RopeConnectorBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final RopeConnectorBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         RopeStrandRenderer.render(be, be.getRopeHolder(), partialTicks, ms, buffer);
 
         final RopeStrandHolderBehavior holder = be.getRopeHolder();
@@ -42,7 +43,7 @@ public class RopeConnectorRenderer extends SafeBlockEntityRenderer<RopeConnector
         if ((!holder.isAttached()) && (!be.isVirtual() || !be.getRopeHolder().renderAttached)) {
             return;
         }
-        final SuperByteBuffer knot = CachedBuffers.partialFacing(SimPartialModels.ROPE_CONNECTOR_KNOT, AllBlocks.ROPE.getDefaultState(), Direction.NORTH);
+        final SuperByteBuffer knot = CreateCachedBuffers.partialFacing(SimPartialModels.ROPE_CONNECTOR_KNOT, AllBlocks.ROPE.getDefaultState(), Direction.NORTH);
 
         final BlockPos blockPos = be.getBlockPos();
         final BlockState state = be.getBlockState();
@@ -64,6 +65,6 @@ public class RopeConnectorRenderer extends SafeBlockEntityRenderer<RopeConnector
         knotBuffer.rotateCentered((float) ((zRotLast) / 180 * Math.PI), Direction.SOUTH);
 
         knotBuffer.rotateCentered((float) (Math.PI / 2.0), Direction.UP);
-        knotBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+        knotBuffer.renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
     }
 }

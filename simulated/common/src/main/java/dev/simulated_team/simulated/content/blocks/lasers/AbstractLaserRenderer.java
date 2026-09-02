@@ -11,7 +11,7 @@ import dev.ryanhcode.sable.util.SableDistUtil;
 import dev.simulated_team.simulated.index.SimRenderTypes;
 import net.createmod.catnip.api.data.Couple;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -29,7 +29,7 @@ public abstract class AbstractLaserRenderer<T extends AbstractLaserBlockEntity> 
     }
 
     @Override
-    protected void renderSafe(final T blockEntity, final float partialTicks, final PoseStack pose, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final T blockEntity, final float partialTicks, final PoseStack pose, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         super.renderSafe(blockEntity, partialTicks, pose, buffer, light, overlay);
 
         final LaserBehaviour laser = blockEntity.getAllBehaviours().stream().filter(behaviour -> behaviour instanceof LaserBehaviour).map(behaviour -> (LaserBehaviour) behaviour).findFirst().orElse(null);
@@ -94,7 +94,7 @@ public abstract class AbstractLaserRenderer<T extends AbstractLaserBlockEntity> 
         pose.translate(-0.5, -0.5, 0.0);
     }
 
-    protected void createLaser(final Vector4f color, final PoseStack pose, final MultiBufferSource buffer, final float maxLength, final float length) {
+    protected void createLaser(final Vector4f color, final PoseStack pose, final SuperRenderTypeBuffer buffer, final float maxLength, final float length) {
         final VertexConsumer builder;
         if (buffer instanceof final SuperRenderTypeBuffer superRenderTypeBuffer) {
             builder = superRenderTypeBuffer.getLateBuffer(SimRenderTypes.laser());
@@ -117,11 +117,11 @@ public abstract class AbstractLaserRenderer<T extends AbstractLaserBlockEntity> 
         for (int i = 0; i < 4; i++) {
             final Matrix4f matrix = pose.last().pose();
 
-            builder.addVertex(matrix, 0, 0f, 0).setColor(red, green, blue, alpha).setUv(0, endU).setLight(LightTexture.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
-            builder.addVertex(matrix, 1, 0f, 0).setColor(red, green, blue, alpha).setUv(0, endU).setLight(LightTexture.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
+            builder.addVertex(matrix, 0, 0f, 0).setColor(red, green, blue, alpha).setUv(0, endU).setLight(LightCoordsUtil.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
+            builder.addVertex(matrix, 1, 0f, 0).setColor(red, green, blue, alpha).setUv(0, endU).setLight(LightCoordsUtil.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
             // offset makes the end of the laser spread out, helping reduce z-fighting
-            builder.addVertex(matrix, 1 + offset, -offset, length + 0.5f).setColor(red, green, blue, endAlpha).setUv(endU, endU).setLight(LightTexture.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
-            builder.addVertex(matrix, -offset, -offset, length + 0.5f).setColor(red, green, blue, endAlpha).setUv(endU, endU).setLight(LightTexture.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
+            builder.addVertex(matrix, 1 + offset, -offset, length + 0.5f).setColor(red, green, blue, endAlpha).setUv(endU, endU).setLight(LightCoordsUtil.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
+            builder.addVertex(matrix, -offset, -offset, length + 0.5f).setColor(red, green, blue, endAlpha).setUv(endU, endU).setLight(LightCoordsUtil.FULL_BRIGHT).setOverlay(OverlayTexture.NO_OVERLAY).setNormal(0.0f, 1.0f, 0.0f);
 
             pose.translate(0.5, 0.5, 0.5);
             pose.mulPose(rotationQuat);

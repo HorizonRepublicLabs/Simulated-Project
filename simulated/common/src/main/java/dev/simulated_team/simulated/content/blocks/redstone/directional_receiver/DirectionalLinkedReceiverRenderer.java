@@ -12,7 +12,7 @@ public class DirectionalLinkedReceiverRenderer extends SmartBlockEntityRenderer<
     }
 
     @Override
-    protected void renderSafe(final DirectionalLinkedReceiverBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource bufferSource, final int light, final int overlay) {
+    protected void renderSafe(final DirectionalLinkedReceiverBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer bufferSource, final int light, final int overlay) {
         super.renderSafe(be, partialTicks, ms, bufferSource, light, overlay);
     }
 }

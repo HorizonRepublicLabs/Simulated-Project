@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.redstone.modulating_receiver;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
@@ -7,10 +8,10 @@ import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import net.createmod.catnip.api.data.Iterate;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -27,7 +28,7 @@ public class ModulatingLinkedReceiverRenderer extends SmartBlockEntityRenderer<M
     }
 
     @Override
-    protected void renderSafe(final ModulatingLinkedReceiverBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource bufferSource, final int light, final int overlay) {
+    protected void renderSafe(final ModulatingLinkedReceiverBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer bufferSource, final int light, final int overlay) {
         super.renderSafe(be, partialTicks, ms, bufferSource, light, overlay);
 
         if (VisualizationManager.supportsVisualization(be.getLevel())) {
@@ -44,7 +45,7 @@ public class ModulatingLinkedReceiverRenderer extends SmartBlockEntityRenderer<M
         final float maxPos = 5.5f * ((be.maxRange - 1) * (SMOOTHING + MAX_DISTANCE - 1)) / ((MAX_DISTANCE - 1) * (SMOOTHING + be.maxRange - 1));
 
         for (final boolean bottom : Iterate.trueAndFalse) {
-            final SuperByteBuffer superBuffer = CachedBuffers.partial(SimPartialModels.MODULATING_RECEIVER_PLATE, be.getBlockState());
+            final SuperByteBuffer superBuffer = CreateCachedBuffers.partial(SimPartialModels.MODULATING_RECEIVER_PLATE, be.getBlockState());
 
             if (bottom) {
                 superBuffer.translate(pixelNormal.scale(minPos));
@@ -59,7 +60,7 @@ public class ModulatingLinkedReceiverRenderer extends SmartBlockEntityRenderer<M
             superBuffer.rotateCentered(AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)), Direction.EAST);
 
             superBuffer.light(light);
-            superBuffer.renderInto(ms, bufferSource.getBuffer(RenderType.solid()));
+            superBuffer.renderInto(ms, bufferSource.getBuffer(CreateRenderTypes.solidMovingBlock()));
         }
     }
 }

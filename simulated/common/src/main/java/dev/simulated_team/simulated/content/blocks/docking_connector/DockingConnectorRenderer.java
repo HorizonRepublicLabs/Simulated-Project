@@ -1,15 +1,16 @@
 package dev.simulated_team.simulated.content.blocks.docking_connector;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -24,19 +25,19 @@ public class DockingConnectorRenderer extends SafeBlockEntityRenderer<DockingCon
     }
 
     @Override
-    protected void renderSafe(final DockingConnectorBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource bufferSource, final int light, final int overlay) {
-        final VertexConsumer vb = bufferSource.getBuffer(RenderType.cutout());
+    protected void renderSafe(final DockingConnectorBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer bufferSource, final int light, final int overlay) {
+        final VertexConsumer vb = bufferSource.getBuffer(CreateRenderTypes.cutoutMovingBlock());
         final Direction direction = be.getBlockState()
                 .getValue(BlockStateProperties.FACING);
         final BlockState blockState = be.getBlockState();
         final float extension = be.getExtensionDistance(partialTicks);
         final float rotation = be.getFeetRotation(partialTicks) * 90;
 
-        final SuperByteBuffer piston1 = CachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_MAIN_PISTON_BOTTOM, blockState);
-        final SuperByteBuffer piston2 = CachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_MAIN_PISTON_TOP, blockState);
-        final SuperByteBuffer sidePiston1 = CachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_SIDE_PISTON_BOTTOM, blockState);
-        final SuperByteBuffer sidePiston2 = CachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_SIDE_PISTON_TOP, blockState);
-        final SuperByteBuffer foot = CachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_FOOT, blockState);
+        final SuperByteBuffer piston1 = CreateCachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_MAIN_PISTON_BOTTOM, blockState);
+        final SuperByteBuffer piston2 = CreateCachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_MAIN_PISTON_TOP, blockState);
+        final SuperByteBuffer sidePiston1 = CreateCachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_SIDE_PISTON_BOTTOM, blockState);
+        final SuperByteBuffer sidePiston2 = CreateCachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_SIDE_PISTON_TOP, blockState);
+        final SuperByteBuffer foot = CreateCachedBuffers.partial(SimPartialModels.DOCKING_CONNECTOR_FOOT, blockState);
         ms.pushPose();
         rotateToFaceCentered(ms, direction);
         piston1.translate(0, extension * 0.5, 0);

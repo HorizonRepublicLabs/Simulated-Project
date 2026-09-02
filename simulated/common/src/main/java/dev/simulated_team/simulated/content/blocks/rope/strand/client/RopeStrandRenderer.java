@@ -1,5 +1,8 @@
 package dev.simulated_team.simulated.content.blocks.rope.strand.client;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
@@ -14,11 +17,11 @@ import dev.simulated_team.simulated.content.blocks.rope.RopeStrandHolderBehavior
 import dev.simulated_team.simulated.index.SimPartialModels;
 import dev.simulated_team.simulated.util.SimMathUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -34,16 +37,16 @@ import java.util.Objects;
 public class RopeStrandRenderer {
     public record RopeRenderPoint(Quaternionf orientation, Vector3d position) { }
 
-    public static void render(final SmartBlockEntity be, final RopeStrandHolderBehavior ropeHolder, final float partialTick, final PoseStack ps, final MultiBufferSource buffer) {
+    public static void render(final SmartBlockEntity be, final RopeStrandHolderBehavior ropeHolder, final float partialTick, final PoseStack ps, final SuperRenderTypeBuffer buffer) {
 
         final Level level = be.getLevel();
         assert level != null;
 
         final BlockPos ownerPos = be.getBlockPos();
 
-        final SuperByteBuffer middle = CachedBuffers.partialFacing(SimPartialModels.ROPE, AllBlocks.ROPE.getDefaultState(), Direction.NORTH);
-        final SuperByteBuffer knot = CachedBuffers.partialFacing(SimPartialModels.ROPE_KNOT, AllBlocks.ROPE.getDefaultState(), Direction.NORTH);
-        final VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+        final SuperByteBuffer middle = CreateCachedBuffers.partialFacing(SimPartialModels.ROPE, AllBlocks.ROPE.getDefaultState(), Direction.NORTH);
+        final SuperByteBuffer knot = CreateCachedBuffers.partialFacing(SimPartialModels.ROPE_KNOT, AllBlocks.ROPE.getDefaultState(), Direction.NORTH);
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.solidMovingBlock());
 
         final SubLevel subLevel = Sable.HELPER.getContaining(be);
         Pose3dc containingPose = null;
@@ -89,7 +92,7 @@ public class RopeStrandRenderer {
                 ps.mulPose(orientation);
                 ps.translate(-0.5, -0.5, -0.5);
                 final BlockPos pos = BlockPos.containing(globalRenderPos.x, globalRenderPos.y, globalRenderPos.z);
-                final int worldLight = LevelRenderer.getLightColor(level, pos);
+                final int worldLight = BlockEntityRenderHelper.lightColorAt(level, pos);
 
                 if (i > 1) {
                     knot.light(worldLight)
@@ -119,7 +122,7 @@ public class RopeStrandRenderer {
         }
     }
 
-    private static void renderOutline(final PoseStack ps, final MultiBufferSource buffer, final float rad, final ObjectArrayList<RopeRenderPoint> ropeRenderPoints, final BlockPos ownerPos) {
+    private static void renderOutline(final PoseStack ps, final SuperRenderTypeBuffer buffer, final float rad, final ObjectArrayList<RopeRenderPoint> ropeRenderPoints, final BlockPos ownerPos) {
         final Vector3d previousCorner = new Vector3d();
         final Vector3d currentCorner = new Vector3d();
         final Vector3d cornerDiff = new Vector3d();
@@ -131,7 +134,7 @@ public class RopeStrandRenderer {
                 new Vector3d(rad, 0, -rad),
         };
 
-        final VertexConsumer linesVB = buffer.getBuffer(RenderType.lines());
+        final VertexConsumer linesVB = buffer.getBuffer(RenderTypes.lines());
         final Matrix4f pose = ps.last().pose();
 
         for (int i = 0; i < ropeRenderPoints.size() + 1; i++) {

@@ -66,7 +66,7 @@ public class SpringRenderer extends SmartBlockEntityRenderer<SpringBlockEntity> 
     }
 
     @Override
-    protected void renderSafe(final SpringBlockEntity be, final float partialTicks, final PoseStack ps, final MultiBufferSource bufferSource, final int light, final int overlay) {
+    protected void renderSafe(final SpringBlockEntity be, final float partialTicks, final PoseStack ps, final SuperRenderTypeBuffer bufferSource, final int light, final int overlay) {
         super.renderSafe(be, partialTicks, ps, bufferSource, light, overlay);
         if (!be.isController()) {
             return;

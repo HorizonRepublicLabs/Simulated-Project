@@ -1,15 +1,16 @@
 package dev.simulated_team.simulated.content.blocks.swivel_bearing;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.simulated_team.simulated.index.SimPartialModels;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,7 +22,7 @@ public class SwivelBearingRenderer extends KineticBlockEntityRenderer<SwivelBear
     }
 
     @Override
-    protected void renderSafe(final SwivelBearingBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
+    protected void renderSafe(final SwivelBearingBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
         if (VisualizationManager.supportsVisualization(be.getLevel())) {
             return;
         }
@@ -32,21 +33,21 @@ public class SwivelBearingRenderer extends KineticBlockEntityRenderer<SwivelBear
         final Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
 
         final SuperByteBuffer cogwheel = kineticRotationTransform(
-                CachedBuffers.partialFacingVertical(SimPartialModels.SWIVEL_BEARING_COG, state, state.getValue(SwivelBearingBlock.FACING).getOpposite()),
+                CreateCachedBuffers.partialFacingVertical(SimPartialModels.SWIVEL_BEARING_COG, state, state.getValue(SwivelBearingBlock.FACING).getOpposite()),
                 be.getExtraKinetics(),
                 axis,
                 getAngleForBe(be.getExtraKinetics(), be.getBlockPos(), axis),
                 light);
 
-        final VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.solidMovingBlock());
         cogwheel.renderInto(ms, vb);
         if (!be.isAssembled()) {
-            renderRotatingBuffer(be, CachedBuffers.partialFacing(SimPartialModels.SHAFT_SIXTEENTH, state, state.getValue(SwivelBearingBlock.FACING)), ms, vb, light);
+            renderRotatingBuffer(be, CreateCachedBuffers.partialFacing(SimPartialModels.SHAFT_SIXTEENTH, state, state.getValue(SwivelBearingBlock.FACING)), ms, vb, light);
         }
     }
 
     @Override
     protected SuperByteBuffer getRotatedModel(final SwivelBearingBlockEntity be, final BlockState state) {
-        return CachedBuffers.partialFacing(SimPartialModels.SHAFT_SIXTEENTH, state, state.getValue(SwivelBearingBlock.FACING).getOpposite());
+        return CreateCachedBuffers.partialFacing(SimPartialModels.SHAFT_SIXTEENTH, state, state.getValue(SwivelBearingBlock.FACING).getOpposite());
     }
 }

@@ -1,15 +1,16 @@
 package dev.simulated_team.simulated.content.blocks.velocity_sensor;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import dev.simulated_team.simulated.content.blocks.util.AbstractDirectionalAxisBlock;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import dev.simulated_team.simulated.util.SimColors;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,12 +20,12 @@ public class VelocitySensorRenderer extends SafeBlockEntityRenderer<VelocitySens
     }
 
     @Override
-    protected void renderSafe(final VelocitySensorBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer, final int light, final int overlay) {
-        final VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
+    protected void renderSafe(final VelocitySensorBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer, final int light, final int overlay) {
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.cutoutMovingBlock());
 
         final BlockState state  = be.getBlockState();
-        final SuperByteBuffer diode = CachedBuffers.partial(SimPartialModels.VELOCITY_SENSOR_DIODE, state);
-        final SuperByteBuffer fan = CachedBuffers.partial(SimPartialModels.VELOCITY_SENSOR_FAN, state);
+        final SuperByteBuffer diode = CreateCachedBuffers.partial(SimPartialModels.VELOCITY_SENSOR_DIODE, state);
+        final SuperByteBuffer fan = CreateCachedBuffers.partial(SimPartialModels.VELOCITY_SENSOR_FAN, state);
 
         boolean front = (state.getValue(VelocitySensorBlock.POWERED) == 1);
         // north + east always opposite

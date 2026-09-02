@@ -28,7 +28,7 @@ public class VoidAnchorRenderer implements BlockEntityRenderer<VoidAnchorBlockEn
     }
 
     @Override
-    public void render(final VoidAnchorBlockEntity blockEntity, final float f, final PoseStack poseStack, final MultiBufferSource multiBufferSource, final int i, final int j) {
+    public void render(final VoidAnchorBlockEntity blockEntity, final float f, final PoseStack poseStack, final SuperRenderTypeBuffer multiBufferSource, final int i, final int j) {
         if (EndSeaShadowRenderer.renderingShadowMap())
             return;
 

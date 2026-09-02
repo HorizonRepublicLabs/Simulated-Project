@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.portable_engine;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -8,11 +9,11 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringR
 import dev.simulated_team.simulated.index.SimPartialModels;
 import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -32,14 +33,14 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
     }
 
     @Override
-    protected void renderSafe(final PortableEngineBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer,
+    protected void renderSafe(final PortableEngineBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer,
                               final int light, final int overlay) {
         final BlockState state = this.getRenderedBlockState(be);
         final RenderType type = this.getRenderType(be, state);
         renderRotatingBuffer(be, this.getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
 
         FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
-        final VertexConsumer cutout = buffer.getBuffer(RenderType.cutout());
+        final VertexConsumer cutout = buffer.getBuffer(CreateRenderTypes.cutoutMovingBlock());
 
         final Direction direction = be.getBlockState()
                 .getValue(BlockStateProperties.HORIZONTAL_FACING);
@@ -55,15 +56,15 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
 
         final float hatchOpenProgress = 1.0f - getHatchOpenProgress(be, partialTicks);
         if (visualStrength > 0) {
-            final VertexConsumer translucent = buffer.getBuffer(RenderType.translucent());
+            final VertexConsumer translucent = buffer.getBuffer(CreateRenderTypes.translucentMovingBlock());
             engineParts = be.isSuperHeated() ? SimPartialModels.ENGINE_PARTS_SUPERHEATED : SimPartialModels.ENGINE_PARTS_HEATED;
 
-            this.renderPipes(be, partialTicks, ms, LightTexture.FULL_BRIGHT, blockState, direction, translucent, (int) (visualStrength * 255), engineParts, true);
+            this.renderPipes(be, partialTicks, ms, LightCoordsUtil.FULL_BRIGHT, blockState, direction, translucent, (int) (visualStrength * 255), engineParts, true);
         }
 
         if (lit) {
-            final VertexConsumer translucent = buffer.getBuffer(RenderType.translucent());
-            this.renderHatch(be, partialTicks, ms, LightTexture.FULL_BRIGHT, blockState, direction, translucent, (int) (hatchOpenProgress * 255), engineParts, lit, true);
+            final VertexConsumer translucent = buffer.getBuffer(CreateRenderTypes.translucentMovingBlock());
+            this.renderHatch(be, partialTicks, ms, LightCoordsUtil.FULL_BRIGHT, blockState, direction, translucent, (int) (hatchOpenProgress * 255), engineParts, lit, true);
         }
     }
 
@@ -75,7 +76,7 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
 
         final float hatchOpenAmount = getHatchOpenProgress(be, partialTicks) * 0.65f;
 
-        final SuperByteBuffer hatchBottom = this.rotateToFacing(CachedBuffers.partial(parts.hatchBottom, blockState), direction);
+        final SuperByteBuffer hatchBottom = this.rotateToFacing(CreateCachedBuffers.partial(parts.hatchBottom, blockState), direction);
         if (lit) hatchBottom.disableDiffuse();
         hatchBottom
                 .translate(0.0f, hatchPivotY, hatchPivotZ)
@@ -85,7 +86,7 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
                 .color(255, 255, 255, alpha)
                 .renderInto(ms, consumer);
 
-        final SuperByteBuffer hatchTop = this.rotateToFacing(CachedBuffers.partial(parts.hatchTop, blockState), direction);
+        final SuperByteBuffer hatchTop = this.rotateToFacing(CreateCachedBuffers.partial(parts.hatchTop, blockState), direction);
         if (lit) hatchTop.disableDiffuse();
         hatchTop
                 .light(light)
@@ -93,7 +94,7 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
                 .renderInto(ms, consumer);
 
         if (renderInner) {
-            final SuperByteBuffer mouth = this.rotateToFacing(CachedBuffers.partial(parts.mouth, blockState), direction.getOpposite());
+            final SuperByteBuffer mouth = this.rotateToFacing(CreateCachedBuffers.partial(parts.mouth, blockState), direction.getOpposite());
             if (lit) mouth.disableDiffuse();
             mouth
                     .light(light)
@@ -122,7 +123,7 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
 
         if (be.isVirtual()) lit = false;
 
-        final SuperByteBuffer pipeRight = this.rotateToFacing(CachedBuffers.partial(parts.pipeRight, blockState), direction);
+        final SuperByteBuffer pipeRight = this.rotateToFacing(CreateCachedBuffers.partial(parts.pipeRight, blockState), direction);
         if (lit) pipeRight.disableDiffuse();
         pipeRight
                 .translate(pipeCenterRight)
@@ -132,7 +133,7 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
                 .color(255, 255, 255, alpha)
                 .renderInto(ms, consumer);
 
-        final SuperByteBuffer outletRight = this.rotateToFacing(CachedBuffers.partial(parts.outletRight, blockState), direction);
+        final SuperByteBuffer outletRight = this.rotateToFacing(CreateCachedBuffers.partial(parts.outletRight, blockState), direction);
         if (lit) outletRight.disableDiffuse();
         outletRight
                 .translate(pipeCenterRight)
@@ -145,7 +146,7 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
                 .color(255, 255, 255, alpha)
                 .renderInto(ms, consumer);
 
-        final SuperByteBuffer pipeLeft = this.rotateToFacing(CachedBuffers.partial(parts.pipeLeft, blockState), direction);
+        final SuperByteBuffer pipeLeft = this.rotateToFacing(CreateCachedBuffers.partial(parts.pipeLeft, blockState), direction);
         if (lit) pipeLeft.disableDiffuse();
         pipeLeft
                 .translate(pipeCenterLeft)
@@ -155,7 +156,7 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
                 .color(255, 255, 255, alpha)
                 .renderInto(ms, consumer);
 
-        final SuperByteBuffer outletLeft = this.rotateToFacing(CachedBuffers.partial(parts.outletLeft, blockState), direction);
+        final SuperByteBuffer outletLeft = this.rotateToFacing(CreateCachedBuffers.partial(parts.outletLeft, blockState), direction);
         if (lit) outletLeft.disableDiffuse();
         outletLeft
                 .translate(pipeCenterLeft)
@@ -171,7 +172,7 @@ public class PortableEngineRenderer extends KineticBlockEntityRenderer<PortableE
 
     @Override
     protected SuperByteBuffer getRotatedModel(final PortableEngineBlockEntity te, final BlockState state) {
-        return CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, te.getBlockState(), te.getBlockState()
+        return CreateCachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, te.getBlockState(), te.getBlockState()
                 .getValue(BlockStateProperties.HORIZONTAL_FACING));
     }
 

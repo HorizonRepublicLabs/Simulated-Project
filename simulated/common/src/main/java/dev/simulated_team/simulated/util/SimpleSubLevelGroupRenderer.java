@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.util;
 
+import net.minecraft.util.LightCoordsUtil;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -85,7 +86,7 @@ public class SimpleSubLevelGroupRenderer {
 
     public static void renderGroup(final ClientLevel level, final Collection<ClientSubLevel> subLevels, final AdvancedFbo fbo, final Matrix4f modelView, final Matrix4f projectionMat, final Vector3d cameraPosition, final Quaternionf orientation, final float partialTicks, final boolean renderPlayers) {
         // Finish anything previously being rendered for safety
-        final MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+        final SuperRenderTypeBuffer.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         bufferSource.endBatch();
 
         if (subLevels.isEmpty()) {
@@ -95,7 +96,7 @@ public class SimpleSubLevelGroupRenderer {
 
         final Minecraft minecraft = Minecraft.getInstance();
         final GameRenderer gameRenderer = minecraft.gameRenderer;
-        final LightTexture lightTexture = gameRenderer.lightTexture();
+        final LightCoordsUtil lightTexture = gameRenderer.lightTexture();
         final VanillaSubLevelBlockEntityRenderer beRenderer = new VanillaSubLevelBlockEntityRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.renderBuffers(), new Long2ObjectOpenHashMap<>());
 
         CAMERA.setup(cameraPosition, null, minecraft.level, orientation, 0f);

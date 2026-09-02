@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
@@ -9,10 +10,10 @@ import dev.simulated_team.simulated.index.SimPartialModels;
 import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.createmod.catnip.api.animation.LerpedFloat;
 import net.createmod.catnip.api.math.AngleHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.minecraft.client.Minecraft;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -59,11 +60,11 @@ public class LinkedTypewriterRenderer extends SmartBlockEntityRenderer<LinkedTyp
     }
 
     @Override
-    protected void renderSafe(final LinkedTypewriterBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer,
+    protected void renderSafe(final LinkedTypewriterBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer,
                               int light, final int overlay) {
         super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-        final VertexConsumer vb = buffer.getBuffer(RenderType.cutout());
+        final VertexConsumer vb = buffer.getBuffer(CreateRenderTypes.cutoutMovingBlock());
         final BlockState blockState = be.getBlockState();
         final Direction facing = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 
@@ -134,9 +135,9 @@ public class LinkedTypewriterRenderer extends SmartBlockEntityRenderer<LinkedTyp
         ms.translate(0.0F, depression, 0.0F);
 
         if (!isSpacebar) {
-            CachedBuffers.partial(SimPartialModels.LINKED_TYPEWRITER_KEY, blockState).light(light).renderInto(ms, vb);
+            CreateCachedBuffers.partial(SimPartialModels.LINKED_TYPEWRITER_KEY, blockState).light(light).renderInto(ms, vb);
         } else {
-            CachedBuffers.partial(SimPartialModels.LINKED_TYPEWRITER_KEY_SPACEBAR, blockState).light(light).renderInto(ms, vb);
+            CreateCachedBuffers.partial(SimPartialModels.LINKED_TYPEWRITER_KEY_SPACEBAR, blockState).light(light).renderInto(ms, vb);
         }
 
         ms.popPose();

@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.directional_gearshift;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -8,10 +9,10 @@ import com.simibubi.create.content.kinetics.transmission.SplitShaftRenderer;
 import dev.simulated_team.simulated.index.SimBlocks;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import net.createmod.catnip.api.client.animation.AnimationTickHolder;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +23,7 @@ public class DirectionalGearshiftRenderer extends SplitShaftRenderer {
     }
 
     @Override
-    protected void renderSafe(final SplitShaftBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource bufferSource,
+    protected void renderSafe(final SplitShaftBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer bufferSource,
                               final int light, final int overlay) {
 
         final BlockState blockState = be.getBlockState();
@@ -51,10 +52,10 @@ public class DirectionalGearshiftRenderer extends SplitShaftRenderer {
         final Direction direction = blockState.getValue(DirectionalGearshiftBlock.FACING);
         final boolean vertical = axis.isVertical() || (direction.getAxis().isVertical() && !blockState.getValue(DirectionalGearshiftBlock.AXIS_ALONG_FIRST_COORDINATE));
 
-        final VertexConsumer consumer = bufferSource.getBuffer(RenderType.solid());
-        final SuperByteBuffer barrel = CachedBuffers.partial(SimPartialModels.DIRECTIONAL_GEARSHIFT_CENTER, blockState);
+        final VertexConsumer consumer = bufferSource.getBuffer(CreateRenderTypes.solidMovingBlock());
+        final SuperByteBuffer barrel = CreateCachedBuffers.partial(SimPartialModels.DIRECTIONAL_GEARSHIFT_CENTER, blockState);
 
-        final SuperByteBuffer barrelShaftA = CachedBuffers.partial(SimPartialModels.DIRECTIONAL_GEARSHIFT_BARREL_SHAFT, blockState);
+        final SuperByteBuffer barrelShaftA = CreateCachedBuffers.partial(SimPartialModels.DIRECTIONAL_GEARSHIFT_BARREL_SHAFT, blockState);
         kineticRotationTransform(barrelShaftA, be, axis, angle, light);
         barrelShaftA.center().rotateToFace(direction).uncenter();
         if(vertical) {
@@ -64,7 +65,7 @@ public class DirectionalGearshiftRenderer extends SplitShaftRenderer {
         barrelShaftA.rotateYCentered(shaftAngle);
         barrelShaftA.light(light).renderInto(ms, consumer);
 
-        final SuperByteBuffer barrelShaftB = CachedBuffers.partial(SimPartialModels.DIRECTIONAL_GEARSHIFT_BARREL_SHAFT, blockState);
+        final SuperByteBuffer barrelShaftB = CreateCachedBuffers.partial(SimPartialModels.DIRECTIONAL_GEARSHIFT_BARREL_SHAFT, blockState);
         kineticRotationTransform(barrelShaftB, be, axis, angle, light);
         barrelShaftB.center().rotateToFace(direction).uncenter();
         if(vertical) {

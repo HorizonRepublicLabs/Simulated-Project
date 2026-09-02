@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.steering_wheel;
 
+import com.simibubi.create.foundation.render.CreateRenderTypes;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
@@ -9,15 +10,15 @@ import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.simulated_team.simulated.index.SimPartialModels;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.createmod.catnip.api.registry.RegisteredObjectsHelper;
-import net.createmod.catnip.api.client.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CreateCachedBuffers;
 import net.createmod.catnip.api.client.render.SuperBufferFactory;
 import net.createmod.catnip.api.client.render.SuperByteBuffer;
 import net.createmod.catnip.api.client.render.SuperByteBufferCache;
 import net.createmod.catnip.api.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.createmod.catnip.api.client.render.SuperRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -41,7 +42,7 @@ public class SteeringWheelRenderer extends KineticBlockEntityRenderer<SteeringWh
     }
 
     @Override
-    protected void renderSafe(final SteeringWheelBlockEntity be, final float partialTicks, final PoseStack ms, final MultiBufferSource buffer,
+    protected void renderSafe(final SteeringWheelBlockEntity be, final float partialTicks, final PoseStack ms, final SuperRenderTypeBuffer buffer,
                               final int light, final int overlay) {
         if (VisualizationManager.supportsVisualization(be.getLevel())) {
             return;
@@ -53,7 +54,7 @@ public class SteeringWheelRenderer extends KineticBlockEntityRenderer<SteeringWh
         if (be.shouldRenderShaft()) {
             final BlockState state = this.getRenderedBlockState(be);
             final RenderType type = this.getRenderType(be, state);
-            renderRotatingBuffer(be, CachedBuffers.partialFacing(
+            renderRotatingBuffer(be, CreateCachedBuffers.partialFacing(
                     AllPartialModels.SHAFT_HALF,
                     be.getBlockState(),
                     floor ? Direction.DOWN : Direction.UP
@@ -72,7 +73,7 @@ public class SteeringWheelRenderer extends KineticBlockEntityRenderer<SteeringWh
 
         model.light(light);
         model.color(Color.WHITE);
-        model.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+        model.renderInto(ms, buffer.getBuffer(CreateRenderTypes.solidMovingBlock()));
     }
 
     private SuperByteBuffer getWheelModel(final SteeringWheelBlockEntity be) {
