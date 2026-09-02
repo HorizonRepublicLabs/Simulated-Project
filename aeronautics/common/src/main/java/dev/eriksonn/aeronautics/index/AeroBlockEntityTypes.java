@@ -36,7 +36,10 @@ public class AeroBlockEntityTypes {
     public static final BlockEntityEntry<SteamVentBlockEntity> STEAM_VENT = REGISTRATE
             .blockEntity("steam_vent", SteamVentBlockEntity::new)
             .validBlocks(AeroBlocks.STEAM_VENT)
-            .renderer(() -> SteamVentRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> SteamVentRenderer::new)
             .register();
 
     public static final BlockEntityEntry<HotAirBurnerBlockEntity> HOT_AIR_BURNER = REGISTRATE
@@ -48,41 +51,59 @@ public class AeroBlockEntityTypes {
             .blockEntity("propeller_bearing", PropellerBearingBlockEntity::new)
             .visual(() -> PropellerBearingVisual::new)
             .validBlocks(AeroBlocks.PROPELLER_BEARING)
-            .renderer(() -> PropellerBearingRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> PropellerBearingRenderer::new)
             .register();
 
     public static final BlockEntityEntry<GyroscopicPropellerBearingBlockEntity> GYROSCOPIC_PROPELLER_BEARING = REGISTRATE
             .blockEntity("gyroscopic_propeller_bearing", GyroscopicPropellerBearingBlockEntity::new)
             .visual(() -> GyroscopicPropellerBearingVisual::new)
             .validBlocks(AeroBlocks.GYROSCOPIC_PROPELLER_BEARING)
-            .renderer(() -> GyroscopicPropellerBearingRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> GyroscopicPropellerBearingRenderer::new)
             .register();
 
     public static final BlockEntityEntry<KineticBlockEntity> ENVELOPE_ENCASED_SHAFT = REGISTRATE
             .blockEntity("envelope_encased_shaft", KineticBlockEntity::new)
             .visual(() -> SingleAxisRotatingVisual::shaft, false)
             .validBlocks(AeroBlocks.ENVELOPE_ENCASED_SHAFTS.toArray())
-            .renderer(() -> ShaftRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> ShaftRenderer::new)
             .register();
 
     public static final BlockEntityEntry<AndesitePropellerBlockEntity> ANDESITE_PROPELLER = REGISTRATE
             .blockEntity("andesite_propeller", AndesitePropellerBlockEntity::new)
             .visual(() -> AndesitePropellerVisual::new, false)
             .validBlocks(AeroBlocks.ANDESITE_PROPELLER)
-            .renderer(() -> AndesitePropellerRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> AndesitePropellerRenderer::new)
             .register();
 
     public static final BlockEntityEntry<WoodenPropellerBlockEntity> WOODEN_PROPELLER = REGISTRATE
             .blockEntity("wooden_propeller", WoodenPropellerBlockEntity::new)
             .visual(() -> WoodenPropellerVisual::new, false)
             .validBlocks(AeroBlocks.WOODEN_PROPELLER)
-            .renderer(() -> WoodenPropellerRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> WoodenPropellerRenderer::new)
             .register();
 
     public static final BlockEntityEntry<SmartPropellerBlockEntity> SMART_PROPELLER = REGISTRATE
             .blockEntity("smart_propeller", SmartPropellerBlockEntity::new)
             .validBlocks(AeroBlocks.SMART_PROPELLER)
-            .renderer(() -> SmartPropellerRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> SmartPropellerRenderer::new)
             .register();
 
     public static final BlockEntityEntry<MountedPotatoCannonBlockEntity> MOUNTED_POTATO_CANNON = REGISTRATE
@@ -90,7 +111,10 @@ public class AeroBlockEntityTypes {
             .visual(() -> MountedPotatoCannonVisual::new)
             .onRegister(SimInventoryService.INSTANCE.registerInventory((be, dir) -> be.getInventory()))
             .validBlocks(AeroBlocks.MOUNTED_POTATO_CANNON)
-            .renderer(() -> MountedPotatoCannonRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> MountedPotatoCannonRenderer::new)
             .register();
 
     public static void init() {

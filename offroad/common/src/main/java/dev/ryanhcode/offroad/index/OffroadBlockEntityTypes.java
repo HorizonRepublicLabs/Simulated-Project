@@ -19,7 +19,10 @@ public class OffroadBlockEntityTypes {
             .blockEntity("wheel_mount", WheelMountBlockEntity::new)
             .onRegister(SimInventoryService.INSTANCE.registerInventory((be, dir) -> be.getInventory()))
             .validBlocks(OffroadBlocks.WHEEL_MOUNT)
-            .renderer(() -> WheelMountRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> WheelMountRenderer::new)
             .register();
 
     public static final BlockEntityEntry<BoreheadBearingBlockEntity> BOREHEAD_BEARING = REGISTRATE
@@ -27,13 +30,19 @@ public class OffroadBlockEntityTypes {
             .visual(() -> BoreheadBearingVisual::new)
             .validBlock(OffroadBlocks.BOREHEAD_BEARING_BLOCK)
             .onRegister(SimInventoryService.INSTANCE.registerInventory((be, dir) -> be.getContraptionWrappedInventory()))
-            .renderer(() -> BoreheadBearingRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> BoreheadBearingRenderer::new)
             .register();
 
     public static final BlockEntityEntry<RockCuttingWheelBlockEntity> ROCKCUTTING_WHEEL_BLOCK_ENTITY = REGISTRATE
             .blockEntity("rockcutting_wheel", RockCuttingWheelBlockEntity::new)
             .validBlock(OffroadBlocks.ROCK_CUTTER_BLOCK)
-            .renderer(() -> RockCuttingWheelRenderer::new)
+            // Unbound: drawing a SuperByteBuffer from these crashes the render frame
+            // with "Missing elements in vertex". Create's own renderers on the same
+            // path are fine, so the fault is ours and is not yet found.
+            // .renderer(() -> RockCuttingWheelRenderer::new)
             .register();
 
     public static void init() {

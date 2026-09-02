@@ -57,11 +57,9 @@ sourceSets.main.resources {
 sourceSets.main.java {
     exclude 'dev/ryanhcode/offroad/content/ponder/**'
     exclude 'dev/ryanhcode/offroad/index/OffroadPonderScenes.java'
-    exclude 'dev/ryanhcode/offroad/neoforge/OffroadNeoForgeClient.java'
 }
 
 tasks.named('compileJava', JavaCompile) {
     exclude 'dev/ryanhcode/offroad/content/ponder/**'
     exclude 'dev/ryanhcode/offroad/index/OffroadPonderScenes.java'
-    exclude 'dev/ryanhcode/offroad/neoforge/OffroadNeoForgeClient.java'
 }

@@ -1,6 +1,7 @@
 package dev.eriksonn.aeronautics.neoforge;
 
 import dev.eriksonn.aeronautics.Aeronautics;
+import dev.eriksonn.aeronautics.index.AeroPartialModels;
 import dev.eriksonn.aeronautics.index.client.AeroClientRegistries;
 import dev.eriksonn.aeronautics.index.client.AeroSituationalMusic;
 import net.neoforged.api.distmarker.Dist;
@@ -17,6 +18,10 @@ import net.neoforged.fml.common.Mod;
 public class AeronauticsNeoForgeClient {
 	public AeronauticsNeoForgeClient(final IEventBus modBus, final ModContainer container) {
 		AeroClientRegistries.init();
+		// Registers the partial models with flywheel. Without it they are first
+		// touched when a visual is built, long after model bake, and flywheel
+		// gets a null model back.
+		AeroPartialModels.init();
 		AeroSituationalMusic.init();
 	}
 }
