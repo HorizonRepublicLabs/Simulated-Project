@@ -14,7 +14,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class SimulatedNeoForgeJEI implements IModPlugin {
 
-    private static final Identifier ID = Simulated.path("jei_plugin");
+    private static final Identifier ID = Simulated.path("jei_plugin/neoforge");
 
     @Override
     public Identifier getPluginUid() {

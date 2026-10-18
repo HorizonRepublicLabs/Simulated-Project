@@ -97,7 +97,7 @@ public class SteeringWheelHandler extends BlockHoldInteraction {
         }
 
         this.setTargetAngle(effectiveAngle);
-        return !BlockHoldInteraction.inInteractionRange(player, Vec3.atCenterOf(this.getInteractionPos()));
+        return !BlockHoldInteraction.inInteractionRange(player, Vec3.atCenterOf(this.getInteractionPos()), 4);
     }
 
     @Override

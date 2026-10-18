@@ -1,9 +1,5 @@
 package dev.eriksonn.aeronautics.neoforge.events;
 
-import com.simibubi.create.compat.jei.ConversionRecipe;
-import com.simibubi.create.compat.jei.category.MysteriousItemConversionCategory;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-import dev.simulated_team.simulated.service.SimPlatformService;
 import dev.eriksonn.aeronautics.Aeronautics;
 import com.simibubi.create.foundation.item.ItemHelper;
 import dev.eriksonn.aeronautics.data.AeroAdvancementTriggers;
@@ -18,12 +14,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -68,24 +60,6 @@ public class AeroNeoForgeCommonEvents {
 			}
 		}
 
-		// todo: move this somewhere more proper
-		private static void jeiCompat() {
-			MysteriousItemConversionCategory.RECIPES.add(
-					ConversionRecipe.create(AeroFluidsNeoForge.LEVITITE_BLEND.getBucket().get().getDefaultInstance(),
-							AeroBlocks.LEVITITE.asItem().getDefaultInstance()));
-			MysteriousItemConversionCategory.RECIPES.add(
-					ConversionRecipe.create(AeroFluidsNeoForge.LEVITITE_BLEND.getBucket().get().getDefaultInstance(),
-							AeroBlocks.PEARLESCENT_LEVITITE.asItem().getDefaultInstance()));
-
-			Identifier recipeId = Aeronautics.path("conversion_music_disc_cloud_skipper");
-			ConversionRecipe recipe = new StandardProcessingRecipe.Builder<>(ConversionRecipe::new, recipeId)
-					.withItemIngredients(ItemHelper.ingredientOf(AeroTags.ItemTags.CONVERTS_TO_CLOUD_SKIPPER))
-					.withSingleItemOutput(AeroItems.MUSIC_DISC_CLOUD_SKIPPER.asStack())
-					.build();
-			MysteriousItemConversionCategory.RECIPES.add(
-					new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, recipeId), recipe));
-		}
-
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		/// GatherDataEvent is abstract in 26.2; listeners attach to a concrete
 		/// subclass. 26.2 fires the datagen event per mod, so the owning mod no longer
@@ -108,10 +82,6 @@ public class AeroNeoForgeCommonEvents {
 		@SubscribeEvent
 		public static void commonSetup(FMLCommonSetupEvent event) {
 			AeroFluidsNeoForge.registerFluidInteractions();
-
-			if (SimPlatformService.INSTANCE.isLoaded("jei")) {
-				jeiCompat();
-			}
 		}
 
 		@SubscribeEvent

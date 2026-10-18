@@ -75,6 +75,7 @@ sourceSets.main.java {
     exclude 'dev/eriksonn/aeronautics/neoforge/events/AeroNeoForgeClientEvents.java'
     exclude 'dev/eriksonn/aeronautics/neoforge/index/AeroParticleTypesNeoForge.java'
     exclude 'dev/eriksonn/aeronautics/neoforge/mixin/BlockRenderDispatcherMixin.java'
+    exclude 'dev/eriksonn/aeronautics/neoforge/compat/**'
 }
 
 /// common exports its whole source directory, so the loader's own compile task
@@ -99,4 +100,5 @@ tasks.named('compileJava', JavaCompile) {
     exclude 'dev/eriksonn/aeronautics/neoforge/events/AeroNeoForgeClientEvents.java'
     exclude 'dev/eriksonn/aeronautics/neoforge/index/AeroParticleTypesNeoForge.java'
     exclude 'dev/eriksonn/aeronautics/neoforge/mixin/BlockRenderDispatcherMixin.java'
+    exclude 'dev/eriksonn/aeronautics/neoforge/compat/**'
 }

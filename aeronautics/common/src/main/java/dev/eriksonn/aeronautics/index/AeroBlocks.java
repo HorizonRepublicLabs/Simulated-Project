@@ -32,7 +32,9 @@ import dev.eriksonn.aeronautics.content.blocks.propeller.small.smart_propeller.S
 import dev.eriksonn.aeronautics.content.blocks.propeller.small.wooden.WoodenPropellerBlock;
 import dev.eriksonn.aeronautics.content.components.Levitating;
 import dev.ryanhcode.sable.index.SableTags;
+import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.index.SimItems;
+import dev.simulated_team.simulated.index.SimTags;
 import dev.simulated_team.simulated.index.sounds.SimLazySoundType;
 import dev.simulated_team.simulated.registrate.SimulatedRegistrate;
 import dev.simulated_team.simulated.registrate.simulated_tab.CreativeTabItemTransforms;
@@ -84,14 +86,22 @@ public class AeroBlocks {
                     AeroSoundEvents.ENVELOPE_HIT::event,
                     () -> SoundEvents.WOOL_FALL)))
             .properties(p -> p.mapColor(DyeColor.WHITE))
-            .recipe((c, p) -> ShapedRecipeBuilder.shaped(ItemHelper.itemLookup(), RecipeCategory.MISC, c.get(), 4)
-                    .pattern("WS")
-                    .pattern("SW")
-                    .define('W', DyeHelper.getWoolOfDye(DyeColor.WHITE))
-                    .define('S', Items.STICK)
-                    .group("aeronautics:envelope")
-                    .unlockedBy("has_ingredient", p.has(net.minecraft.tags.ItemTags.WOOL))
-                    .save(p))
+            .recipe((c, p) -> {
+                ShapedRecipeBuilder.shaped(ItemHelper.itemLookup(), RecipeCategory.MISC, c.get(), 4)
+                        .pattern("WS")
+                        .pattern("SW")
+                        .define('W', DyeHelper.getWoolOfDye(DyeColor.WHITE))
+                        .define('S', Items.STICK)
+                        .group("aeronautics:envelope")
+                        .unlockedBy("has_ingredient", p.has(net.minecraft.tags.ItemTags.WOOL))
+                        .save(p);
+                ShapelessRecipeBuilder.shapeless(ItemHelper.itemLookup(), RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+                        .group("aeronautics:envelope")
+                        .requires(SimTags.Items.dyesTag(DyeColor.WHITE))
+                        .requires(AeroTags.ItemTags.SHAFTLESS_ENVELOPE)
+                        .unlockedBy("has_envelope", p.has(AeroTags.ItemTags.ENVELOPE))
+                        .save(p, ResourceKey.create(Registries.RECIPE, Simulated.path("crafting/" + c.getName() + "_from_other_envelope")));
+            })
             .tag(AeroTags.BlockTags.ENVELOPE)
             .tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_AXE)
             .transform(flammable(30, 60))
@@ -118,14 +128,22 @@ public class AeroBlocks {
                                     AeroSoundEvents.ENVELOPE_HIT::event,
                                     () -> SoundEvents.WOOL_FALL)))
                     .properties(p -> p.mapColor(color))
-                    .recipe((c, p) -> ShapedRecipeBuilder.shaped(ItemHelper.itemLookup(), RecipeCategory.MISC, c.get(), 4)
+                    .recipe((c, p) -> {
+                    ShapedRecipeBuilder.shaped(ItemHelper.itemLookup(), RecipeCategory.MISC, c.get(), 4)
                             .pattern("WS")
                             .pattern("SW")
                             .define('W', DyeHelper.getWoolOfDye(color))
                             .define('S', Items.STICK)
                             .group("aeronautics:envelope")
                             .unlockedBy("has_ingredient", p.has(net.minecraft.tags.ItemTags.WOOL))
-                            .save(p))
+                            .save(p);
+                    ShapelessRecipeBuilder.shapeless(ItemHelper.itemLookup(), RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+                            .group("aeronautics:envelope")
+                            .requires(SimTags.Items.dyesTag(color))
+                            .requires(AeroTags.ItemTags.SHAFTLESS_ENVELOPE)
+                            .unlockedBy("has_envelope", p.has(AeroTags.ItemTags.ENVELOPE))
+                            .save(p, ResourceKey.create(Registries.RECIPE, Simulated.path("crafting/" + c.getName() + "_from_other_envelope")));
+                    })
                     .tag(AeroTags.BlockTags.ENVELOPE)
                     .tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_AXE)
                     .transform(CreativeTabItemTransforms.VisibilityType.SEARCH_ONLY.applyBlock())

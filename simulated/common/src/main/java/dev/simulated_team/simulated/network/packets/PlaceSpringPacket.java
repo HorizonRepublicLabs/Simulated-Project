@@ -18,10 +18,10 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public record PlaceSpringPacket(BlockPos parentPos, BlockPos childPos, Direction parentFacing, Direction childFacing,
@@ -50,9 +50,17 @@ public record PlaceSpringPacket(BlockPos parentPos, BlockPos childPos, Direction
         final BlockPos parentRelative = this.parentPos().relative(this.parentFacing);
         final BlockPos childRelative = this.childPos().relative(this.childFacing);
 
+        if (!player.isWithinBlockInteractionRange(childRelative, 4)) {
+            return;
+        }
+
         final ItemStack spring = player.getItemInHand(this.hand);
         final double distanceSquared = Sable.HELPER.distanceSquaredWithSubLevels(level, Vec3.atCenterOf(parentRelative), Vec3.atCenterOf(childRelative));
         if (!(spring.getItem() instanceof SpringItem) || distanceSquared > (SpringItemHandler.MAX_LENGTH + 1) * (SpringItemHandler.MAX_LENGTH + 1)) {
+            return;
+        }
+
+        if (!level.getBlockState(parentRelative).is(BlockTags.REPLACEABLE) || !level.getBlockState(childRelative).is(BlockTags.REPLACEABLE)) {
             return;
         }
 
@@ -60,8 +68,8 @@ public record PlaceSpringPacket(BlockPos parentPos, BlockPos childPos, Direction
         final SpringBlockEntity partnerSpring = this.addSpring(level, childRelative, parentRelative, this.childFacing(), false, (float) distanceSquared);
 
         if (controllerSpring == null || partnerSpring == null) {
-            level.setBlockAndUpdate(parentRelative, Blocks.AIR.defaultBlockState());
-            level.setBlockAndUpdate(childRelative, Blocks.AIR.defaultBlockState());
+            level.destroyBlock(parentRelative, true, player);
+            level.destroyBlock(childRelative, true, player);
             return;
         }
 

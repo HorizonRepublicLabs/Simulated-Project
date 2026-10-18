@@ -127,6 +127,7 @@ processResources {
             'sable_mod_version_range'            : sable_mod_version_range,
             'create_mod_version'           : create_mod_version,
             'flywheel_mod_version'         : flywheel_mod_version,
+            'jei_min_version'              : jei_min_version,
             'credits'                      : credits,
             'java_version'                 : java_version
     ]
