@@ -1,8 +1,8 @@
 package dev.simulated_team.simulated.neoforge.events;
 
 
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import com.simibubi.create.foundation.transfer.fluids.IFluidHandler;
+import com.simibubi.create.foundation.transfer.items.IItemHandler;
 import dev.simulated_team.simulated.Simulated;
 import dev.simulated_team.simulated.command.SimCommand;
 import dev.simulated_team.simulated.content.end_sea.EndSeaPhysicsData;
@@ -14,7 +14,6 @@ import dev.simulated_team.simulated.index.SimSoundEvents;
 import dev.simulated_team.simulated.index.SimTags;
 import dev.simulated_team.simulated.index.neoforge.NeoForgeSimStats;
 import dev.simulated_team.simulated.multiloader.energy.SingleBattery;
-import dev.simulated_team.simulated.multiloader.energy.SingleBatteryWrapper;
 import dev.simulated_team.simulated.multiloader.inventory.AbstractContainer;
 import dev.simulated_team.simulated.multiloader.inventory.neoforge.ContainerWrapper;
 import dev.simulated_team.simulated.multiloader.tanks.SingleTank;

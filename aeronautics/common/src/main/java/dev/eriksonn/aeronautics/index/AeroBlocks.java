@@ -60,7 +60,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.neoforged.neoforge.common.Tags;
 
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
@@ -174,7 +174,7 @@ public class AeroBlocks {
                 .transform(b -> b.transform(EncasingRegistry.addVariantTo(AllBlocks.SHAFT)))
                 .loot((p, b) -> p.add(b, p.createSingleItemTable(DYED_ENVELOPE_BLOCKS.get(color))
                         .withPool(p.applyExplosionCondition(AllBlocks.SHAFT.get(), LootPool.lootPool()
-                                .setRolls(ConstantValue.exactly(1.0F))
+                                .setRolls(ContextIntProviders.exactly(1))
                                 .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))))))
                 .tag(AeroTags.BlockTags.ENVELOPE)
                 .transform(axeOnly())

@@ -34,9 +34,9 @@ public class SimulatedCommonClientEvents {
     /**
      * Called from loader specific implementation of events. Used to call separate onInput inside of client handlers. Can not be cancelled.
      *
-     * @param button    The button being pressed. Use {@link org.lwjgl.glfw.GLFW#GLFW_KEY_SPACE GLFW} keys to determine what button is being pressed
+     * @param button    The button being pressed. Use {@link com.mojang.blaze3d.platform.InputConstants#KEY_SPACE InputConstants} keys to determine what button is being pressed
      * @param modifiers The modifier key that is being applied to this action.
-     * @param action    The action of this key. Use {@link org.lwjgl.glfw.GLFW#GLFW_RELEASE GLFW} Action keys.
+     * @param action    The action of this key. Use {@link com.mojang.blaze3d.platform.InputConstants#RELEASE InputConstants} Action keys.
      */
     public static void onAfterMouseInput(final int button, final int modifiers, final int action) {
     }
@@ -44,9 +44,9 @@ public class SimulatedCommonClientEvents {
     /**
      * Called from loader specific implementation of events. Used to call separate onInput inside of client handlers. Can be cancelled.
      *
-     * @param input     The button being pressed. Use {@link org.lwjgl.glfw.GLFW#GLFW_KEY_SPACE GLFW} keys to determine what button is being pressed
+     * @param input     The button being pressed. Use {@link com.mojang.blaze3d.platform.InputConstants#KEY_SPACE InputConstants} keys to determine what button is being pressed
      * @param modifiers The modifier key that is being applied to this action.
-     * @param action    The action of this key. Use {@link org.lwjgl.glfw.GLFW#GLFW_RELEASE GLFW} Action keys.
+     * @param action    The action of this key. Use {@link com.mojang.blaze3d.platform.InputConstants#RELEASE InputConstants} Action keys.
      */
     public static Result onBeforeMouseInput(final InteractCallback.Input input, final int modifiers, final int action) {
         final Minecraft mc = Minecraft.getInstance();

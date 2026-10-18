@@ -43,12 +43,6 @@ import static net.minecraft.core.Direction.Axis.Y;
 
 public class HandleBlock extends AbstractDirectionalAxisBlock implements IBE<HandleBlockEntity>, IWrenchable {
 
-    public static final MapCodec<HandleBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            propertiesCodec(),
-            DyeColor.CODEC.fieldOf("color").forGetter(HandleBlock::getColor),
-            StringRepresentable.fromValues(Variant::values).fieldOf("variant").forGetter(HandleBlock::getVariant)
-    ).apply(instance, HandleBlock::new));
-
     private static final HandleShaper SHAPER = HandleShaper.make();
 
     static {
@@ -145,10 +139,6 @@ public class HandleBlock extends AbstractDirectionalAxisBlock implements IBE<Han
         return HandleBlockEntity.class;
     }
 
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
-    }
 
     public @Nullable DyeColor getColor() {
         return this.color;

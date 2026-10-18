@@ -46,7 +46,7 @@ public class NeoForgeSimConfigService implements SimConfigService {
     }
 
     public static void registerCommon() {
-        server = register(SimServer::new, ModConfig.Type.SERVER);
+        server = register(SimServer::new, ModConfig.Type.SYNCED);
     }
 
 
@@ -64,7 +64,7 @@ public class NeoForgeSimConfigService implements SimConfigService {
 
 
     public static void register(final ModLoadingContext context, final ModContainer container) {
-        server = register(SimServer::new, ModConfig.Type.SERVER);
+        server = register(SimServer::new, ModConfig.Type.SYNCED);
 
         for (final Map.Entry<ModConfig.Type, ConfigBase> typeConfigBaseEntry : CONFIGS.entrySet()) {
             container.registerConfig(typeConfigBaseEntry.getKey(), (ModConfigSpec) typeConfigBaseEntry.getValue().specification);

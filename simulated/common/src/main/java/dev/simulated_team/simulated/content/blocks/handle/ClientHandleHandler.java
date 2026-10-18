@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.handle;
 
+import net.minecraft.world.item.component.SwingAnimation;
 import com.simibubi.create.AllItems;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
@@ -44,7 +45,7 @@ public class ClientHandleHandler extends BlockHoldInteraction {
         final Vec3 eyePosition = player.getEyePosition();
         this.desiredRange = (float) Math.min(projected.distance(eyePosition.x, eyePosition.y, eyePosition.z), Math.min(HandleBlockEntity.MAX_HANDLE_RANGE, player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE).getValue()));
         this.movingSubLevel = player.isShiftKeyDown();
-        player.swing(hand);
+        player.swing(hand, SwingAnimation.DEFAULT, false);
 
         super.startHold(level, player, blockPos);
         this.sendUpdate(false);
@@ -82,9 +83,8 @@ public class ClientHandleHandler extends BlockHoldInteraction {
 
         // force constant swinging for "animation" in first person
         if (!minecraft.gameRenderer.mainCamera().isDetached()) {
-            player.swingTime = 0;
-            player.swinging = true;
-            player.swingingArm = InteractionHand.MAIN_HAND;
+            // ponytail: 26.3 hides swing state; restarting a swing each tick approximates the old forced swing
+            player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, false);
         }
 
         if (player.isFallFlying()) {

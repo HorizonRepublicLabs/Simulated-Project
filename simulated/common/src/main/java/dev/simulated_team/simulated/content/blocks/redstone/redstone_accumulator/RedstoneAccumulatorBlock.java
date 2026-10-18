@@ -35,7 +35,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 public class RedstoneAccumulatorBlock extends AbstractDiodeBlock implements IBE<RedstoneAccumulatorBlockEntity>, CommonRedstoneBlock {
-    public static final MapCodec<RedstoneAccumulatorBlock> CODEC = simpleCodec(RedstoneAccumulatorBlock::new);
     public static BooleanProperty POWERING = BooleanProperty.create("powering");
     public static BooleanProperty SIDE_POWERED = BooleanProperty.create("side_powered");
     public static BooleanProperty INVERTED = BlockStateProperties.INVERTED;
@@ -50,10 +49,6 @@ public class RedstoneAccumulatorBlock extends AbstractDiodeBlock implements IBE<
         );
     }
 
-    @Override
-    protected MapCodec<? extends DiodeBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
@@ -114,6 +109,11 @@ public class RedstoneAccumulatorBlock extends AbstractDiodeBlock implements IBE<
         level.playSound(null, blockPos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
 
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected boolean shouldRedstoneWireConnectTo(final BlockState state, final BlockGetter level, final BlockPos pos, @org.jetbrains.annotations.Nullable final Direction direction) {
+        return this.commonConnectRedstone(state, level, pos, direction);
     }
 
     @Override

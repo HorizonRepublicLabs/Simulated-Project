@@ -53,7 +53,7 @@ public class NeoForgeAeroConfigService implements AeroConfig {
 	}
 
 	public static void register(final ModContainer container) {
-		server = register(AeroServer::new, ModConfig.Type.SERVER);
+		server = register(AeroServer::new, ModConfig.Type.SYNCED);
 		client = register(AeroClient::new, ModConfig.Type.CLIENT);
 
 		for (final Map.Entry<ModConfig.Type, ConfigBase> typeConfigBaseEntry : CONFIGS.entrySet()) {

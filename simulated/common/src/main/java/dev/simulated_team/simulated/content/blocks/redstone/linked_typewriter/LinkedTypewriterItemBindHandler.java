@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +103,7 @@ public class LinkedTypewriterItemBindHandler {
             return;
         }
 
-        if (key != GLFW.GLFW_KEY_ESCAPE) {
+        if (key != InputConstants.KEY_ESCAPE) {
             final InteractionHand hand = getHand();
             if (hand != null) {
                 VeilPacketManager.server().sendPacket(new TypewriterSaveKeyToItemPacket(hand, new LinkedTypewriterEntries.KeyboardEntry(frequency.getFirst(), frequency.getSecond(), key, BlockPos.ZERO)));

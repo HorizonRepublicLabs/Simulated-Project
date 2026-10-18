@@ -13,7 +13,7 @@ public class LevititeBlendFluidType extends AeroFluidType {
 	}
 
 	@Override
-	public boolean move(FluidState state, LivingEntity entity, Vec3 movementVector, double gravity) {
+	public boolean move(LivingEntity entity, Vec3 movementVector, double gravity) {
 		// this is effectively the lava movement code
 		final double originalY = entity.getY();
 		final boolean falling = entity.getDeltaMovement().y < 0;

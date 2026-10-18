@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.api.levitite_blend_crystallization;
 
+import net.minecraft.world.item.component.SwingAnimation;
 import dev.eriksonn.aeronautics.network.packets.LevititeCatalystCrystallizationPacket;
 import dev.eriksonn.aeronautics.util.CatalyzerHelper;
 import dev.simulated_team.simulated.util.SimDistUtil;
@@ -17,7 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 import static com.simibubi.create.foundation.utility.RaycastHelper.getTraceTarget;
 
@@ -37,7 +38,7 @@ public class LevititeClientCatalyzerHandler implements InteractCallback {
     @Override
     public Result onUse(final int modifiers, final int action, final KeyMapping rightKey) {
 
-        if (action == GLFW.GLFW_PRESS) {
+        if (action == InputConstants.PRESS) {
             final LocalPlayer player = (LocalPlayer) SimDistUtil.getClientPlayer();
             final Level level = player.level();
 
@@ -51,7 +52,7 @@ public class LevititeClientCatalyzerHandler implements InteractCallback {
             final BlockHitResult ray = level.clip(context);
             if (ray.getType() != HitResult.Type.MISS && level.getFluidState(ray.getBlockPos()).getType() == LevititeBlendHelper.getFluid()) {
                 VeilPacketManager.server().sendPacket(new LevititeCatalystCrystallizationPacket(ray.getBlockPos(), hand));
-                player.swing(hand);
+                player.swing(hand, SwingAnimation.DEFAULT, false);
                 return new Result(true);
             }
         }

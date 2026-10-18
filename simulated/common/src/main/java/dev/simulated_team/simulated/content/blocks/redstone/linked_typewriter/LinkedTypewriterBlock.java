@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter;
 
+import net.minecraft.util.Prediction;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.TagValueOutput;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -55,7 +56,6 @@ import java.util.UUID;
 
 public class LinkedTypewriterBlock extends HorizontalDirectionalBlock implements IBE<LinkedTypewriterBlockEntity>, IWrenchable {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final MapCodec<LinkedTypewriterBlock> CODEC = simpleCodec(LinkedTypewriterBlock::new);
     public static final EnumProperty<Direction> HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public LinkedTypewriterBlock(final Properties properties) {
@@ -63,10 +63,6 @@ public class LinkedTypewriterBlock extends HorizontalDirectionalBlock implements
         this.registerDefaultState(this.defaultBlockState().setValue(POWERED, false));
     }
 
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
@@ -174,7 +170,7 @@ public class LinkedTypewriterBlock extends HorizontalDirectionalBlock implements
         if (world instanceof ServerLevel) {
             if (player != null && player.isCreative()) {
                 Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand()).forEach((itemStack) -> {
-                    player.getInventory().placeItemBackInInventory(itemStack);
+                    player.getInventory().placeItemBackInInventory(itemStack, Prediction.SERVER_ONLY);
                 });
             }
         }

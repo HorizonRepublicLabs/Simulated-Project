@@ -39,16 +39,11 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 public class AltitudeSensorBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<AltitudeSensorBlockEntity>, IWrenchable, CommonRedstoneBlock {
     public static final EnumProperty<FaceType> DIAL = EnumProperty.create("dial", FaceType.class);
-    public static final MapCodec<AltitudeSensorBlock> CODEC = simpleCodec(AltitudeSensorBlock::new);
 
     public AltitudeSensorBlock(final Properties pProperties) {
         super(pProperties);
     }
 
-    @Override
-    protected @NotNull MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Nullable
     @Override
@@ -119,6 +114,11 @@ public class AltitudeSensorBlock extends FaceAttachedHorizontalDirectionalBlock 
         }
 
         return this.getSignal(state, level, pos, direction);
+    }
+
+    @Override
+    protected boolean shouldRedstoneWireConnectTo(final BlockState state, final BlockGetter level, final BlockPos pos, @org.jetbrains.annotations.Nullable final Direction direction) {
+        return this.commonConnectRedstone(state, level, pos, direction);
     }
 
     @Override

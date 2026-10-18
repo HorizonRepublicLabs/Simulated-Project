@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 public class AeroWashingRecipes extends WashingRecipeGen {
-    public AeroWashingRecipes(final PackOutput output, final CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, Aeronautics.MOD_ID);
+    public AeroWashingRecipes() {
+		super(Aeronautics.MOD_ID);
     }
 
     GeneratedRecipe ENVELOPE_WASHING = this.create("envelope_washing", b -> b

@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 public class AeroCrushingRecipes extends CrushingRecipeGen {
-	public AeroCrushingRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-		super(output, registries, Aeronautics.MOD_ID);
+	public AeroCrushingRecipes() {
+		super(Aeronautics.MOD_ID);
 	}
 
 	GeneratedRecipe END_STONE_POWDER = create("end_stone_powder", b -> b

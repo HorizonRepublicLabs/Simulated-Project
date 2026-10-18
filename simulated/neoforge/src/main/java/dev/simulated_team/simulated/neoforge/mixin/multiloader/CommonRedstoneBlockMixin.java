@@ -18,8 +18,5 @@ public interface CommonRedstoneBlockMixin extends CommonRedstoneBlock, IBlockExt
         return this.commonCheckWeakPower(state, level, pos, side);
     }
 
-    @Override
-    default boolean canConnectRedstone(final BlockState state, final BlockGetter level, final BlockPos pos, @Nullable final Direction direction) {
-        return this.commonConnectRedstone(state, level, pos, direction);
-    }
+    // 26.3: wire connection is BlockBehaviour#shouldRedstoneWireConnectTo, overridden in each block.
 }

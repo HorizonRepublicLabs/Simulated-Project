@@ -30,7 +30,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 
 public class DirectionalLinkedReceiverBlock extends WrenchableDirectionalBlock implements IBE<DirectionalLinkedReceiverBlockEntity>, IWrenchable, CommonRedstoneBlock {
-    public static final MapCodec<ModulatingLinkedReceiverBlock> CODEC = simpleCodec(ModulatingLinkedReceiverBlock::new);
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     static {
@@ -52,10 +51,6 @@ public class DirectionalLinkedReceiverBlock extends WrenchableDirectionalBlock i
         this.registerDefaultState(this.defaultBlockState().setValue(POWERED, false));
     }
 
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
@@ -124,6 +119,11 @@ public class DirectionalLinkedReceiverBlock extends WrenchableDirectionalBlock i
                 .getOpposite());
         final BlockState neighbour = level.getBlockState(neighbourPos);
         return !neighbour.canBeReplaced();
+    }
+
+    @Override
+    protected boolean shouldRedstoneWireConnectTo(final BlockState state, final BlockGetter level, final BlockPos pos, @org.jetbrains.annotations.Nullable final Direction direction) {
+        return this.commonConnectRedstone(state, level, pos, direction);
     }
 
     @Override

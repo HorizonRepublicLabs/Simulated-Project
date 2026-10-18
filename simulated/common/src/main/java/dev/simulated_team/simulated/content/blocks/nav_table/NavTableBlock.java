@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.nav_table;
 
+import net.minecraft.util.Prediction;
 import net.minecraft.server.level.ServerLevel;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
@@ -39,16 +40,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class NavTableBlock extends DirectionalBlock implements IBE<NavTableBlockEntity>, IWrenchable, CommonRedstoneBlock, SpecialBlockItemRequirement {
-    public static final MapCodec<NavTableBlock> CODEC = simpleCodec(NavTableBlock::new);
 
     public NavTableBlock(final Properties pProperties) {
         super(pProperties);
     }
 
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> pBuilder) {
@@ -109,7 +105,7 @@ public class NavTableBlock extends DirectionalBlock implements IBE<NavTableBlock
                     heldItem.shrink(1);
                 }
                 if (!extract.isEmpty()) {
-                    player.getInventory().placeItemBackInInventory(extract.copy());
+                    player.getInventory().placeItemBackInInventory(extract.copy(), Prediction.SERVER_ONLY);
                 }
 
                 final ItemStack newSlotItem = slot.getStack();
@@ -165,6 +161,11 @@ public class NavTableBlock extends DirectionalBlock implements IBE<NavTableBlock
     @Override
     public boolean commonCheckWeakPower(final BlockState state, final SignalGetter level, final BlockPos pos, final Direction side) {
         return false;
+    }
+
+    @Override
+    protected boolean shouldRedstoneWireConnectTo(final BlockState state, final BlockGetter level, final BlockPos pos, @org.jetbrains.annotations.Nullable final Direction direction) {
+        return this.commonConnectRedstone(state, level, pos, direction);
     }
 
     @Override

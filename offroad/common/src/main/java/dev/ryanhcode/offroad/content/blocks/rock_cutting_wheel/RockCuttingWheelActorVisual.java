@@ -10,7 +10,7 @@ import dev.ryanhcode.offroad.index.OffroadPartialModels;
 import net.createmod.catnip.api.client.animation.AnimationTickHolder;
 import net.createmod.catnip.api.animation.LerpedFloat;
 import net.minecraft.core.Direction;
-import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class RockCuttingWheelActorVisual extends ActorVisual {
@@ -19,7 +19,7 @@ public class RockCuttingWheelActorVisual extends ActorVisual {
     private final Direction facing;
     private final boolean axisFirst;
 
-    public RockCuttingWheelActorVisual(final VisualizationContext visualizationContext, final BlockAndTintGetter world, final MovementContext context) {
+    public RockCuttingWheelActorVisual(final VisualizationContext visualizationContext, final VirtualRenderWorld world, final MovementContext context) {
         super(visualizationContext, world, context);
 
         this.facing = context.state.getValue(BlockStateProperties.FACING);

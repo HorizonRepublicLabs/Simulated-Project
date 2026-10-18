@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import com.simibubi.create.foundation.transfer.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;

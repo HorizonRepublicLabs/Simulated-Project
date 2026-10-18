@@ -5,13 +5,13 @@ import com.simibubi.create.AllKeys;
 import dev.simulated_team.simulated.Simulated;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.KeyMapping;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public enum SimKeys {
-	ROTATE_MODE("rotate_mode", GLFW.GLFW_KEY_TAB, "Physics Staff Rotate Mode"),
+	ROTATE_MODE("rotate_mode", InputConstants.KEY_TAB, "Physics Staff Rotate Mode"),
 	SCROLL_UP("scroll_up", InputConstants.UNKNOWN.getValue(), "Scroll Up"),
 	SCROLL_DOWN("scroll_down", InputConstants.UNKNOWN.getValue(), "Scroll Down"),
 	;

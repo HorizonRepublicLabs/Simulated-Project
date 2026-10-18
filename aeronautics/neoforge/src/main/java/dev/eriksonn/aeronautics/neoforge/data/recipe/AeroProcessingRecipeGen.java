@@ -1,35 +1,20 @@
 package dev.eriksonn.aeronautics.neoforge.data.recipe;
 
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
+import net.neoforged.neoforge.data.event.DatapackRegistryGatherer;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
+/// 26.3: recipes are a datapack registry, so the generators are bootstrapped
+/// through GatherDataRegistryEntriesEvent instead of running as a DataProvider.
 public class AeroProcessingRecipeGen {
-	protected static List<BaseRecipeProvider> GENERATORS = new ArrayList<>();
-
-	public static DataProvider registerAll(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-		GENERATORS.add(new AeroMixingRecipes(output, lookupProvider));
-		GENERATORS.add(new AeroCrushingRecipes(output, lookupProvider));
-		GENERATORS.add(new AeroMechanicalCraftingRecipes(output, lookupProvider));
-		GENERATORS.add(new AeroWashingRecipes(output, lookupProvider));
-		GENERATORS.add(new AeroDeployingRecipes(output, lookupProvider));
-
-		return new DataProvider() {
-			@Override
-			public CompletableFuture<?> run(CachedOutput cachedOutput) {
-				return CompletableFuture.allOf(GENERATORS.stream().map(gen -> gen.run(cachedOutput)).toArray(CompletableFuture[]::new));
-			}
-
-			@Override
-			public String getName() {
-				return "Aero's Perfect Processing Recipes";
-			}
-		};
+	public static void registerAll(final DatapackRegistryGatherer gatherer) {
+		List.<BaseRecipeProvider>of(
+				new AeroMixingRecipes(),
+				new AeroCrushingRecipes(),
+				new AeroMechanicalCraftingRecipes(),
+				new AeroWashingRecipes(),
+				new AeroDeployingRecipes()
+		).forEach(gen -> gatherer.add(gen.asBootstrap()));
 	}
 }

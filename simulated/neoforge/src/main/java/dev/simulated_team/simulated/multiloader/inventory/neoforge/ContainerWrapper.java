@@ -2,7 +2,7 @@ package dev.simulated_team.simulated.multiloader.inventory.neoforge;
 
 import dev.simulated_team.simulated.multiloader.inventory.AbstractContainer;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import com.simibubi.create.foundation.transfer.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 public class ContainerWrapper<T extends AbstractContainer> implements IItemHandlerModifiable {

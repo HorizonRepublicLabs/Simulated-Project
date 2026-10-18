@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.rope;
 
+import net.minecraft.util.Prediction;
 import net.minecraft.core.UUIDUtil;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
@@ -372,7 +373,7 @@ public class RopeStrandHolderBehavior extends BlockEntityBehaviour {
 
                 if (player != null) {
                     if (!player.hasInfiniteMaterials() || !player.getInventory().contains(stack)) {
-                        player.getInventory().placeItemBackInInventory(stack);
+                        player.getInventory().placeItemBackInInventory(stack, Prediction.SERVER_ONLY);
                     }
                 } else {
                     if (ropeDropPos != null)

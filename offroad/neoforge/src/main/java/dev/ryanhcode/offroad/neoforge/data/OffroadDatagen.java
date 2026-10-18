@@ -27,7 +27,7 @@ public class OffroadDatagen {
     public static void gatherData(final GatherDataEvent.Client event) {
         final DataGenerator generator = event.getGenerator();
         final PackOutput output = generator.getPackOutput();
-        final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getReloadableLookupProvider();
 
         generator.addProvider(true, new OffroadAdvancements(output, lookupProvider));
         event.addProvider(OffroadSoundEvents.REGISTRY.getProvider(output));

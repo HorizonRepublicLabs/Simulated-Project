@@ -1,5 +1,7 @@
 package dev.simulated_team.simulated.content.blocks.docking_connector;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ScheduledTickAccess;
 import com.mojang.serialization.MapCodec;
@@ -26,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class PairedDockingConnectorBlock extends DirectionalBlock {
 
-    public static final MapCodec<PairedDockingConnectorBlock> CODEC = simpleCodec(PairedDockingConnectorBlock::new);
 
     private static final VoxelShape[] SHAPES = {
             box(0.0, -16.0, 0.0, 16.0, 16.0, 16.0),
@@ -89,7 +90,7 @@ public class PairedDockingConnectorBlock extends DirectionalBlock {
     }
 
     @Override
-    public void playerDestroy(final @NotNull Level level, final @NotNull Player player, final @NotNull BlockPos pos, final @NotNull BlockState state, @Nullable final BlockEntity blockEntity, final @NotNull ItemStack tool) {
+    public void playerDestroy(final @NotNull ServerLevel level, final @NotNull ServerPlayer player, final @NotNull BlockPos pos, final @NotNull BlockState state, @Nullable final BlockEntity blockEntity, final @NotNull ItemStack tool) {
         super.playerDestroy(level, player, pos, Blocks.AIR.defaultBlockState(), blockEntity, tool);
     }
 
@@ -125,8 +126,4 @@ public class PairedDockingConnectorBlock extends DirectionalBlock {
         return SimBlocks.DOCKING_CONNECTOR.asStack();
     }
 
-    @Override
-    protected @NotNull MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
-    }
 }

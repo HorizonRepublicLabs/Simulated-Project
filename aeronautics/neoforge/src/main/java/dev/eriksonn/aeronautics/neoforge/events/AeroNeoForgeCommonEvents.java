@@ -22,6 +22,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.data.event.GatherDataRegistryEntriesEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -69,13 +70,17 @@ public class AeroNeoForgeCommonEvents {
 		}
 
 		@SubscribeEvent
+		public static void gatherRegistries(final GatherDataRegistryEntriesEvent event) {
+			AeroProcessingRecipeGen.registerAll(event);
+		}
+
+		@SubscribeEvent
 		public static void gatherData(GatherDataEvent.Client event) {
 			final DataGenerator generator = event.getGenerator();
 			final PackOutput output = generator.getPackOutput();
-			final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+			final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getReloadableLookupProvider();
 
 			generator.addProvider(true, new AeroAdvancements(output, lookupProvider));
-			generator.addProvider(true, AeroProcessingRecipeGen.registerAll(output, lookupProvider));
 			event.addProvider(AeroSoundEvents.REGISTRY.getProvider(output));
 		}
 

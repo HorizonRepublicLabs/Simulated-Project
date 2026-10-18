@@ -237,8 +237,8 @@ public class LaunchedPlungerEntityRenderer extends EntityRenderer<LaunchedPlunge
         if (entity.isPlunged()) {
             stack.rotate(dir.getRotation());
         } else {
-            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(pt, entity.yRotO, entity.getYRot()) - 90.0F));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(pt, entity.xRotO, entity.getXRot())));
+            poseStack.rotate(Axis.YP.rotationDegrees(Mth.lerp(pt, entity.yRotO, entity.getYRot()) - 90.0F));
+            poseStack.rotate(Axis.ZP.rotationDegrees(Mth.lerp(pt, entity.xRotO, entity.getXRot())));
             stack.rotateZDegrees(90f);
         }
         stack.rotateXDegrees(-90);

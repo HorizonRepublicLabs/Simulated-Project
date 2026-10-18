@@ -28,7 +28,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class PhysicsAssemblerBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<PhysicsAssemblerBlockEntity>, IWrenchable, BlockSubLevelAssemblyListener {
-    public static final MapCodec<PhysicsAssemblerBlock> CODEC = simpleCodec(PhysicsAssemblerBlock::new);
 
     public PhysicsAssemblerBlock(final Properties properties) {
         super(properties);
@@ -44,10 +43,6 @@ public class PhysicsAssemblerBlock extends FaceAttachedHorizontalDirectionalBloc
         return !reader.getBlockState(blockpos).getBlockSupportShape(reader, pos).getFaceShape(direction.getOpposite()).isEmpty();
     }
 
-    @Override
-    protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     public Class<PhysicsAssemblerBlockEntity> getBlockEntityClass() {

@@ -42,7 +42,7 @@ public class SimNeoForgeClientEvents {
 
 	@SubscribeEvent
 	public static void keyInput(final InputEvent.Key event) {
-		SimulatedCommonClientEvents.onAfterKeyPress(event.getKey(), event.getScanCode(), event.getAction(), event.getModifiers());
+		SimulatedCommonClientEvents.onAfterKeyPress(event.getKey(), event.getKeycode(), event.getAction(), event.getModifiers());
 	}
 
 	@SubscribeEvent

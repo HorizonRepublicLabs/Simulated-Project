@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 public class AeroMixingRecipes extends MixingRecipeGen {
-	public AeroMixingRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-		super(output, registries, Aeronautics.MOD_ID);
+	public AeroMixingRecipes() {
+		super(Aeronautics.MOD_ID);
 	}
 
 	GeneratedRecipe LEVITITE_BLEND = create("levitite_blend", b -> b

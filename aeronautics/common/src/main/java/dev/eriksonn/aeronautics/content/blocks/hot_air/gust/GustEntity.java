@@ -101,7 +101,7 @@ public class GustEntity extends Entity implements IEntityWithComplexSpawn {
 
     @Override
     public @NotNull PushReaction getPistonPushReaction() {
-        return PushReaction.IGNORE;
+        return PushReaction.IGNORE_ENTITY;
     }
 
     /// 26.2 sealed the no argument makeBoundingBox and passes the position in.

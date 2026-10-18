@@ -13,8 +13,8 @@ import net.neoforged.neoforge.common.Tags;
 import java.util.concurrent.CompletableFuture;
 
 public class AeroMechanicalCraftingRecipes extends MechanicalCraftingRecipeGen {
-	public AeroMechanicalCraftingRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-		super(output, registries, Aeronautics.MOD_ID);
+	public AeroMechanicalCraftingRecipes() {
+		super(Aeronautics.MOD_ID);
 	}
 
 	private final GeneratedRecipe MOUNTED_POTATO_CANNON = this.create(AeroBlocks.MOUNTED_POTATO_CANNON::get)

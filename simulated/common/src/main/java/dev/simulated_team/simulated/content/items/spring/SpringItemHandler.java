@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.items.spring;
 
+import net.minecraft.world.item.component.SwingAnimation;
 import dev.ryanhcode.sable.Sable;
 import dev.simulated_team.simulated.data.SimLang;
 import dev.simulated_team.simulated.index.SimItems;
@@ -25,7 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 public class SpringItemHandler implements InteractCallback {
     public static final double MAX_LENGTH = 9.0;
@@ -58,7 +59,7 @@ public class SpringItemHandler implements InteractCallback {
         final LocalPlayer player = (LocalPlayer) SimDistUtil.getClientPlayer();
         final Level level = player.level();
 
-        if (action == GLFW.GLFW_PRESS) {
+        if (action == InputConstants.PRESS) {
             final InteractionHand hand = this.getHandOrNull(player);
             if (hand == null) {
                 this.reset(true);
@@ -67,7 +68,7 @@ public class SpringItemHandler implements InteractCallback {
 
             if (this.linkPos != null) {
                 if (player.isShiftKeyDown()) {
-                    player.swing(hand);
+                    player.swing(hand, SwingAnimation.DEFAULT, false);
 
                     this.reset(true);
                     return new Result(true);
@@ -96,7 +97,7 @@ public class SpringItemHandler implements InteractCallback {
                     return Result.empty();
                 }
 
-                player.swing(hand);
+                player.swing(hand, SwingAnimation.DEFAULT, false);
                 VeilPacketManager.server().sendPacket(new PlaceSpringPacket(this.linkPos, pos, this.linkDirection, dir, hand));
                 this.reset(false);
                 return new Result(true);

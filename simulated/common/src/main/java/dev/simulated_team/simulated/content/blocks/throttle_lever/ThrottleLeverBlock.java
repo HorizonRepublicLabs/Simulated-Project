@@ -35,7 +35,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 public class ThrottleLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<ThrottleLeverBlockEntity>, IWrenchable, CommonRedstoneBlock {
-    public static MapCodec<ThrottleLeverBlock> CODEC = simpleCodec(ThrottleLeverBlock::new);
     public static BooleanProperty INVERTED = BooleanProperty.create("inverted");
 
     public ThrottleLeverBlock(final Properties builder) {
@@ -62,10 +61,6 @@ public class ThrottleLeverBlock extends FaceAttachedHorizontalDirectionalBlock i
         world.updateNeighborsAt(pos.relative(getConnectedDirection(state).getOpposite()), state.getBlock());
     }
 
-    @Override
-    protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected InteractionResult useWithoutItem(final BlockState state, final Level level, final BlockPos pos, final Player player, final BlockHitResult hitResult) {
@@ -85,6 +80,11 @@ public class ThrottleLeverBlock extends FaceAttachedHorizontalDirectionalBlock i
         }
 
         return InteractionResult.CONSUME;
+    }
+
+    @Override
+    protected boolean shouldRedstoneWireConnectTo(final BlockState state, final BlockGetter level, final BlockPos pos, @org.jetbrains.annotations.Nullable final Direction direction) {
+        return this.commonConnectRedstone(state, level, pos, direction);
     }
 
     @Override

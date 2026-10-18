@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 public class NeoForgeSimItemService implements SimItemService {
 
     public int getBurnTime(final Level level, final ItemStack stack) {
-        return stack.getBurnTime(RecipeType.SMELTING, level.fuelValues());
+        return com.simibubi.create.foundation.utility.FuelHelper.getBurnTime(level, stack);
     }
 
     @Override

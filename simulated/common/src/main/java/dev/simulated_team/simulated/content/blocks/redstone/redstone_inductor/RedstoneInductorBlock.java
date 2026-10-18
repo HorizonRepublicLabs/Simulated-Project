@@ -24,7 +24,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DiodeBlock;
-import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.level.block.RedstoneWireBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -35,7 +35,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Vector3f;
 
 public class RedstoneInductorBlock extends AbstractDiodeBlock implements IBE<RedstoneInductorBlockEntity>, CommonRedstoneBlock {
-    public static final MapCodec<RedstoneInductorBlock> CODEC = simpleCodec(RedstoneInductorBlock::new);
     public static final BooleanProperty INVERTED = BooleanProperty.create("inverted");
 
     public RedstoneInductorBlock(final Properties builder) {
@@ -45,10 +44,6 @@ public class RedstoneInductorBlock extends AbstractDiodeBlock implements IBE<Red
                 .setValue(POWERED, false));
     }
 
-    @Override
-    protected MapCodec<? extends DiodeBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected InteractionResult useItemOn(final ItemStack itemStack, final BlockState blockState, final Level level, final BlockPos blockPos, final Player player, final InteractionHand interactionHand, final BlockHitResult blockHitResult) {
@@ -103,6 +98,11 @@ public class RedstoneInductorBlock extends AbstractDiodeBlock implements IBE<Red
     }
 
     @Override
+    protected boolean shouldRedstoneWireConnectTo(final BlockState state, final BlockGetter level, final BlockPos pos, @org.jetbrains.annotations.Nullable final Direction direction) {
+        return this.commonConnectRedstone(state, level, pos, direction);
+    }
+
+    @Override
     public boolean commonConnectRedstone(final BlockState state, final BlockGetter world, final BlockPos pos, final Direction side) {
         if (side == null) return false;
 
@@ -117,7 +117,7 @@ public class RedstoneInductorBlock extends AbstractDiodeBlock implements IBE<Red
     public int getBackSignal(final Level level, final BlockPos pos, final BlockState state){
         final Direction direction = state.getValue(FACING);
         final BlockPos blockpos = pos.relative(direction);
-            return Math.max(level.getSignal(blockpos, direction), state.is(Blocks.REDSTONE_WIRE) ? state.getValue(RedStoneWireBlock.POWER) : 0);
+            return Math.max(level.getSignal(blockpos, direction), state.is(Blocks.REDSTONE_WIRE) ? state.getValue(RedstoneWireBlock.POWER) : 0);
     }
 
     @Override

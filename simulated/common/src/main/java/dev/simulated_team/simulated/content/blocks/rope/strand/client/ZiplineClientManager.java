@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.rope.strand.client;
 
+import net.minecraft.world.item.component.SwingAnimation;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -34,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -158,7 +159,7 @@ public class ZiplineClientManager implements InteractCallback {
                     continue;
                 }
                 embark(foundStrand);
-                player.swing(InteractionHand.MAIN_HAND);
+                player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, false);
                 return;
             }
         }
@@ -331,7 +332,7 @@ public class ZiplineClientManager implements InteractCallback {
 
     @Override
     public Result onUse(final int modifiers, final int action, final KeyMapping rightKey) {
-        if (action == GLFW.GLFW_RELEASE || hoveringRope == null || ridingRope == hoveringRope)
+        if (action == InputConstants.RELEASE || hoveringRope == null || ridingRope == hoveringRope)
             return Result.empty();
 
         final Minecraft mc = Minecraft.getInstance();
@@ -354,13 +355,13 @@ public class ZiplineClientManager implements InteractCallback {
             }
 
             embark(hoveringRope);
-            mc.player.swing(InteractionHand.MAIN_HAND);
+            mc.player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, false);
             return new Result(true);
         }
 
         if (isDestroyer || (isWrench && mc.player.isShiftKeyDown())) {
             VeilPacketManager.server().sendPacket(new RopeBreakPacket(hoveringRope));
-            mc.player.swing(InteractionHand.MAIN_HAND);
+            mc.player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, false);
             return new Result(true);
         }
 

@@ -30,7 +30,7 @@ public class KeyboardHandlerMixin {
 
         if (SimDistUtil.getClientPlayer() != null && !SimDistUtil.getClientPlayer().isSpectator()) {
             final InteractCallback.Result status = SimulatedCommonClientEvents.onBeforeMouseInput(
-                    InteractCallback.Input.key(keyEvent.key(), keyEvent.scancode()), keyEvent.modifiers(), action);
+                    InteractCallback.Input.key(keyEvent.key(), keyEvent.keycode()), keyEvent.modifiers(), action);
 
             if (status.cancelled()) {
                 ci.cancel();

@@ -51,13 +51,13 @@ if (project.path.endsWith(":common")) {
         compileOnly "net.neoforged:neoforge:$neoforge_version"
         compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
 
-        compileOnly("dev.ryanhcode.sable-companion:sable-companion-common-${project.minecraft_version}:${project.sable_companion_version}")
+        compileOnly("dev.ryanhcode.sable-companion:sable-companion-common-${project.sable_companion_minecraft_version}:${project.sable_companion_version}")
 
         // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
         compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.4.1'
         annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
-        // No 26.2 build of JEI; the compat that used it is excluded.
+        // JEI compat stays staged out: it hangs off the screens that are still excluded.
 
         implementation ("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}") {
             exclude group: "foundry.veil"
@@ -124,6 +124,7 @@ processResources {
             'description'                  : project.description,
             'neoforge_version'             : neoforge_version,
             'neoforge_loader_version_range': neoforge_loader_version_range,
+            'neoforge_version_range'       : neoforge_version_range,
             'sable_mod_version_range'            : sable_mod_version_range,
             'create_mod_version'           : create_mod_version,
             'flywheel_mod_version'         : flywheel_mod_version,

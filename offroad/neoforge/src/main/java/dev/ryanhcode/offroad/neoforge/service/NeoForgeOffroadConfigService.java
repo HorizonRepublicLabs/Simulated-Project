@@ -52,7 +52,7 @@ public class NeoForgeOffroadConfigService implements OffroadConfig {
 	}
 
 	public static void register(final ModContainer container) {
-		server = register(OffroadServer::new, ModConfig.Type.SERVER);
+		server = register(OffroadServer::new, ModConfig.Type.SYNCED);
 		client = register(OffroadClientConfig::new, ModConfig.Type.CLIENT);
 
 		for (final Map.Entry<ModConfig.Type, ConfigBase> typeConfigBaseEntry : CONFIGS.entrySet()) {

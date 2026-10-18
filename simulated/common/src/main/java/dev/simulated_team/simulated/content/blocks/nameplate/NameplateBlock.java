@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.nameplate;
 
+import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.redstone.Orientation;
@@ -59,7 +60,6 @@ import java.util.function.Predicate;
 public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<NameplateBlockEntity>, IWrenchable, BlockSubLevelAssemblyListener {
 
     public static final EnumProperty<Position> POSITION = EnumProperty.create("position", Position.class);
-    public static final MapCodec<NameplateBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(propertiesCodec(), DyeColor.CODEC.fieldOf("DyeColor").forGetter(NameplateBlock::getColor)).apply(instance, NameplateBlock::new));
 
     private static final IPlacementHelper placementHelper = PlacementHelpers.register(new PlacementHelper());
 
@@ -177,15 +177,15 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
 
                     final SignBlockEntity dummySign = new SignBlockEntity(blockPos, Blocks.OAK_SIGN.defaultBlockState());
                     dummySign.setLevel(controller.getLevel());
-                    SignText text = dummySign.getFrontText()
-                            .setMessage(0, Component.literal(controller.getName()))
-                            .setColor(controller.getTextColor())
-                            .setHasGlowingText(controller.glowing);
-                    dummySign.setText(text, true);
+                    SignText text = dummySign.getText(SignTextSlot.FRONT)
+                            .asMutable().setLine(0, Component.literal(controller.getName())).asImmutable()
+                            .withColor(controller.getTextColor())
+                            .withGlowingText(controller.glowing);
+                    dummySign.setText(text, SignTextSlot.FRONT);
                     dummySign.setWaxed(controller.waxed);
 
-                    if (signApplicator.canApplyToSign(text, itemStack, player) && signApplicator.tryApplyToSign(controller.getLevel(), dummySign, true, itemStack, player)) {
-                        text = dummySign.getFrontText();
+                    if (signApplicator.canApplyToSign(text, itemStack, player) && signApplicator.tryApplyToSign(controller.getLevel(), dummySign, SignTextSlot.FRONT, itemStack, player)) {
+                        text = dummySign.getText(SignTextSlot.FRONT);
                         controller.setTextColor(text.getColor(), true);
                         controller.glowing = text.hasGlowingText();
                         controller.waxed = dummySign.isWaxed();
@@ -248,10 +248,6 @@ public class NameplateBlock extends HorizontalDirectionalBlock implements IBE<Na
         return this.color;
     }
 
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     public void afterMove(final ServerLevel serverLevel, final ServerLevel resultingLevel, final BlockState blockState, final BlockPos oldPos, final BlockPos newPos) {

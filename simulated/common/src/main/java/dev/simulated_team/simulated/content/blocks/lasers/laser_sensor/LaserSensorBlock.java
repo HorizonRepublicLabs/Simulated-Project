@@ -71,6 +71,11 @@ public class LaserSensorBlock extends DirectedDirectionalBlock implements IBE<La
     }
 
     @Override
+    protected boolean shouldRedstoneWireConnectTo(final BlockState state, final BlockGetter level, final BlockPos pos, @org.jetbrains.annotations.Nullable final Direction direction) {
+        return this.commonConnectRedstone(state, level, pos, direction);
+    }
+
+    @Override
     public boolean commonConnectRedstone(final BlockState state, final BlockGetter level, final BlockPos pos, @Nullable final Direction direction) {
         if (direction == null)
             return false;

@@ -127,9 +127,9 @@ public class PhysicsStaffItemRenderer extends CustomRenderedItemModelRenderer {
         ms.translate(0, 9 / 16.0, 0);
         for (int i = 0; i < 2; i++) {
             ms.pushPose();
-            ms.mulPose(Axis.YP.rotationDegrees(i * 180));
+            ms.rotate(Axis.YP.rotationDegrees(i * 180));
             ms.translate(-3 / 16.0, 0, 0);
-            ms.mulPose(Axis.ZP.rotationDegrees(openAmount * 20));
+            ms.rotate(Axis.ZP.rotationDegrees(openAmount * 20));
             renderer.render(SimPartialModels.PHYSICS_STAFF_SIGMA.get(), Sheets.cutoutBlockSheet(), light);
             ms.popPose();
         }

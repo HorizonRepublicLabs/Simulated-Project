@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import com.simibubi.create.foundation.transfer.fluids.IFluidHandlerItem;
 
 public class NeoForgeSimFluidService implements SimFluidService {
     public long mbToLoaderUnits(final long mb) {

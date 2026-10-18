@@ -75,6 +75,11 @@ sourceSets.main.java {
     exclude 'dev/simulated_team/simulated/neoforge/service/compat/**'
 }
 
+// 26.3 removed IEnergyStorage; the battery wrapper was never registered as a capability.
+sourceSets.main.java {
+    exclude 'dev/simulated_team/simulated/multiloader/energy/SingleBatteryWrapper.java'
+}
+
 // Reduced 26.2 port: the client render layer is built on GuiGraphics,
 // MultiBufferSource and the pre-render-state entity renderers, all of which
 // 26.2 replaced, and it draws through Sable's sub-level renderer which is not

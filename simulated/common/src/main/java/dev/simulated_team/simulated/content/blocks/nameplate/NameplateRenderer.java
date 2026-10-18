@@ -50,7 +50,7 @@ public class NameplateRenderer extends SafeBlockEntityRenderer<NameplateBlockEnt
         ps.pushPose();
 
         ps.translate(0.5, 0.5, 0.5);
-        ps.mulPose(Axis.YP.rotationDegrees(-facing.toYRot() + 180.0f));
+        ps.rotate(Axis.YP.rotationDegrees(-facing.toYRot() + 180.0f));
         ps.translate(-0.5, -0.5, -0.5);
 
         ps.translate(1.0, 1.0, 1.0);
@@ -66,7 +66,7 @@ public class NameplateRenderer extends SafeBlockEntityRenderer<NameplateBlockEnt
 
         ps.scale(1 / 7f, 1 / 7f, 1 / 7f);
 
-        ps.mulPose(Axis.ZP.rotationDegrees(180.0f));
+        ps.rotate(Axis.ZP.rotationDegrees(180.0f));
 
         final int availableSpace = ((be.getControllerWidth()) * 16 - pixelsLeft * 2) * 7 / pixelsTall + 1;
         final String trimmed = font.plainSubstrByWidth(be.getName(), availableSpace);

@@ -3,7 +3,7 @@ package dev.simulated_team.simulated.multiloader.tanks.neoforge;
 import dev.simulated_team.simulated.multiloader.tanks.CFluidType;
 import dev.simulated_team.simulated.multiloader.tanks.SingleTank;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import com.simibubi.create.foundation.transfer.fluids.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 
 public class SingleTankWrapper extends FluidTank {

@@ -92,7 +92,7 @@ public class NavTableRenderer extends SmartBlockEntityRenderer<NavTableBlockEnti
             rnti.renderInNavTable(heldItem, navBE, navState, partialTicks, ms, buffer, light, overlay);
         } else {
             if (heldItem.is(SimTags.Items.ROTATE_WITH_NAV_ARROW))
-                ms.mulPose(Axis.ZP.rotation(arrowAngle));
+                ms.rotate(Axis.ZP.rotation(arrowAngle));
             itemRenderer.renderStatic(heldItem, ItemDisplayContext.FIXED, light, overlay, ms, buffer, navBE.getLevel(), 0);
         }
         ms.popPose();

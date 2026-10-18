@@ -42,7 +42,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class LaserPointerBlock extends DirectionalBlock implements IBE<LaserPointerBlockEntity>, IWrenchable {
-    public static final MapCodec<LaserPointerBlock> CODEC = simpleCodec(LaserPointerBlock::new);
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
@@ -52,10 +51,6 @@ public class LaserPointerBlock extends DirectionalBlock implements IBE<LaserPoin
         this.registerDefaultState(this.defaultBlockState().setValue(POWERED, false).setValue(INVERTED, false));
     }
 
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {

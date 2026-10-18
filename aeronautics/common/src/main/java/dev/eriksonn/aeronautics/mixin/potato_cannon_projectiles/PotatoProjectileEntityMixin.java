@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.mixin.potato_cannon_projectiles;
 
+import net.minecraft.server.level.ServerLevel;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileEntity;
 import dev.eriksonn.aeronautics.index.AeroAdvancements;
 import dev.eriksonn.aeronautics.mixinterface.PotatoProjectileEntityExtension;

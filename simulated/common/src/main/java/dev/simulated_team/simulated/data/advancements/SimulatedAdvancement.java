@@ -11,6 +11,9 @@ import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.ClientAsset;
+import net.minecraft.core.registries.BuiltInRegistries;
+import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -132,16 +135,17 @@ public class SimulatedAdvancement {
         // 26.2 builds an advancement icon straight from the item, so the icon
         // never needs a stack and never needs bound components.
         final Builder d = this.display;
-        this.builder.display(new ItemStackTemplate(d.iconItem.get().asItem()), Component.translatable(this.titleKey()),
+        this.builder.display(new DisplayInfo(new ItemStackTemplate(d.iconItem.get().asItem()), Component.translatable(this.titleKey()),
                 Component.translatable(this.descriptionKey()).withStyle(s -> s.withColor(SimColors.ADVANCABLE_GOLD)),
-                this.id.equals("root") ? this.background : null, d.type.advancementType, d.type.toast,
-                d.type.announce, d.type.hide);
+                this.id.equals("root") ? Optional.of(new ClientAsset.ResourceTexture(this.background)) : Optional.empty(),
+                d.type.advancementType, d.type.toast, d.type.announce, d.type.hide));
 
         if (this.parent != null)
             this.builder.parent(this.parent.datagenResult);
 
-        this.datagenResult = this.builder.save(t, Identifier.fromNamespaceAndPath(this.modid, this.id)
-                .toString());
+        // 26.3 only saves builders into a registry bootstrap; build the holder and hand it to the provider.
+        this.datagenResult = this.builder.build(Identifier.fromNamespaceAndPath(this.modid, this.id));
+        t.accept(this.datagenResult);
     }
 
     public void provideLang(final BiConsumer<String, String> consumer) {
@@ -221,7 +225,7 @@ public class SimulatedAdvancement {
         }
 
         public Builder whenBlockPlaced(final Block block) {
-            return this.externalTrigger(ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(block));
+            return this.externalTrigger(ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(BuiltInRegistries.BLOCK, block));
         }
 
         public Builder whenIconCollected() {
@@ -230,7 +234,7 @@ public class SimulatedAdvancement {
 
         public Builder whenIconPlaced() {
             if(this.iconItem.get().asItem() instanceof final BlockItem blockItem) {
-                return this.externalTrigger(ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(blockItem.getBlock()));
+                return this.externalTrigger(ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(BuiltInRegistries.BLOCK, blockItem.getBlock()));
             }
             return this.whenIconCollected();
         }

@@ -19,7 +19,7 @@ public class SimDatagen {
     public static void gatherData(final GatherDataEvent event) {
         final DataGenerator generator = event.getGenerator();
         final PackOutput output = generator.getPackOutput();
-        final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getReloadableLookupProvider();
 
         generator.addProvider(event.includeServer(), new SimAdvancements(output, lookupProvider));
         generator.addProvider(event.includeServer(), SimProcessingRecipeGen.registerAll(output, lookupProvider));

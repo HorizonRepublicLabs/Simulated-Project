@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 /**
  * A client interaction that requires holding right click<br>
@@ -94,7 +94,7 @@ public abstract class BlockHoldInteraction implements InteractCallback {
 
     @Override
     public Result onAttack(final int modifiers, final int action, final KeyMapping leftKey) {
-        if (this.isActive() && action != GLFW.GLFW_RELEASE) {
+        if (this.isActive() && action != InputConstants.RELEASE) {
             return new Result(true);
         }
 
@@ -103,7 +103,7 @@ public abstract class BlockHoldInteraction implements InteractCallback {
 
     @Override
     public Result onUse(final int modifiers, final int action, final KeyMapping rightKey) {
-        if (action == GLFW.GLFW_RELEASE && this.isActive()) {
+        if (action == InputConstants.RELEASE && this.isActive()) {
             this.release();
             HoldInteractionManager.stop();
             // sometimes minecraft can view keybinds as active even after a release event

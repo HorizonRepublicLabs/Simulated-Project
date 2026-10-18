@@ -512,7 +512,7 @@ public class SimBlocks {
                     .properties(properties -> properties
                             .noOcclusion()
                             .noLootTable()
-                            .pushReaction(PushReaction.BLOCK)
+                            .pushReaction(PushReaction.IMMOVEABLE)
                             .forceSolidOff())
                     .register();
 
@@ -813,6 +813,10 @@ public class SimBlocks {
     }
 
     public static void register() {
+    }
+
+    /// RadialWrenchMenu is a client screen; dedicated servers must not load it.
+    public static void registerClient() {
         RadialWrenchMenu.registerBlacklistedBlock(SWIVEL_BEARING.getId());
         RadialWrenchMenu.registerBlacklistedBlock(SWIVEL_BEARING_LINK_BLOCK.getId());
         RadialWrenchMenu.registerBlacklistedBlock(PAIRED_DOCKING_CONNECTOR.getId());

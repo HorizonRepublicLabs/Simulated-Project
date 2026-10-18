@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.network.packets;
 
+import net.minecraft.world.item.component.SwingAnimation;
 import dev.eriksonn.aeronautics.Aeronautics;
 import dev.eriksonn.aeronautics.api.levitite_blend_crystallization.CrystalPropagationContext;
 import dev.eriksonn.aeronautics.api.levitite_blend_crystallization.LevititeBlendHelper;
@@ -48,7 +49,7 @@ public record LevititeCatalystCrystallizationPacket(BlockPos pos, InteractionHan
 				item.shrink(1);
 			}
 		}
-		player.swing(this.hand);
+		player.swing(this.hand, SwingAnimation.DEFAULT, false);
 		final CrystalPropagationContext itemContext = item.is(AeroTags.ItemTags.LEVITITE_SOUL_CATALYZER) ?
 				AeroLevititeBlendPropagationContexts.SOUL_CONTEXT.get() :
 				AeroLevititeBlendPropagationContexts.STANDARD_CONTEXT.get();

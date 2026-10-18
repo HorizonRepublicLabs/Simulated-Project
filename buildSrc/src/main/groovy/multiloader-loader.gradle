@@ -24,10 +24,10 @@ dependencies {
     
     // ---
 
-    compileOnly("dev.ryanhcode.sable-companion:sable-companion-common-${project.minecraft_version}:${project.sable_companion_version}")
+    compileOnly("dev.ryanhcode.sable-companion:sable-companion-common-${project.sable_companion_minecraft_version}:${project.sable_companion_version}")
 
-    // No 26.2 build of curios; nothing in this project references it.
-    // No 26.2 build of JEI; the compat that used it is excluded.
+    // Curios (17.0.0-beta.2+26.3 exists) is not referenced anywhere in this project, so it is not a dependency.
+    // JEI compat stays staged out: it hangs off the screens that are still excluded.
 
     api("com.simibubi.create:create-${minecraft_version}:${create_version}") { transitive = false }
     api("net.createmod.ponder:neoforge:${ponder_version}+mc${minecraft_version}")

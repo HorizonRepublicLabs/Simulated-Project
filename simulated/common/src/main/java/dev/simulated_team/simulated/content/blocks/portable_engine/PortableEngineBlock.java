@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.blocks.portable_engine;
 
+import net.minecraft.util.Prediction;
 import net.minecraft.server.level.ServerLevel;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
@@ -155,7 +156,7 @@ public class PortableEngineBlock extends HorizontalKineticBlock implements IBE<P
                 player.setItemInHand(interactionHand, heldItem);
             } else {
                 slot.setStack(ItemStack.EMPTY);
-                player.getInventory().placeItemBackInInventory(currentItemStack);
+                player.getInventory().placeItemBackInInventory(currentItemStack, Prediction.SERVER_ONLY);
                 level.playSound(null, blockPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
                         1f + level.getRandom().nextFloat());
             }

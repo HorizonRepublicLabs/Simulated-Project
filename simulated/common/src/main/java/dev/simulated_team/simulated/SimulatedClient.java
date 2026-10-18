@@ -15,5 +15,6 @@ public class SimulatedClient {
     public static void init() {
         SimPartialModels.init();
         BlockPropertiesTooltip.init();
+        dev.simulated_team.simulated.index.SimBlocks.registerClient();
     }
 }

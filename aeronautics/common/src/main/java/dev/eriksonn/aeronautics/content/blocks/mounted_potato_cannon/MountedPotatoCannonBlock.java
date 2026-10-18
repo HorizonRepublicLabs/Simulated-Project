@@ -1,5 +1,6 @@
 package dev.eriksonn.aeronautics.content.blocks.mounted_potato_cannon;
 
+import net.minecraft.util.Prediction;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.redstone.Orientation;
 import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
@@ -73,7 +74,7 @@ public class MountedPotatoCannonBlock extends DirectionalAxisKineticBlock implem
 			//We're attempting to swap
 			if (slot.getType() != heldItem.getItem() && slot.canInsert(info)) {
 				final ItemStack extracted = slot.getStack().copy();
-				player.getInventory().placeItemBackInInventory(extracted);
+				player.getInventory().placeItemBackInInventory(extracted, Prediction.SERVER_ONLY);
 				slot.setStack(ItemStack.EMPTY);
 
 				if (!level.isClientSide()) {

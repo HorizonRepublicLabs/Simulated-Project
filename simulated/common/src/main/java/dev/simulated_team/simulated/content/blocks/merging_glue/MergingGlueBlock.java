@@ -21,7 +21,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class MergingGlueBlock extends DirectionalBlock implements IBE<MergingGlueBlockEntity> {
-    public static final MapCodec<MergingGlueBlock> CODEC = simpleCodec(MergingGlueBlock::new);
 
     public MergingGlueBlock(final Properties properties) {
         super(properties);
@@ -73,10 +72,6 @@ public class MergingGlueBlock extends DirectionalBlock implements IBE<MergingGlu
         builder.add(FACING);
     }
 
-    @Override
-    protected @NotNull MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     public Class<MergingGlueBlockEntity> getBlockEntityClass() {

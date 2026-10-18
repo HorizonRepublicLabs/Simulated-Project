@@ -37,11 +37,7 @@ public record ItemInfoWrapper(Item type, DataComponentPatch patchMap) {
      */
     public static @NotNull ItemStack generateFromInfo(final ItemInfoWrapper info) {
         final ItemStack newStack = info.type().getDefaultInstance();
-        final DataComponentPatch.Builder builder = DataComponentPatch.builder();
-        for (final Map.Entry<DataComponentType<?>, Optional<?>> set : info.patchMap().entrySet()) {
-            setDataComponent(set.getKey(), set.getValue(), builder);
-        }
-        newStack.applyComponents(builder.build());
+        newStack.applyComponents(info.patchMap());
         return newStack;
     }
 

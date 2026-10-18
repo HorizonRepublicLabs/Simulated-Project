@@ -1,5 +1,6 @@
 package dev.simulated_team.simulated.content.items.merging_glue;
 
+import net.minecraft.world.item.component.SwingAnimation;
 import com.simibubi.create.AllSpecialTextures;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.sublevel.SubLevel;
@@ -103,7 +104,7 @@ public class MergingGlueItemHandler {
 
                     return true;
                 } else if (!this.firstPos.relative(this.firstDirection).equals(relative)) { //we are connecting!
-                    player.swing(hand);
+                    player.swing(hand, SwingAnimation.DEFAULT, false);
                     VeilPacketManager.server().sendPacket(new PlaceMergingGluePacket(this.firstPos, pos, this.firstDirection, normal, hand));
                     this.reset(false);
                     return true;

@@ -5,9 +5,9 @@ import dev.simulated_team.simulated.content.blocks.redstone.linked_typewriter.sc
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import com.simibubi.create.foundation.transfer.items.IItemHandler;
+import com.simibubi.create.foundation.transfer.items.ItemStackHandler;
+import com.simibubi.create.foundation.transfer.items.SlotItemHandler;
 
 //TODO:figure out where items are rendered and change it
 public class LinkedTypewriterMenuImpl extends LinkedTypewriterMenuCommon {

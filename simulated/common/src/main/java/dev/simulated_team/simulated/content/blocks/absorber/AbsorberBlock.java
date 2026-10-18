@@ -40,17 +40,12 @@ public class AbsorberBlock extends HorizontalDirectionalBlock implements IBE<Abs
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty WET = BooleanProperty.create("wet");
     public static final EnumProperty<Direction> HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final MapCodec<AbsorberBlock> CODEC = simpleCodec(AbsorberBlock::new);
 
     public AbsorberBlock(final Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(POWERED, false).setValue(WET,false));
     }
 
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected void neighborChanged(final BlockState state, final Level level, final BlockPos pos, final Block block, final @Nullable Orientation orientation, final boolean isMoving) {
