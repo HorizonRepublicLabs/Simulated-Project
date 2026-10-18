@@ -32,8 +32,9 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
     /// the server whole, so the crouch is masked by handing back a copy. Every
     /// read in tick goes through here — the changed-since-last-tick comparison,
     /// the packet and lastSentInput alike — so the three stay consistent and the
-    /// client does not resend on every tick.
-    @WrapOperation(method = "tick", at = @At(value = "FIELD",
+    /// client does not resend on every tick. 26.3 moved those reads from tick
+    /// into sendChanges.
+    @WrapOperation(method = "sendChanges", at = @At(value = "FIELD",
             target = "Lnet/minecraft/client/player/ClientInput;keyPresses:Lnet/minecraft/world/entity/player/Input;"))
     private Input simulated$shhhhDontTellTheServer(final ClientInput instance, final Operation<Input> original) {
         final Input keyPresses = original.call(instance);
